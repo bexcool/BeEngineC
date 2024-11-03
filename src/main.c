@@ -7,6 +7,7 @@
 #include "renderer.h"
 #include "helpers/fileHelper.h"
 #include "SDL.h"
+#include "appManager.h"
 
 int main(int argc, char *argv[]) {
     logger_init(strcat(getParentDirectoryPath(argv[0]), "/log.txt"));
@@ -24,20 +25,23 @@ int main(int argc, char *argv[]) {
     LOG("Initializing SDL...");
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         LOG_E("Could not initialize SDL: %s\n", SDL_GetError());
+        logger_stop();
+
         return 1;
     }
     LOG("SDL initialized.");
 
-    renderer_init();
+    // Initialize renderer
+    if (renderer_init() == 1) {
+        cleanupApp();
+        quitApp(1);
+    }
 
-    startGameLoop();
-    
-    LOG("Cleaning up...");
-    LOG("Destroying SDL window...");
-    SDL_DestroyWindow(gameWindow);
-    LOG("Quitting SDL...");
-    SDL_Quit();
-    LOG("Stopping logger...");
-    logger_stop();
-    return 0;
+    // Start the game loop
+    gameLoop_start();
+
+    // Start cleanup after gameLoop ends
+    cleanupApp();
+
+    quitApp(0);
 }

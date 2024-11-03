@@ -70,15 +70,15 @@ endif
 GENERATED :=
 OBJECTS :=
 
+GENERATED += $(OBJDIR)/appManager.o
 GENERATED += $(OBJDIR)/fileHelper.o
 GENERATED += $(OBJDIR)/gameLoop.o
-GENERATED += $(OBJDIR)/gameManager.o
 GENERATED += $(OBJDIR)/logger.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/renderer.o
+OBJECTS += $(OBJDIR)/appManager.o
 OBJECTS += $(OBJDIR)/fileHelper.o
 OBJECTS += $(OBJDIR)/gameLoop.o
-OBJECTS += $(OBJDIR)/gameManager.o
 OBJECTS += $(OBJDIR)/logger.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/renderer.o
@@ -145,10 +145,10 @@ endif
 # File Rules
 # #############################################
 
-$(OBJDIR)/gameLoop.o: src/gameLoop.c
+$(OBJDIR)/appManager.o: src/appManager.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/gameManager.o: src/gameManager.c
+$(OBJDIR)/gameLoop.o: src/gameLoop.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/fileHelper.o: src/helpers/fileHelper.c

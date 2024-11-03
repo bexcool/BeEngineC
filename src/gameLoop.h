@@ -1,3 +1,3 @@
 extern int exitRequested;
 
-int startGameLoop();
+int gameLoop_start();

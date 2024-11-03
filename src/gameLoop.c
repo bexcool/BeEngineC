@@ -5,7 +5,7 @@
 
 int exitRequested = 0;
 
-int startGameLoop() {
+int gameLoop_start() {
     LOG("Starting game loop...");
 
     SDL_Event event;

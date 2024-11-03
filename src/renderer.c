@@ -1,5 +1,6 @@
 #include "SDL.h"
 #include "logger.h"
+#include "appManager.h"
 
 SDL_Renderer *gameRenderer;
 SDL_Window *gameWindow;
@@ -19,7 +20,6 @@ int renderer_init() {
 
     if (gameWindow == NULL) {
         LOG_E("Renderer: Could not create window: %s\n", SDL_GetError());
-        SDL_Quit();
         return 1;
     }
     LOG("Renderer: SDL window created.");
@@ -33,8 +33,7 @@ int renderer_init() {
 
     if (gameRenderer == NULL) {
         LOG_E("Renderer: Could not create renderer: %s\n", SDL_GetError());
-        SDL_Quit();
-        return -1;
+        return 1;
     }
     LOG("Renderer: SDL renderer created.");
     LOG("Renderer initialized.");
