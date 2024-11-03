@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include <stdio.h>
 
 // Info
 #define LOG(message, ...) logger_log(INFO, message, ## __VA_ARGS__) // If the variable arguments are empty, ty ## removes "," in the preprocessor
@@ -13,8 +14,8 @@ typedef enum {
     ERROR
 } LogType;
 
-char logFilePath[256];
-FILE *logFile;
+char logger_logPath[256];
+FILE *logger_logFile;
 
 void logger_init(const char *logFilePath);
 void logger_log(LogType type, char *message, ...);

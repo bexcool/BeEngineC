@@ -27,13 +27,13 @@ endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
-INCLUDES +=
+INCLUDES += -Ilibs/SDL2/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
 LIBS += -lSDL2
 LDDEPS +=
-ALL_LDFLAGS += $(LDFLAGS)
+ALL_LDFLAGS += $(LDFLAGS) -Llibs/SDL2/lib
 LINKCMD = $(CC) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
 endef
@@ -46,7 +46,7 @@ ifeq ($(config),debug)
 TARGETDIR = bin/Debug
 TARGET = $(TARGETDIR)/Breaker
 OBJDIR = obj/Debug
-DEFINES += -DDEBUG
+DEFINES += -DSDL_MAIN_HANDLED -DDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g
 
@@ -54,7 +54,7 @@ else ifeq ($(config),release)
 TARGETDIR = bin/Release
 TARGET = $(TARGETDIR)/Breaker
 OBJDIR = obj/Release
-DEFINES += -DNDEBUG
+DEFINES += -DSDL_MAIN_HANDLED -DNDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2
 
@@ -71,11 +71,15 @@ GENERATED :=
 OBJECTS :=
 
 GENERATED += $(OBJDIR)/gameLoop.o
+GENERATED += $(OBJDIR)/gameManager.o
 GENERATED += $(OBJDIR)/logger.o
 GENERATED += $(OBJDIR)/main.o
+GENERATED += $(OBJDIR)/renderer.o
 OBJECTS += $(OBJDIR)/gameLoop.o
+OBJECTS += $(OBJDIR)/gameManager.o
 OBJECTS += $(OBJDIR)/logger.o
 OBJECTS += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/renderer.o
 
 # Rules
 # #############################################
@@ -142,10 +146,16 @@ endif
 $(OBJDIR)/gameLoop.o: src/gameLoop.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/logger.o: src/logger/logger.c
+$(OBJDIR)/gameManager.o: src/gameManager.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/logger.o: src/logger.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: src/main.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/renderer.o: src/renderer.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

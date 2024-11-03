@@ -3,20 +3,27 @@ workspace "Breaker"
    configurations { "Debug", "Release" }
 
 project "Breaker"
-   kind "ConsoleApp" -- WindowedApp
+   kind "ConsoleApp" -- WindowedApp / ConsoleApp
    language "C"
    targetdir "bin/%{cfg.buildcfg}"
+   architecture "x86_64"  -- Default architecture
 
-   sdl2_includedir = "lib/SDL2/Headers"
-   sdl2_libdir = "lib/SDL2"
+   filter "system:macosx"
+      architecture "arm64"
 
-   files { "**.h", "**.c" }
+   files { "src/**.h", "src/**.c" } -- "src/**.h", 
 
-   filter "system:windows"
-      links { "SDL2", "SDL2main" }
+   includedirs {
+      "libs/SDL2/include"
+   }
 
-   filter "system:linux or system:macosx"
+   libdirs {
+      "libs/SDL2/lib"
+   }
+
+   filter "system:macosx"
       links { "SDL2" }
+      defines { "SDL_MAIN_HANDLED" }
 
    filter "configurations:Debug"
       defines { "DEBUG" }

@@ -7,10 +7,10 @@
 #include "logger.h"
 
 void logger_init(const char *filePath) {
-    strcpy(logFilePath, filePath);
-    logFile = fopen(logFilePath, "w+");
+    strcpy(logger_logPath, filePath);
+    logger_logFile = fopen(logger_logPath, "w+");
 
-    LOG("Logger initialized. Log path: \"%s\"", realpath(logFilePath, NULL));
+    LOG("Logger initialized. Log path: \"%s\"", realpath(logger_logPath, NULL));
 }
 
 void logger_log(LogType type, char *message, ...) {
@@ -39,12 +39,14 @@ void logger_log(LogType type, char *message, ...) {
     }
 
     printf("%s", buffer); 
-    fprintf(logFile, "%s", buffer);
+    fprintf(logger_logFile, "%s", buffer);
 
     vprintf(message, args);
-    vfprintf(logFile, message, args);
+    vfprintf(logger_logFile, message, args);
     va_end(args);  
 
-    fprintf(logFile, "\n");
+    fprintf(logger_logFile, "\n");
     printf("\n");
 }
+
+// TODO: Clean up logger
