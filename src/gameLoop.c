@@ -21,5 +21,7 @@ int startGameLoop() {
         renderer_render();
     }
 
+    LOG("Game loop: Exit requested. Starting the exit sequence...");
+
     return 0;
 }

@@ -14,8 +14,9 @@ typedef enum {
     ERROR
 } LogType;
 
-char logger_logPath[256];
-FILE *logger_logFile;
+extern char logger_logPath[256];
+extern FILE *logger_logFile;
 
 void logger_init(const char *logFilePath);
 void logger_log(LogType type, char *message, ...);
+void logger_stop();

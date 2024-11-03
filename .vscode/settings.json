@@ -16,6 +16,8 @@
         "sdl.h": "c",
         "gameloop.h": "c",
         "renderer.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "bitset": "c",
+        "string.h": "c"
     }
 }

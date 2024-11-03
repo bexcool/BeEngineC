@@ -7,7 +7,7 @@ SDL_Window *gameWindow;
 int renderer_init() {
     LOG("Initializing renderer...");
 
-    LOG("Creating SDL window...");
+    LOG("Renderer: Creating SDL window...");
     gameWindow = SDL_CreateWindow(
         "Breaker",
         100,
@@ -18,13 +18,13 @@ int renderer_init() {
     );
 
     if (gameWindow == NULL) {
-        LOG_E("Could not create window: %s\n", SDL_GetError());
+        LOG_E("Renderer: Could not create window: %s\n", SDL_GetError());
         SDL_Quit();
         return 1;
     }
-    LOG("SDL window created.");
+    LOG("Renderer: SDL window created.");
 
-    LOG("Creating SDL renderer...");
+    LOG("Renderer: Creating SDL renderer...");
     gameRenderer = SDL_CreateRenderer(
         gameWindow,
         -1,
@@ -32,11 +32,11 @@ int renderer_init() {
     );
 
     if (gameRenderer == NULL) {
-        LOG_E("Could not create renderer: %s\n", SDL_GetError());
+        LOG_E("Renderer: Could not create renderer: %s\n", SDL_GetError());
         SDL_Quit();
         return -1;
     }
-    LOG("SDL renderer created.");
+    LOG("Renderer: SDL renderer created.");
     LOG("Renderer initialized.");
 
     return 0;

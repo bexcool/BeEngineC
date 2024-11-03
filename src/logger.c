@@ -6,6 +6,9 @@
 
 #include "logger.h"
 
+char logger_logPath[256];
+FILE *logger_logFile;
+
 void logger_init(const char *filePath) {
     strcpy(logger_logPath, filePath);
     logger_logFile = fopen(logger_logPath, "w+");
@@ -47,6 +50,11 @@ void logger_log(LogType type, char *message, ...) {
 
     fprintf(logger_logFile, "\n");
     printf("\n");
+
+    fflush(logger_logFile);
 }
 
 // TODO: Clean up logger
+void logger_stop() {
+    fclose(logger_logFile);
+}
