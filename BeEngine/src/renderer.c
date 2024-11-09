@@ -2,6 +2,10 @@
 #include "logger.h"
 #include "appManager.h"
 
+#include "objSquare.h"
+#include "gameObject.h"
+#include "engineCore.h"
+
 SDL_Renderer *gameRenderer;
 SDL_Window *gameWindow;
 
@@ -38,6 +42,7 @@ int renderer_init() {
     LOG("Renderer: SDL renderer created.");
     LOG("Renderer initialized.");
 
+
     return 0;
 }
 
@@ -53,6 +58,10 @@ void renderer_render() {
     .h = 200
     };
     SDL_RenderFillRect(gameRenderer, &rect);
+
+    for (int )
+
+    //GameObject* g = REG_GAMEOBJECT(GAMEOBJECT(0, VECTOR2(10, 15), NULL, NULL));
 
     SDL_RenderPresent(gameRenderer);
 }

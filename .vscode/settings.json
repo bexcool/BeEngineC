@@ -18,6 +18,9 @@
         "renderer.h": "c",
         "stdlib.h": "c",
         "bitset": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "gamemanager.h": "c",
+        "typeinfo": "cpp",
+        "unistd.h": "c"
     }
 }

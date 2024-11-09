@@ -1,15 +1,20 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+
+#include "engineCore.h"
 #include "logger.h"
 #include "gameLoop.h"
 #include "renderer.h"
-#include "helpers/fileHelper.h"
+#include "fileHelper.h"
 #include "SDL.h"
 #include "appManager.h"
 
-int main(int argc, char *argv[]) {
+GameObject **AllGameObjects;
+size_t AllGameObjectsSize;
+
+void engineCore_startGameEngine(const char* projectName, int argc, const char* argv[]) {
     logger_init(strcat(getParentDirectoryPath(argv[0]), "/log.txt"));
 
     #ifdef DEBUG
@@ -27,7 +32,8 @@ int main(int argc, char *argv[]) {
         LOG_E("Could not initialize SDL: %s\n", SDL_GetError());
         logger_stop();
 
-        return 1;
+        cleanupApp();
+        quitApp(1);
     }
     LOG("SDL initialized.");
 
@@ -44,4 +50,18 @@ int main(int argc, char *argv[]) {
     cleanupApp();
 
     quitApp(0);
+}
+
+GameObject* _engineCore_registerGameObject(GameObject go) {
+    AllGameObjects = realloc(AllGameObjects, (sizeof(AllGameObjects) + 1) * sizeof(GameObject));
+
+    GameObject* _go = malloc(sizeof(GameObject));
+    _go->id = go.id;
+    _go->position = go.position;
+    _go->properties = go.properties;
+    _go->draw = go.draw;
+
+    AllGameObjects[sizeof(AllGameObjects)] = _go;
+
+    return _go;
 }

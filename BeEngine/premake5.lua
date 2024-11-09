@@ -1,9 +1,9 @@
 -- premake5.lua
-workspace "Breaker"
+workspace "BeEngine"
    configurations { "Debug", "Release" }
 
-project "Breaker"
-   kind "ConsoleApp" -- WindowedApp / ConsoleApp
+project "BeEngine"
+   kind "SharedLib" -- WindowedApp / ConsoleApp
    language "C"
    targetdir "bin/%{cfg.buildcfg}"
    architecture "x86_64"  -- Default architecture
