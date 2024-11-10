@@ -1,8 +1,22 @@
 #include <stdio.h>
 #include "BeEngine.h"
+#include "array.h"
+#include "testLevel.h"
+
+void gameEngineInitialized();
 
 int main(int argc, const char* argv[]) {
-    engineCore_startGameEngine("Breaker (BeEngineC)", argc, argv);
+    EngineOptions opt = {
+        .projectName = "Breaker (BeEngine)",
+        .window_x = 200,
+        .window_y = 200,
+        .window_width = 800,
+        .window_height = 600
+    };
+    
+    engineCore_startGameEngine(opt, argc, argv, &gameEngineInitialized);
+}
 
-    LOG("Logging from main!");
+void gameEngineInitialized() {
+    _testLevel_initialize();   
 }

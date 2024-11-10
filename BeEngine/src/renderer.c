@@ -1,20 +1,21 @@
 #include "SDL.h"
 #include "logger.h"
 #include "appManager.h"
-
 #include "objSquare.h"
 #include "gameObject.h"
 #include "engineCore.h"
+#include "color.h"
+#include "vector2.h"
 
 SDL_Renderer *gameRenderer;
 SDL_Window *gameWindow;
 
-int renderer_init() {
+int renderer_init(const char* projectName) {
     LOG("Initializing renderer...");
 
     LOG("Renderer: Creating SDL window...");
     gameWindow = SDL_CreateWindow(
-        "Breaker",
+        projectName,
         100,
         100,
         800,
@@ -32,7 +33,7 @@ int renderer_init() {
     gameRenderer = SDL_CreateRenderer(
         gameWindow,
         -1,
-        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+        SDL_RENDERER_ACCELERATED /*| SDL_RENDERER_PRESENTVSYNC*/
     );
 
     if (gameRenderer == NULL) {
@@ -42,26 +43,34 @@ int renderer_init() {
     LOG("Renderer: SDL renderer created.");
     LOG("Renderer initialized.");
 
-
     return 0;
 }
 
 void renderer_render() {
+    static size_t frame = 0;
     SDL_SetRenderDrawColor(gameRenderer, 0, 0, 0, 255);
     SDL_RenderClear(gameRenderer);
 
-    SDL_SetRenderDrawColor(gameRenderer, 255, 0, 0, 255);
-    SDL_Rect rect = {
-    .x = 100,
-    .y = 200,
-    .w = 500,
-    .h = 200
-    };
-    SDL_RenderFillRect(gameRenderer, &rect);
+    Level *l = getLevel();
 
-    for (int )
-
-    //GameObject* g = REG_GAMEOBJECT(GAMEOBJECT(0, VECTOR2(10, 15), NULL, NULL));
+    for (size_t i = 0; i < l->allGameObjectsSize; i++) {
+        l->allGameObjects[i]->draw(l->allGameObjects[i]);
+    }
 
     SDL_RenderPresent(gameRenderer);
+}
+
+void renderer_fillRectangle(const Color color, const Vector2 position, const Vector2 size) {
+    SDL_SetRenderDrawColor(gameRenderer, color.r, color.g, color.b, color.a);
+
+    SDL_Rect rect = {
+    .x = position.x,
+    .y = position.y,
+    .w = size.x,
+    .h = size.y
+    };
+
+    
+
+    SDL_RenderFillRect(gameRenderer, &rect);
 }

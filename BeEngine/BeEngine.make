@@ -71,6 +71,7 @@ GENERATED :=
 OBJECTS :=
 
 GENERATED += $(OBJDIR)/appManager.o
+GENERATED += $(OBJDIR)/array.o
 GENERATED += $(OBJDIR)/engineCore.o
 GENERATED += $(OBJDIR)/fileHelper.o
 GENERATED += $(OBJDIR)/gameLoop.o
@@ -78,6 +79,7 @@ GENERATED += $(OBJDIR)/logger.o
 GENERATED += $(OBJDIR)/objSquare.o
 GENERATED += $(OBJDIR)/renderer.o
 OBJECTS += $(OBJDIR)/appManager.o
+OBJECTS += $(OBJDIR)/array.o
 OBJECTS += $(OBJDIR)/engineCore.o
 OBJECTS += $(OBJDIR)/fileHelper.o
 OBJECTS += $(OBJDIR)/gameLoop.o
@@ -148,6 +150,9 @@ endif
 # #############################################
 
 $(OBJDIR)/appManager.o: src/appManager.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/array.o: src/array.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/engineCore.o: src/engineCore.c

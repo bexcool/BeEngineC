@@ -16,7 +16,7 @@ void logger_init(const char *filePath) {
     LOG("Logger initialized. Log path: \"%s\"", realpath(logger_logPath, NULL));
 }
 
-void logger_log(LogType type, char *message, ...) {
+void logger_log(LogType type, const char *message, ...) {
     char buffer[256], timeBuffer[16];
     time_t now = time(NULL);
     struct tm tm_now;

@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include "logger.h"
+#include "engineCore.h"
 
 void cleanupApp() {
     LOG("Cleaning up...");
@@ -13,6 +14,10 @@ void cleanupApp() {
     // Quit SDL
     LOG("Quitting SDL...");
     SDL_Quit();
+
+    // Clean engine core
+    LOG("Cleaning engine core...");
+    _engineCore_clean();
 }
 
 void quitApp(int retCode) {

@@ -21,6 +21,20 @@
         "string.h": "c",
         "gamemanager.h": "c",
         "typeinfo": "cpp",
-        "unistd.h": "c"
-    }
+        "unistd.h": "c",
+        "__hash_table": "cpp",
+        "array": "cpp",
+        "type_traits": "cpp",
+        "limits": "cpp",
+        "ratio": "cpp",
+        "tuple": "cpp",
+        "variant": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "vector": "cpp",
+        "appmanager.h": "c",
+        "__locale": "cpp",
+        "testlevel.h": "c"
+    },
+    "explorer.compactFolders": false
 }

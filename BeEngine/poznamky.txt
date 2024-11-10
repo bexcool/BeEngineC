@@ -1,4 +1,4 @@
-Bude gameManager, který má v sobě structy (gameObject) v právě načteném levelu (level bude struct).
+Bude engineCore, který má v sobě struct Level, který má structy (gameObject) v právě načteném levelu (level bude struct).
 Levelu se zavolá funkce load a ta vytvoří gameObject a hodí se do arraye v gameManageru.
 
 Udělat generateProjectTemplate.sh, který udělá project template s includy atd.
