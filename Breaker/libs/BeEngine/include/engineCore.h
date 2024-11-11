@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include "gameObject.h"
 #include "level.h"
+#include "SDL.h"
 
+// Type definitions
 typedef struct EngineOptions {
     const char* projectName;
     unsigned int window_x;
@@ -13,8 +15,14 @@ typedef struct EngineOptions {
     unsigned int window_height;
 } EngineOptions;
 
+typedef struct EngineEvents {
+    void (*engineInitialized)();
+    void (*inputEvent)(SDL_Event);
+} EngineEvents;
+
 typedef struct EngineCore {
     EngineOptions options;
+    EngineEvents events;
 } EngineCore;
 
 // Macros
@@ -25,15 +33,16 @@ typedef struct EngineCore {
     _engineCore_registerGameObject(id)
 
 // Public functions
-void engineCore_startGameEngine(EngineOptions options, int argc, const char* argv[], void (*gameEngineInitialized)());
+void engineCore_startGameEngine(EngineOptions *options, EngineEvents *events, int argc, const char* argv[]);
 EngineCore* getCore();
 Level* getLevel();
 int loadLevel(Level *level);
 
 // Private functions
-void _engineCore_initialize(EngineOptions _options);
+void _engineCore_initialize(EngineOptions *_options, EngineEvents *_events);
 void _engineCore_clean();
-GameObject* _engineCore_registerGameObject(GameObject go);
+void _engineCore_cleanGameObjects();
+GameObject* _engineCore_registerGameObject(GameObject *go);
 int _engineCore_unregisterGameObject(int id);
 
 #endif

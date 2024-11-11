@@ -8,6 +8,8 @@ typedef struct GameObject {
     Vector2 position;
     void* properties;
     void (*draw)(struct GameObject*);
+    void (*tick)(struct GameObject*);
+    void (*collided)(struct GameObject*, struct GameObject*); // Self, Collided object
 } GameObject;
 
 // Přidat sám sebe do nějakého arraye objektů a přidat tam svoji draw funkci

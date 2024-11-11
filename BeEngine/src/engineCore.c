@@ -15,7 +15,7 @@
 EngineCore _engineCore;
 Level _currentLevel;
 
-void engineCore_startGameEngine(EngineOptions options, int argc, const char* argv[], void (*gameEngineInitialized)()) {
+void engineCore_startGameEngine(EngineOptions *options, EngineEvents *events, int argc, const char* argv[]) {
     logger_init(strcat(getParentDirectoryPath(argv[0]), "/log.txt"));
 
     #ifdef DEBUG
@@ -29,7 +29,7 @@ void engineCore_startGameEngine(EngineOptions options, int argc, const char* arg
     LOG("Starting application...");
 
     LOG("Initializing engine core...");
-    _engineCore_initialize(options);
+    _engineCore_initialize(options, events);
     LOG("Engine core initialized.");
 
     LOG("Initializing SDL...");
@@ -43,13 +43,13 @@ void engineCore_startGameEngine(EngineOptions options, int argc, const char* arg
     LOG("SDL initialized.");
 
     // Initialize renderer
-    if (renderer_init(options.projectName) == 1) {
+    if (renderer_init(options->projectName) == 1) {
         cleanupApp();
         quitApp(1);
     }
 
     // Call initialized function
-    gameEngineInitialized();
+    getCore()->events.engineInitialized();
 
     // Start the game loop
     gameLoop_start();
@@ -60,16 +60,23 @@ void engineCore_startGameEngine(EngineOptions options, int argc, const char* arg
     quitApp(0);
 }
 
-void _engineCore_initialize(EngineOptions _options) {
-    getCore()->options = _options;
+void _engineCore_initialize(EngineOptions *_options, EngineEvents *_events) {
+    getCore()->options = *_options;
+    getCore()->events = *_events;
 }
 
 void _engineCore_clean() {
+    _engineCore_cleanGameObjects();
+}
+
+void _engineCore_cleanGameObjects() {
     // Clean allGameObjects array
-    for (size_t i = 0; i < getLevel()->allGameObjectsSize; i++) {
-        free(getLevel()->allGameObjects[i]);
-        getLevel()->allGameObjects[i] = NULL;
+    for (size_t i = 0; i < getLevel()->allGameObjects.size; i++) {
+        free(getLevel()->allGameObjects.items[i]);
+        getLevel()->allGameObjects.items[i] = NULL;
     }
+
+    ARRAY_CLEAN(getLevel()->allGameObjects);
 }
 
 EngineCore* getCore() {
@@ -81,19 +88,32 @@ Level* getLevel() {
 }
 
 int loadLevel(Level *level) {
-    return 0;
+    LOG("Requested to load level \"%s\".", level->name);
+    LOG("Cleaning game objects in the current level.");
+    _engineCore_cleanGameObjects();
+
+    LOG("Transitioning from \"%s\" to \"%s\"...", getLevel()->name, level->name);
+    _currentLevel = *level;
+
+    LOG("Initializing new level...");
+    ARRAY_INIT(getLevel()->allGameObjects);
+    getLevel()->initialize();
+    LOG("Level initialized.");
+
+    LOG("Level \"%s\" loaded successfully.", getLevel()->name);
+    return 1;
 }
 
-GameObject* _engineCore_registerGameObject(GameObject go) {
-    getLevel()->allGameObjects = realloc(getLevel()->allGameObjects, ++(getLevel()->allGameObjectsSize) * sizeof(GameObject));
-
+// Relloc nevolat furt
+GameObject* _engineCore_registerGameObject(GameObject *go) {
     GameObject *_go = (GameObject*)malloc(sizeof(GameObject));
-    _go->id = go.id;
-    _go->position = go.position;
-    _go->properties = go.properties;
-    _go->draw = go.draw;
+    _go->id = go->id;
+    _go->position = go->position;
+    _go->properties = go->properties;
+    _go->draw = go->draw;
 
-    getLevel()->allGameObjects[getLevel()->allGameObjectsSize - 1] = _go;
+    ARRAY_ADD(getLevel()->allGameObjects, GameObject*, _go);
+    LOG_W("Arrays new capacity: %d", getLevel()->allGameObjects._capacity);
 
     return _go;
 }

@@ -3,13 +3,15 @@
 
 #include <stdio.h>
 #include "gameObject.h"
+#include "array.h"
+
+PREPARE_ARRAY(GameObjectArray, GameObject*);
 
 typedef struct Level {
     size_t id;
     char *name;
     // Game objects
-    GameObject **allGameObjects;
-    size_t allGameObjectsSize;
+    GameObjectArray allGameObjects;
     // Functions
     void (*initialize)();
 } Level;

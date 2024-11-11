@@ -10,16 +10,18 @@
 SDL_Renderer *gameRenderer;
 SDL_Window *gameWindow;
 
-int renderer_init(const char* projectName) {
+int renderer_init() {
     LOG("Initializing renderer...");
+
+    EngineOptions opt = getCore()->options;
 
     LOG("Renderer: Creating SDL window...");
     gameWindow = SDL_CreateWindow(
-        projectName,
-        100,
-        100,
-        800,
-        600,
+        opt.projectName,
+        opt.window_x,
+        opt.window_y,
+        opt.window_width,
+        opt.window_height,
         SDL_WINDOW_SHOWN
     );
 
@@ -53,24 +55,22 @@ void renderer_render() {
 
     Level *l = getLevel();
 
-    for (size_t i = 0; i < l->allGameObjectsSize; i++) {
-        l->allGameObjects[i]->draw(l->allGameObjects[i]);
+    for (size_t i = 0; i < l->allGameObjects.size; i++) {
+        l->allGameObjects.items[i]->draw(l->allGameObjects.items[i]);
     }
 
     SDL_RenderPresent(gameRenderer);
 }
 
-void renderer_fillRectangle(const Color color, const Vector2 position, const Vector2 size) {
-    SDL_SetRenderDrawColor(gameRenderer, color.r, color.g, color.b, color.a);
+void renderer_fillRectangle(const Color *color, const Vector2 *position, const Vector2 *size) {
+    SDL_SetRenderDrawColor(gameRenderer, color->r, color->g, color->b, color->a);
 
     SDL_Rect rect = {
-    .x = position.x,
-    .y = position.y,
-    .w = size.x,
-    .h = size.y
+    .x = position->x,
+    .y = position->y,
+    .w = size->x,
+    .h = size->y
     };
-
-    
 
     SDL_RenderFillRect(gameRenderer, &rect);
 }

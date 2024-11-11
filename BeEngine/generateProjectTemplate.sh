@@ -10,15 +10,19 @@ cat << EOT >> ./projectTemplate/src/main.c
 void gameEngineInitialized();
 
 int main(int argc, char* argv[]) {
-    EngineOptions opt = {
-        .projectName = "Breaker (BeEngine)",
+    EngineOptions options = {
+        .projectName = "BeEngine Project",
         .window_x = 200,
         .window_y = 200,
         .window_width = 800,
         .window_height = 600
     };
 
-    engineCore_startGameEngine(opt, argc, argv, &gameEngineInitialized);
+    EngineEvents events = {
+        .engineInitialized = &gameEngineInitialized
+    };
+    
+    engineCore_startGameEngine(options, events, argc, argv);
 }
 
 void gameEngineInitialized() {

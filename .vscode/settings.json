@@ -34,7 +34,13 @@
         "vector": "cpp",
         "appmanager.h": "c",
         "__locale": "cpp",
-        "testlevel.h": "c"
+        "testlevel.h": "c",
+        "__split_buffer": "cpp",
+        "deque": "cpp",
+        "initializer_list": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "unordered_map": "cpp"
     },
     "explorer.compactFolders": false
 }

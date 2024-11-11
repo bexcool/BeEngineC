@@ -8,4 +8,4 @@ extern SDL_Renderer *gameRenderer;
 int renderer_init(const char* projectName);
 void renderer_render();
 
-void renderer_fillRectangle(const Color color, const Vector2 position, const Vector2 size);
+void renderer_fillRectangle(const Color *color, const Vector2 *position, const Vector2 *size);
