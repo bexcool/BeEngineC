@@ -2,8 +2,9 @@
 #include "BeEngine.h"
 
 GameObject *go1, *go2, *go3, *go4, *go5;
+const Level testLevel = { .id = 2, .name = "testLevel", .loaded = &_testLevel_loaded };
 
-void _testLevel_initialize() {
+void _testLevel_loaded() {
     go1 = REG_GAMEOBJECT(&GAMEOBJECT(0, VECTOR2(20, 20), NULL, &drawTest));
     go2 = REG_GAMEOBJECT(&GAMEOBJECT(0, VECTOR2(100, 20), NULL, &drawTest));
     go3 = REG_GAMEOBJECT(&GAMEOBJECT(0, VECTOR2(250, 200), NULL, &drawTest));

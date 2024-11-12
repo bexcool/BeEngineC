@@ -49,7 +49,8 @@ void engineCore_startGameEngine(EngineOptions *options, EngineEvents *events, in
     }
 
     // Call initialized function
-    getCore()->events.engineInitialized();
+    if (getCore()->events.engineInitialized != NULL)
+        getCore()->events.engineInitialized();
 
     // Start the game loop
     gameLoop_start();
@@ -63,6 +64,8 @@ void engineCore_startGameEngine(EngineOptions *options, EngineEvents *events, in
 void _engineCore_initialize(EngineOptions *_options, EngineEvents *_events) {
     getCore()->options = *_options;
     getCore()->events = *_events;
+
+    loadLevel(&getCore()->options.initialLevel);
 }
 
 void _engineCore_clean() {
@@ -89,6 +92,23 @@ Level* getLevel() {
 
 int loadLevel(Level *level) {
     LOG("Requested to load level \"%s\".", level->name);
+
+    if (level->name == NULL) {
+        LOG_E("Failed to load level! Level name is NULL.");
+        cleanupApp();
+        exit(1);
+    }
+
+    // Check ID
+    if (level->id == 0) {
+        LOG_W("Level does not have an ID. This could cause issues in the future.");
+    }
+
+    // Check loaded
+    if (level->loaded == NULL) {
+        LOG_W("Level does not have a pointer to the \"loaded\" function. This could cause issues in the future.");
+    }
+
     LOG("Cleaning game objects in the current level.");
     _engineCore_cleanGameObjects();
 
@@ -97,10 +117,11 @@ int loadLevel(Level *level) {
 
     LOG("Initializing new level...");
     ARRAY_INIT(getLevel()->allGameObjects);
-    getLevel()->initialize();
     LOG("Level initialized.");
 
     LOG("Level \"%s\" loaded successfully.", getLevel()->name);
+    if(getLevel()->loaded != NULL) getLevel()->loaded();
+
     return 1;
 }
 
@@ -113,7 +134,6 @@ GameObject* _engineCore_registerGameObject(GameObject *go) {
     _go->draw = go->draw;
 
     ARRAY_ADD(getLevel()->allGameObjects, GameObject*, _go);
-    LOG_W("Arrays new capacity: %d", getLevel()->allGameObjects._capacity);
 
     return _go;
 }

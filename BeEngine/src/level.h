@@ -13,10 +13,11 @@ typedef struct Level {
     // Game objects
     GameObjectArray allGameObjects;
     // Functions
-    void (*initialize)();
+    void (*loaded)();
 } Level;
 
 #define PREPARE_LEVEL(name) \
-    void _##name##_initialize();
+    const Level name;\
+    void _##name##_loaded();
 
 #endif

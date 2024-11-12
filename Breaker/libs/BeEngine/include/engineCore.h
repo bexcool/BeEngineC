@@ -13,6 +13,7 @@ typedef struct EngineOptions {
     unsigned int window_y;
     unsigned int window_width;
     unsigned int window_height;
+    Level initialLevel;
 } EngineOptions;
 
 typedef struct EngineEvents {

@@ -11,7 +11,8 @@ int main(int argc, const char* argv[]) {
         .window_x = 200,
         .window_y = 200,
         .window_width = 800,
-        .window_height = 600
+        .window_height = 600,
+        .initialLevel = testLevel
     };
 
     EngineEvents events = {
@@ -22,5 +23,5 @@ int main(int argc, const char* argv[]) {
 }
 
 void gameEngineInitialized() {
-    _testLevel_initialize();   
+    
 }
