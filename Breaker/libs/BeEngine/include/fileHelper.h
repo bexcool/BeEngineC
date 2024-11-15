@@ -1,1 +1,1 @@
-char* getParentDirectoryPath(const char* path);
+void getParentDirectoryPath(const char *path, char *resultPath);

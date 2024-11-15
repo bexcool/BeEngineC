@@ -1,11 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-char* getParentDirectoryPath(const char* path) {
+void getParentDirectoryPath(const char *path, char *resultPath) {
     char *lastSlashPos = strrchr(path, '/');
-    char *folderPath = (char*)malloc(256);
 
-    strncpy(folderPath, path, lastSlashPos - path);
-
-    return folderPath;
+    strncpy(resultPath, path, lastSlashPos - path);
 }

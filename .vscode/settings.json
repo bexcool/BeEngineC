@@ -40,7 +40,8 @@
         "initializer_list": "cpp",
         "queue": "cpp",
         "stack": "cpp",
-        "unordered_map": "cpp"
+        "unordered_map": "cpp",
+        "__node_handle": "c"
     },
     "explorer.compactFolders": false
 }

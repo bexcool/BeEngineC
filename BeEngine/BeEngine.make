@@ -33,7 +33,6 @@ ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
 LIBS += -lSDL2
 LDDEPS +=
-ALL_LDFLAGS += $(LDFLAGS) -Llibs/SDL2/lib -dynamiclib -Wl,-install_name,@rpath/libBeEngine.dylib
 LINKCMD = $(CC) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
 endef
@@ -47,8 +46,9 @@ TARGETDIR = bin/Debug
 TARGET = $(TARGETDIR)/libBeEngine.dylib
 OBJDIR = obj/Debug
 DEFINES += -DSDL_MAIN_HANDLED -DDEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g -fsanitize=address
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g -fsanitize=address
+ALL_LDFLAGS += $(LDFLAGS) -Llibs/SDL2/lib -dynamiclib -Wl,-install_name,@rpath/libBeEngine.dylib -fsanitize=address
 
 else ifeq ($(config),release)
 TARGETDIR = bin/Release
@@ -57,6 +57,7 @@ OBJDIR = obj/Release
 DEFINES += -DSDL_MAIN_HANDLED -DNDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -fPIC
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -fPIC
+ALL_LDFLAGS += $(LDFLAGS) -Llibs/SDL2/lib -dynamiclib -Wl,-install_name,@rpath/libBeEngine.dylib
 
 endif
 
@@ -77,6 +78,7 @@ GENERATED += $(OBJDIR)/fileHelper.o
 GENERATED += $(OBJDIR)/gameLoop.o
 GENERATED += $(OBJDIR)/logger.o
 GENERATED += $(OBJDIR)/objSquare.o
+GENERATED += $(OBJDIR)/physicsEngine.o
 GENERATED += $(OBJDIR)/renderer.o
 OBJECTS += $(OBJDIR)/appManager.o
 OBJECTS += $(OBJDIR)/array.o
@@ -85,6 +87,7 @@ OBJECTS += $(OBJDIR)/fileHelper.o
 OBJECTS += $(OBJDIR)/gameLoop.o
 OBJECTS += $(OBJDIR)/logger.o
 OBJECTS += $(OBJDIR)/objSquare.o
+OBJECTS += $(OBJDIR)/physicsEngine.o
 OBJECTS += $(OBJDIR)/renderer.o
 
 # Rules
@@ -168,6 +171,9 @@ $(OBJDIR)/logger.o: src/logger.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/objSquare.o: src/objSquare.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/physicsEngine.o: src/physicsEngine.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/renderer.o: src/renderer.c

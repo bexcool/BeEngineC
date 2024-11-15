@@ -2,9 +2,10 @@
 #define _ENGINECORE_H_
 
 #include <stdlib.h>
+
+#include "SDL.h"
 #include "gameObject.h"
 #include "level.h"
-#include "SDL.h"
 
 // Type definitions
 typedef struct EngineOptions {
@@ -17,8 +18,8 @@ typedef struct EngineOptions {
 } EngineOptions;
 
 typedef struct EngineEvents {
-    void (*engineInitialized)();
-    void (*inputEvent)(SDL_Event);
+    void (*event_engineInitialized)();
+    void (*event_anyInput)(SDL_Event*);
 } EngineEvents;
 
 typedef struct EngineCore {
@@ -31,19 +32,29 @@ typedef struct EngineCore {
     _engineCore_registerGameObject(gameObject)
 
 #define UNREG_GAMEOBJECT(id) \
-    _engineCore_registerGameObject(id)
+    _engineCore_unregisterGameObject(id)
+
+#define TRUE 1
+#define FALSE 0
 
 // Public functions
-void engineCore_startGameEngine(EngineOptions *options, EngineEvents *events, int argc, const char* argv[]);
+void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, int argc, const char* argv[]);
+int engineCore_loadLevel(Level* level);
+
+// Getters
 EngineCore* getCore();
 Level* getLevel();
-int loadLevel(Level *level);
+double getDeltaTime();
+GameObject* getFocusedGameObject();
 
 // Private functions
-void _engineCore_initialize(EngineOptions *_options, EngineEvents *_events);
+void _engineCore_initialize(EngineOptions* _options, EngineEvents* _events);
 void _engineCore_clean();
 void _engineCore_cleanGameObjects();
-GameObject* _engineCore_registerGameObject(GameObject *go);
+
+void _engineCore_tick();
+
+GameObject* _engineCore_registerGameObject(GameObject* go);
 int _engineCore_unregisterGameObject(int id);
 
 #endif

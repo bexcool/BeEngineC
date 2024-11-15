@@ -2,14 +2,27 @@
 #define _GAMEOBJECT_H_
 
 #include "vector2.h"
+#include "stdlib.h"
+#include "physics.h"
+#include "array.h"
+
+PREPARE_ARRAY(GameObjectArray, struct GameObject*);
 
 typedef struct GameObject {
     size_t id;
     Vector2 position;
+    Vector2 size;
+    Vector2 velocity;
+    CollisionType collisionType;
+    ObjectType objectType;
+    struct GameObject *parentGameObject;
+    GameObjectArray overlappedGameObjects;
     void* properties;
-    void (*draw)(struct GameObject*);
-    void (*tick)(struct GameObject*);
-    void (*collided)(struct GameObject*, struct GameObject*); // Self, Collided object
+    void (*event_draw)(struct GameObject*);
+    void (*event_tick)(struct GameObject*);
+    void (*event_destroyed)(struct GameObject*);
+    void (*event_beginOverlap)(struct GameObject*, struct GameObject*); // Self, Collided object
+    void (*event_endOverlap)(struct GameObject*, struct GameObject*); // Self, Collided object
 } GameObject;
 
 // Přidat sám sebe do nějakého arraye objektů a přidat tam svoji draw funkci
@@ -17,7 +30,15 @@ typedef struct GameObject {
 #define PREPARE_GAMEOBJECT(name) \
     void _##name##_draw(GameObject* gameObject);
 
-#define GAMEOBJECT(_id, _position, _properties, _draw) \
-    ((GameObject) { .id = _id, .position = _position, .properties = _properties, .draw = _draw })
+#define GAMEOBJECT(_id, _position, _size, _properties, _event_draw) \
+    ((GameObject) { \
+        .id = _id, \
+        .position =_position, \
+        .size = _size,  \
+        .properties = _properties, \
+        .event_draw = _event_draw, \
+        .collisionType = BLOCK, \
+        .objectType = STATIC \
+    })
 
 #endif

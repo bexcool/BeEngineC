@@ -1,10 +1,10 @@
+#include "logger.h"
+
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <stdarg.h>
-
-#include "logger.h"
 
 char logger_logPath[256];
 FILE *logger_logFile;
@@ -27,26 +27,25 @@ void logger_log(LogType type, const char *message, ...) {
     localtime_r(&now, &tm_now);
     strftime(timeBuffer, sizeof(timeBuffer), "%H:%M:%S", &tm_now);
 
-    switch (type)
-    {
+    switch (type) {
         case INFO:
-            sprintf(buffer, "%s - [INFO] ", timeBuffer);
+            snprintf(buffer, 256, "%s - [INFO] ", timeBuffer);
             break;
 
         case WARNING:
-            sprintf(buffer, "%s - [WARNING] ", timeBuffer);
+            snprintf(buffer, 256, "%s - [WARNING] ", timeBuffer);
             break;
 
         case ERROR:
-            sprintf(buffer, "%s - [ERROR] ", timeBuffer);
+            snprintf(buffer, 256, "%s - [ERROR] ", timeBuffer);
     }
 
-    printf("%s", buffer); 
+    printf("%s", buffer);
     fprintf(logger_logFile, "%s", buffer);
 
     vprintf(message, args);
     vfprintf(logger_logFile, message, args);
-    va_end(args);  
+    va_end(args);
 
     fprintf(logger_logFile, "\n");
     printf("\n");

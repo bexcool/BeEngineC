@@ -1,4 +1,14 @@
-Bude engineCore, který má v sobě struct Level, který má structy (gameObject) v právě načteném levelu (level bude struct).
-Levelu se zavolá funkce load a ta vytvoří gameObject a hodí se do arraye v gameManageru.
+- Input bude fungovat jako v Unrealu. Buď focus na UI nebo na hru.
+Hra bude managovat kliknutí pomocí ptr na fci. Bude existovat funkce getGameObjectByMousePos().
+Pokud bude focus na UI, tak se po kliknutí zavolá ptr na fci, která zavolá určitému objektu fci "clicked".
+// nebo
+Bude prostě normálně input a když se klikne na UI, tak se pošle event UI. A když se klikne na hru, tak bude clicked na hru.
+Klávesnice bude zatím defaultně pro celou hru.
 
-Udělat generateProjectTemplate.sh, který udělá project template s includy atd.
+- Random ID generator
+- Draw collisions
+
+DONE:
+- Bude engineCore, který má v sobě struct Level, který má structy (gameObject) v právě načteném levelu (level bude struct).
+Levelu se zavolá funkce load a ta vytvoří gameObject a hodí se do arraye v gameManageru.
+- Udělat generateProjectTemplate.sh, který udělá project template s includy atd.

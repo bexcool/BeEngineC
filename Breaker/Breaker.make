@@ -33,7 +33,6 @@ ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
 LIBS += -lBeEngine
 LDDEPS +=
-ALL_LDFLAGS += $(LDFLAGS) -Llibs/BeEngine/lib -rpath @executable_path/../../libs/BeEngine/lib
 LINKCMD = $(CC) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
 endef
@@ -47,8 +46,9 @@ TARGETDIR = bin/Debug
 TARGET = $(TARGETDIR)/Breaker
 OBJDIR = obj/Debug
 DEFINES += -DDEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -fsanitize=address
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -fsanitize=address
+ALL_LDFLAGS += $(LDFLAGS) -Llibs/BeEngine/lib -rpath @executable_path/../../libs/BeEngine/lib -fsanitize=address
 
 else ifeq ($(config),release)
 TARGETDIR = bin/Release
@@ -57,6 +57,7 @@ OBJDIR = obj/Release
 DEFINES += -DNDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2
+ALL_LDFLAGS += $(LDFLAGS) -Llibs/BeEngine/lib -rpath @executable_path/../../libs/BeEngine/lib
 
 endif
 

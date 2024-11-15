@@ -1,30 +1,39 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-
 #include "engineCore.h"
-#include "logger.h"
-#include "gameLoop.h"
-#include "renderer.h"
-#include "fileHelper.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
 #include "SDL.h"
 #include "appManager.h"
+#include "fileHelper.h"
+#include "gameLoop.h"
 #include "level.h"
+#include "logger.h"
+#include "renderer.h"
 
+Uint64 _lastTime;
 EngineCore _engineCore;
 Level _currentLevel;
 
-void engineCore_startGameEngine(EngineOptions *options, EngineEvents *events, int argc, const char* argv[]) {
-    logger_init(strcat(getParentDirectoryPath(argv[0]), "/log.txt"));
+GameObject* _focusedGameObject;
 
-    #ifdef DEBUG
-        LOG("Running engine in DEBUG configuration.");
-    #endif
+double _deltaTime;
 
-    #ifdef NDEBUG
-        LOG("Running engine in RELEASE configuration.");
-    #endif
+void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, int argc, const char* argv[]) {
+    char appParentFolderPath[255];
+
+    getParentDirectoryPath(argv[0], appParentFolderPath);
+    logger_init(strcat(appParentFolderPath, "/log.txt"));
+
+#ifdef DEBUG
+    LOG("Running engine in DEBUG configuration.");
+#endif
+
+#ifdef NDEBUG
+    LOG("Running engine in RELEASE configuration.");
+#endif
 
     LOG("Starting application...");
 
@@ -43,14 +52,14 @@ void engineCore_startGameEngine(EngineOptions *options, EngineEvents *events, in
     LOG("SDL initialized.");
 
     // Initialize renderer
-    if (renderer_init(options->projectName) == 1) {
+    if (renderer_init() == 1) {
         cleanupApp();
         quitApp(1);
     }
 
     // Call initialized function
-    if (getCore()->events.engineInitialized != NULL)
-        getCore()->events.engineInitialized();
+    if (getCore()->events.event_engineInitialized != NULL)
+        getCore()->events.event_engineInitialized();
 
     // Start the game loop
     gameLoop_start();
@@ -61,11 +70,29 @@ void engineCore_startGameEngine(EngineOptions *options, EngineEvents *events, in
     quitApp(0);
 }
 
-void _engineCore_initialize(EngineOptions *_options, EngineEvents *_events) {
+EngineCore* getCore() {
+    return &_engineCore;
+}
+
+Level* getLevel() {
+    return &_currentLevel;
+}
+
+double getDeltaTime() {
+    return _deltaTime;
+}
+
+GameObject* getFocusedGameObject() {
+    return _focusedGameObject;
+}
+
+void _engineCore_initialize(EngineOptions* _options, EngineEvents* _events) {
     getCore()->options = *_options;
     getCore()->events = *_events;
 
-    loadLevel(&getCore()->options.initialLevel);
+    engineCore_loadLevel(&getCore()->options.initialLevel);
+
+    _lastTime = SDL_GetPerformanceCounter();
 }
 
 void _engineCore_clean() {
@@ -82,15 +109,22 @@ void _engineCore_cleanGameObjects() {
     ARRAY_CLEAN(getLevel()->allGameObjects);
 }
 
-EngineCore* getCore() {
-    return &_engineCore;
+void _engineCore_tick() {
+    // Calculate delta time
+    Uint64 currentTime = SDL_GetPerformanceCounter();
+    _deltaTime = (double)(currentTime - _lastTime) / (double)SDL_GetPerformanceFrequency();
+    _lastTime = currentTime;
+
+    // Call tick event on every game object
+    for (size_t i = 0; i < getLevel()->allGameObjects.size; i++) {
+        GameObject* go = getLevel()->allGameObjects.items[i];
+
+        if (go->event_tick != NULL)
+            go->event_tick(go);
+    }
 }
 
-Level* getLevel() {
-    return &_currentLevel;
-}
-
-int loadLevel(Level *level) {
+int engineCore_loadLevel(Level* level) {
     LOG("Requested to load level \"%s\".", level->name);
 
     if (level->name == NULL) {
@@ -105,7 +139,7 @@ int loadLevel(Level *level) {
     }
 
     // Check loaded
-    if (level->loaded == NULL) {
+    if (level->event_loaded == NULL) {
         LOG_W("Level does not have a pointer to the \"loaded\" function. This could cause issues in the future.");
     }
 
@@ -120,20 +154,42 @@ int loadLevel(Level *level) {
     LOG("Level initialized.");
 
     LOG("Level \"%s\" loaded successfully.", getLevel()->name);
-    if(getLevel()->loaded != NULL) getLevel()->loaded();
+    if (getLevel()->event_loaded != NULL)
+        getLevel()->event_loaded();
 
     return 1;
 }
 
-// Relloc nevolat furt
-GameObject* _engineCore_registerGameObject(GameObject *go) {
-    GameObject *_go = (GameObject*)malloc(sizeof(GameObject));
-    _go->id = go->id;
-    _go->position = go->position;
-    _go->properties = go->properties;
-    _go->draw = go->draw;
+GameObject* _engineCore_registerGameObject(GameObject* go) {
+    GameObject* _go = (GameObject*)malloc(sizeof(GameObject));
+
+    (*_go) = (*go);
 
     ARRAY_ADD(getLevel()->allGameObjects, GameObject*, _go);
 
     return _go;
+}
+
+int _engineCore_unregisterGameObject(int id) {
+    Level* l = getLevel();
+
+    for (size_t i = 0; i < l->allGameObjects.size; i++) {
+        if (l->allGameObjects.items[i]->id == id) {
+            if (l->allGameObjects.items[i]->event_destroyed != NULL)
+                l->allGameObjects.items[i]->event_destroyed(l->allGameObjects.items[i]);
+
+            ARRAY_REMOVE_CLEAN(l->allGameObjects, GameObject*, i);
+
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+/**
+ * Sends input to this game object.
+ */
+void engineCore_focusGameObject(GameObject* go) {
+    _focusedGameObject = go;
 }

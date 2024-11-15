@@ -1,6 +1,6 @@
-#include "renderer.h"
-#include "logger.h"
 #include "engineCore.h"
+#include "logger.h"
+#include "renderer.h"
 
 void cleanupApp() {
     LOG("Cleaning up...");

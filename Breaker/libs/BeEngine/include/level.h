@@ -3,9 +3,6 @@
 
 #include <stdio.h>
 #include "gameObject.h"
-#include "array.h"
-
-PREPARE_ARRAY(GameObjectArray, GameObject*);
 
 typedef struct Level {
     size_t id;
@@ -13,7 +10,7 @@ typedef struct Level {
     // Game objects
     GameObjectArray allGameObjects;
     // Functions
-    void (*loaded)();
+    void (*event_loaded)();
 } Level;
 
 #define PREPARE_LEVEL(name) \

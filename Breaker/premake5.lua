@@ -27,6 +27,8 @@ project "Breaker"
 
    filter "configurations:Debug"
       defines { "DEBUG" }
+      buildoptions { "-fsanitize=address" }
+      linkoptions { "-fsanitize=address" }
       symbols "On"
 
    filter "configurations:Release"

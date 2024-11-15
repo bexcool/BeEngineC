@@ -1,10 +1,12 @@
+#include "renderer.h"
+
 #include "SDL.h"
-#include "logger.h"
 #include "appManager.h"
-#include "objSquare.h"
-#include "gameObject.h"
-#include "engineCore.h"
 #include "color.h"
+#include "engineCore.h"
+#include "gameObject.h"
+#include "logger.h"
+#include "objSquare.h"
 #include "vector2.h"
 
 SDL_Renderer *gameRenderer;
@@ -22,8 +24,7 @@ int renderer_init() {
         opt.window_y,
         opt.window_width,
         opt.window_height,
-        SDL_WINDOW_SHOWN
-    );
+        SDL_WINDOW_SHOWN);
 
     if (gameWindow == NULL) {
         LOG_E("Renderer: Could not create window: %s\n", SDL_GetError());
@@ -35,7 +36,7 @@ int renderer_init() {
     gameRenderer = SDL_CreateRenderer(
         gameWindow,
         -1,
-        SDL_RENDERER_ACCELERATED /*| SDL_RENDERER_PRESENTVSYNC*/
+        SDL_RENDERER_ACCELERATED  //| SDL_RENDERER_PRESENTVSYNC
     );
 
     if (gameRenderer == NULL) {
@@ -56,7 +57,7 @@ void renderer_render() {
     Level *l = getLevel();
 
     for (size_t i = 0; i < l->allGameObjects.size; i++) {
-        l->allGameObjects.items[i]->draw(l->allGameObjects.items[i]);
+        l->allGameObjects.items[i]->event_draw(l->allGameObjects.items[i]);
     }
 
     SDL_RenderPresent(gameRenderer);
@@ -66,11 +67,10 @@ void renderer_fillRectangle(const Color *color, const Vector2 *position, const V
     SDL_SetRenderDrawColor(gameRenderer, color->r, color->g, color->b, color->a);
 
     SDL_Rect rect = {
-    .x = position->x,
-    .y = position->y,
-    .w = size->x,
-    .h = size->y
-    };
+        .x = position->x,
+        .y = position->y,
+        .w = size->x,
+        .h = size->y};
 
     SDL_RenderFillRect(gameRenderer, &rect);
 }

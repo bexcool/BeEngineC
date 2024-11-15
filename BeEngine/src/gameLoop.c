@@ -1,6 +1,8 @@
 #include "gameLoop.h"
 #include "logger.h"
 #include "renderer.h"
+#include "engineCore.h"
+#include "physicsEngine.h"
 #include <SDL2/SDL_events.h>
 
 int exitRequested = 0;
@@ -16,8 +18,12 @@ int gameLoop_start() {
             if (event.type == SDL_QUIT) {
                 exitRequested = 1;
             }
+
+            if (getCore()->events.event_anyInput != NULL) getCore()->events.event_anyInput(&event);
         }
 
+        _engineCore_tick();
+        _physicsEngine_tick();
         renderer_render();
     }
 
