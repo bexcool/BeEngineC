@@ -5,10 +5,14 @@ Pokud bude focus na UI, tak se po kliknutí zavolá ptr na fci, která zavolá u
 Bude prostě normálně input a když se klikne na UI, tak se pošle event UI. A když se klikne na hru, tak bude clicked na hru.
 Klávesnice bude zatím defaultně pro celou hru.
 
-- Random ID generator
-- Draw collisions
+- Udělat komponenty jako: TextureComponent? Pak by se nemusela používat funkce "draw" v game objectu
+- Vymyslet jak handlovat fonty a obrázky. Dát fonty do arraye (_engineCore_installFont)?
+- Jde načíst textury z paměti (xxd -i example.png > example_image.h ; SDL_RWops *rw = SDL_RWFromMem(example_png, example_png_len); ; SDL_Texture *texture = IMG_LoadTexture_RW(renderer, rw, 1);), 
+- UI layer (Font, UI renderer)
 
 DONE:
+- Draw collisions
+- Random ID
 - Bude engineCore, který má v sobě struct Level, který má structy (gameObject) v právě načteném levelu (level bude struct).
 Levelu se zavolá funkce load a ta vytvoří gameObject a hodí se do arraye v gameManageru.
 - Udělat generateProjectTemplate.sh, který udělá project template s includy atd.

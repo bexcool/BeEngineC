@@ -1,0 +1,1 @@
+void getParentDirectoryPath(const char *path, char *resultPath);

@@ -1,17 +1,19 @@
 #include "engineCore.h"
 
+#include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "SDL.h"
 #include "appManager.h"
 #include "fileHelper.h"
 #include "gameLoop.h"
 #include "level.h"
 #include "logger.h"
+#include "physicsGameObjectComp.h"
 #include "renderer.h"
+#include "time.h"
 
 Uint64 _lastTime;
 EngineCore _engineCore;
@@ -52,7 +54,7 @@ void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, in
     LOG("SDL initialized.");
 
     // Initialize renderer
-    if (renderer_init() == 1) {
+    if (renderer_init() == -1) {
         cleanupApp();
         quitApp(1);
     }
@@ -93,6 +95,8 @@ void _engineCore_initialize(EngineOptions* _options, EngineEvents* _events) {
     engineCore_loadLevel(&getCore()->options.initialLevel);
 
     _lastTime = SDL_GetPerformanceCounter();
+
+    srand(time(NULL));
 }
 
 void _engineCore_clean() {
@@ -119,9 +123,59 @@ void _engineCore_tick() {
     for (size_t i = 0; i < getLevel()->allGameObjects.size; i++) {
         GameObject* go = getLevel()->allGameObjects.items[i];
 
+        // Handle parent's properties
+        if (go->parentGameObject != NULL) {
+            go->position = go->parentGameObject->position;
+        }
+
+        // Call tick event on components
+        if (go->components.size != 0) {
+            for (size_t i = 0; i < go->components.size; i++) {
+                void* comp = go->components.items[i];
+                // event_registered (void*, GameObject*)
+                // event_tick (void*, GameObject*)
+                // event_draw (void*, GameObject*)
+                // event_destroyed (void*, GameObject*)
+                // id (size_t)
+                // relativeLocation (Vector2)
+                // relativeLocation (Vector2)
+                // size (Vector2)
+
+                Vector2* relativeLoc = (Vector2*)(comp + (sizeof(void (*)(void*, GameObject*)) * GAMEOBJECTCOMP_EVENT_COUNT) + sizeof(size_t));
+                Vector2* worldLoc = (Vector2*)(comp + (sizeof(void (*)(void*, GameObject*)) * GAMEOBJECTCOMP_EVENT_COUNT) + sizeof(size_t) + sizeof(Vector2));
+
+                // Set world location
+                worldLoc->x = go->position.x + relativeLoc->x;
+                worldLoc->y = go->position.y + relativeLoc->y;
+                LOG_W("World loc: %d, %d", worldLoc->x, worldLoc->y);
+                void (*event_tick)(void*, GameObject*) = *(void (**)(void*, GameObject*))(comp + sizeof(void (*)(void*, GameObject*)));
+                if (event_tick != NULL)
+                    event_tick(go->components.items[i], go);
+            }
+        }
+
+        // Call tick event
         if (go->event_tick != NULL)
             go->event_tick(go);
     }
+}
+
+void _engineCore_anyInput(SDL_Event* event) {
+    SDL_Keycode code = event->key.keysym.sym;
+
+#ifndef NDEBUG
+    // Debug keys
+    if (event->type == SDL_KEYDOWN) {
+        if (code == SDLK_F1) {
+            debugShowStats = !debugShowStats;
+        } else if (code == SDLK_F2) {
+            debugShowCollisions = !debugShowCollisions;
+        }
+    }
+
+#endif
+
+    if (getCore()->events.event_anyInput != NULL) getCore()->events.event_anyInput(event);
 }
 
 int engineCore_loadLevel(Level* level) {

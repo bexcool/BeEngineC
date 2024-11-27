@@ -3,8 +3,7 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/Breaker/libs/BeEngine/include"
+                "${workspaceFolder}/**"
             ],
             "defines": [],
             "macFrameworkPath": [

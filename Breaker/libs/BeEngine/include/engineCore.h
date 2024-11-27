@@ -1,9 +1,9 @@
 #ifndef _ENGINECORE_H_
 #define _ENGINECORE_H_
 
+#include <SDL2/SDL.h>
 #include <stdlib.h>
 
-#include "SDL.h"
 #include "gameObject.h"
 #include "level.h"
 
@@ -27,15 +27,30 @@ typedef struct EngineCore {
     EngineEvents events;
 } EngineCore;
 
+typedef struct {
+    void (*event_tick)(void*);
+} EventTick;
+
 // Macros
+#ifndef BEENGINE_VERSION_MAJOR
+
+#define BEENGINE_VERSION_MAJOR 1
+#define BEENGINE_VERSION_MINOR 0
+#define BEENGINE_VERSION_PATCH 0
+#define BEENGINE_VERSION_BUILD 1
+
+#endif
+
+#define TRUE 1
+#define FALSE 0
+
 #define REG_GAMEOBJECT(gameObject) \
     _engineCore_registerGameObject(gameObject)
 
 #define UNREG_GAMEOBJECT(id) \
     _engineCore_unregisterGameObject(id)
 
-#define TRUE 1
-#define FALSE 0
+#define NEW_ID rand() % (SIZE_T_MAX + 1)
 
 // Public functions
 void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, int argc, const char* argv[]);
@@ -53,6 +68,7 @@ void _engineCore_clean();
 void _engineCore_cleanGameObjects();
 
 void _engineCore_tick();
+void _engineCore_anyInput(SDL_Event* event);
 
 GameObject* _engineCore_registerGameObject(GameObject* go);
 int _engineCore_unregisterGameObject(int id);

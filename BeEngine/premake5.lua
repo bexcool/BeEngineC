@@ -13,20 +13,25 @@ project "BeEngine"
 
    files { "src/**.h", "src/**.c" } -- "src/**.h", 
 
-   includedirs {
-      "libs/SDL2/include"
-   }
-
-   libdirs {
-      "libs/SDL2/lib"
-   }
 
    filter "system:macosx"
-      links { "SDL2" }
+      libdirs {
+         "./libs/SDL2/lib",
+      }
+      includedirs {
+         "./libs/SDL2/include",
+      }
+      links { "SDL2", "SDL2_image", "SDL2_ttf" }
       defines { "SDL_MAIN_HANDLED" }
 
    filter "configurations:Debug"
-      defines { "DEBUG" }
+      defines { 
+         "DEBUG",
+         "BEENGINE_VERSION_MAJOR=1", 
+         "BEENGINE_VERSION_MINOR=0", 
+         "BEENGINE_VERSION_PATCH=0", 
+         "BEENGINE_VERSION_BUILD=1" 
+      }
       buildoptions { "-fsanitize=address" }
       linkoptions { "-fsanitize=address" }
       symbols "On"

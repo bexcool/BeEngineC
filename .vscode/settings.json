@@ -41,7 +41,12 @@
         "queue": "cpp",
         "stack": "cpp",
         "unordered_map": "cpp",
-        "__node_handle": "c"
+        "__node_handle": "c",
+        "enginecore.h": "c",
+        "color.h": "c",
+        "gameobject.h": "c",
+        "physicsgameobjectcomp.h": "c",
+        "gameobjectcomponent.h": "c"
     },
     "explorer.compactFolders": false
 }

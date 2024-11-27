@@ -31,7 +31,7 @@ INCLUDES += -Ilibs/SDL2/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS += -lSDL2
+LIBS += -lSDL2 -lSDL2_image -lSDL2_ttf
 LDDEPS +=
 LINKCMD = $(CC) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
@@ -45,7 +45,7 @@ ifeq ($(config),debug)
 TARGETDIR = bin/Debug
 TARGET = $(TARGETDIR)/libBeEngine.dylib
 OBJDIR = obj/Debug
-DEFINES += -DSDL_MAIN_HANDLED -DDEBUG
+DEFINES += -DSDL_MAIN_HANDLED -DDEBUG -DBEENGINE_VERSION_MAJOR=1 -DBEENGINE_VERSION_MINOR=0 -DBEENGINE_VERSION_PATCH=0 -DBEENGINE_VERSION_BUILD=1
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g -fsanitize=address
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g -fsanitize=address
 ALL_LDFLAGS += $(LDFLAGS) -Llibs/SDL2/lib -dynamiclib -Wl,-install_name,@rpath/libBeEngine.dylib -fsanitize=address
@@ -76,19 +76,25 @@ GENERATED += $(OBJDIR)/array.o
 GENERATED += $(OBJDIR)/engineCore.o
 GENERATED += $(OBJDIR)/fileHelper.o
 GENERATED += $(OBJDIR)/gameLoop.o
+GENERATED += $(OBJDIR)/gameObject.o
 GENERATED += $(OBJDIR)/logger.o
 GENERATED += $(OBJDIR)/objSquare.o
 GENERATED += $(OBJDIR)/physicsEngine.o
+GENERATED += $(OBJDIR)/physicsGameObjectComp.o
 GENERATED += $(OBJDIR)/renderer.o
+GENERATED += $(OBJDIR)/textureGameObjectComp.o
 OBJECTS += $(OBJDIR)/appManager.o
 OBJECTS += $(OBJDIR)/array.o
 OBJECTS += $(OBJDIR)/engineCore.o
 OBJECTS += $(OBJDIR)/fileHelper.o
 OBJECTS += $(OBJDIR)/gameLoop.o
+OBJECTS += $(OBJDIR)/gameObject.o
 OBJECTS += $(OBJDIR)/logger.o
 OBJECTS += $(OBJDIR)/objSquare.o
 OBJECTS += $(OBJDIR)/physicsEngine.o
+OBJECTS += $(OBJDIR)/physicsGameObjectComp.o
 OBJECTS += $(OBJDIR)/renderer.o
+OBJECTS += $(OBJDIR)/textureGameObjectComp.o
 
 # Rules
 # #############################################
@@ -167,6 +173,9 @@ $(OBJDIR)/fileHelper.o: src/fileHelper.c
 $(OBJDIR)/gameLoop.o: src/gameLoop.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/gameObject.o: src/gameObject.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/logger.o: src/logger.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -176,7 +185,13 @@ $(OBJDIR)/objSquare.o: src/objSquare.c
 $(OBJDIR)/physicsEngine.o: src/physicsEngine.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/physicsGameObjectComp.o: src/physicsGameObjectComp.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/renderer.o: src/renderer.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/textureGameObjectComp.o: src/textureGameObjectComp.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
