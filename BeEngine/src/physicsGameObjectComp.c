@@ -101,3 +101,7 @@ void _PhysicsGameObjectComp_tick(PhysicsGameObjectComp *comp, GameObject *parent
         }
     }
 }
+
+void _PhysicsGameObjectComp_registered(PhysicsGameObjectComp *comp, GameObject *parent) {}
+void _PhysicsGameObjectComp_draw(PhysicsGameObjectComp *comp, GameObject *parent) {}
+void _PhysicsGameObjectComp_destroyed(PhysicsGameObjectComp *comp, GameObject *parent) {}

@@ -94,33 +94,18 @@ void renderer_render() {
     for (size_t i = 0; i < l->allGameObjects.size; i++) {
         GameObject *go = l->allGameObjects.items[i];
 
-        go->event_draw(l->allGameObjects.items[i]);
+        if (go->event_draw != NULL)
+            go->event_draw(l->allGameObjects.items[i]);
 
         for (size_t j = 0; j < go->components.size; j++) {
             void *comp = go->components.items[j];
 
-            void (*event_draw)(void *, GameObject *) = *(void (**)(void *, GameObject *))(comp + (sizeof(void (*)(void *, GameObject *)) * 2));
-            if (event_draw != NULL)
-                event_draw(go->components.items[i], go);
+            void (*comp_event_draw)(void *, GameObject *) = *(void (**)(void *, GameObject *))(comp + (sizeof(void (*)(void *, GameObject *)) * 2));
+            if (comp_event_draw != NULL)
+                comp_event_draw(comp, go);
         }
 
 #ifndef NDEBUG
-
-        if (debugShowStats) {
-            SDL_Color color = {255, 255, 255, 255};
-            char statsBuff[256];
-
-            snprintf(statsBuff, 256, "FPS: %.2f", 1.0 / getDeltaTime());
-
-            statsTextSurface = TTF_RenderText_Solid(font, statsBuff, color);
-            statsTextTexture = SDL_CreateTextureFromSurface(gameRenderer, statsTextSurface);
-
-            SDL_Rect statsTextRect = {.x = 5, .y = 5, .w = surfaceMessage->w, surfaceMessage->h};
-            SDL_RenderCopy(gameRenderer, statsTextTexture, NULL, &statsTextRect);
-
-            SDL_FreeSurface(statsTextSurface);
-            SDL_DestroyTexture(statsTextTexture);
-        }
 
         if (debugShowCollisions) {
             renderer_drawRectangle(&COLOR(255, 0, 0), &VECTOR2(go->position.x, go->position.y), &VECTOR2(go->size.x, go->size.y));
@@ -130,6 +115,26 @@ void renderer_render() {
 
 #endif
     }
+
+#ifndef NDEBUG
+
+    if (debugShowStats) {
+        SDL_Color color = {255, 255, 255, 255};
+        char statsBuff[256];
+
+        snprintf(statsBuff, 256, "FPS: %.2f", 1.0 / getDeltaTime());
+
+        statsTextSurface = TTF_RenderText_Solid(font, statsBuff, color);
+        statsTextTexture = SDL_CreateTextureFromSurface(gameRenderer, statsTextSurface);
+
+        SDL_Rect statsTextRect = {.x = 5, .y = 5, .w = surfaceMessage->w, surfaceMessage->h};
+        SDL_RenderCopy(gameRenderer, statsTextTexture, NULL, &statsTextRect);
+
+        SDL_FreeSurface(statsTextSurface);
+        SDL_DestroyTexture(statsTextTexture);
+    }
+
+#endif
 
     SDL_Rect textRect = {.x = 500, .y = 20, .w = surfaceMessage->w, surfaceMessage->h};
     // TTF_SizeText(font, "put your text here", &textRect.w, &textRect.h);

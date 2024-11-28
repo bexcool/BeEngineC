@@ -138,16 +138,16 @@ void _engineCore_tick() {
                 // event_destroyed (void*, GameObject*)
                 // id (size_t)
                 // relativeLocation (Vector2)
-                // relativeLocation (Vector2)
+                // worldLocation (Vector2)
                 // size (Vector2)
 
                 Vector2* relativeLoc = (Vector2*)(comp + (sizeof(void (*)(void*, GameObject*)) * GAMEOBJECTCOMP_EVENT_COUNT) + sizeof(size_t));
-                Vector2* worldLoc = (Vector2*)(comp + (sizeof(void (*)(void*, GameObject*)) * GAMEOBJECTCOMP_EVENT_COUNT) + sizeof(size_t) + sizeof(Vector2));
+                Vector2* worldLoc = (Vector2*)(relativeLoc + sizeof(Vector2));
 
                 // Set world location
                 worldLoc->x = go->position.x + relativeLoc->x;
                 worldLoc->y = go->position.y + relativeLoc->y;
-                LOG_W("World loc: %d, %d", worldLoc->x, worldLoc->y);
+
                 void (*event_tick)(void*, GameObject*) = *(void (**)(void*, GameObject*))(comp + sizeof(void (*)(void*, GameObject*)));
                 if (event_tick != NULL)
                     event_tick(go->components.items[i], go);

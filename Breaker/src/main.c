@@ -19,8 +19,8 @@ int main(int argc, const char *argv[]) {
         .projectName = "Breaker (BeEngine)",
         .window_x = SDL_WINDOWPOS_CENTERED,
         .window_y = SDL_WINDOWPOS_CENTERED,
-        .window_width = 800,
-        .window_height = 600,
+        .window_width = 1920,   // 800
+        .window_height = 1080,  // 600
         .initialLevel = testLevel};
 
     EngineEvents events = {
@@ -41,10 +41,11 @@ void event_gameEngineInitialized() {
     player->event_endOverlap = &event_endOverlap;
 
     // Automaticky bindovat eventy
-    test = (PhysicsGameObjectComp){.id = 1, .event_tick = &_PhysicsGameObjectComp_tick};
-    texture = (TextureGameObjectComp){.id = 2, .event_registered = &_TextureGameObjectComp_registered, .event_draw = &_TextureGameObjectComp_draw, .imagePath = "./assets/textures/saddam.png"};
-    // GAMEOBJECT_ATTACH_COMPONENT(PhysicsGameObjectComp, &test);
-    gameObject_attachComponent(player, &test);
+    test = (PhysicsGameObjectComp){.id = 1};
+    texture = (TextureGameObjectComp){.id = 2, .imagePath = "./assets/textures/saddam.png", .size = VECTOR2(10, 10)};
+
+    REG_GAMEOBJECTCOMP(PhysicsGameObjectComp, &test, player);
+    REG_GAMEOBJECTCOMP(TextureGameObjectComp, &texture, player);
 }
 
 // Přidávat pozici na ticku (Pak udělat physics systém kde stačí dát velocity).
@@ -52,7 +53,7 @@ void event_gameEngineInitialized() {
 void event_anyInput(SDL_Event *event) {
     SDL_Keycode code = event->key.keysym.sym;
 
-    float vel = 50;
+    float vel = 100;
 
     if (event->type == SDL_KEYDOWN) {
         if (code == SDLK_a)
@@ -76,7 +77,7 @@ void event_anyInput(SDL_Event *event) {
 }
 
 void event_draw() {
-    renderer_drawFillRectangle(&COLOR(255, 0, 0), &player->position, &player->size);
+    // renderer_drawFillRectangle(&COLOR(255, 0, 0), &player->position, &player->size);
 }
 
 void event_beginOverlap(GameObject *self, GameObject *collidedWith) {
