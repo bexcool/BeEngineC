@@ -14,12 +14,14 @@
 #include "physicsGameObjectComp.h"
 #include "renderer.h"
 #include "time.h"
+#include "uiCanvas.h"
 
-Uint64 _lastTime;
 EngineCore _engineCore;
 Level _currentLevel;
 
-GameObject* _focusedGameObject;
+GameObject* _focusedGameObject = NULL;
+
+Uint64 _lastTime;
 
 double _deltaTime;
 
@@ -116,6 +118,7 @@ void _engineCore_cleanGameObjects() {
 void _engineCore_tick() {
     // Calculate delta time
     Uint64 currentTime = SDL_GetPerformanceCounter();
+    EngineCore* c = getCore();
     _deltaTime = (double)(currentTime - _lastTime) / (double)SDL_GetPerformanceFrequency();
     _lastTime = currentTime;
 
@@ -157,6 +160,35 @@ void _engineCore_tick() {
         // Call tick event
         if (go->event_tick != NULL)
             go->event_tick(go);
+    }
+
+    // Call tick event on every UI canvas
+    for (int i = 0; i < c->allUICanvases.size; i++) {
+        UICanvas* canvas = c->allUICanvases.items[i];
+
+        // Call tick event on components
+        for (int j = 0; j < canvas->uiComponents.size; j++) {
+            void* comp = canvas->uiComponents.items[j];
+
+            /*  event_registered
+                event_tick
+                event_draw
+                event_destroyed
+                event_clicked
+                event_pressed
+                event_released
+                event_hovered
+                event_unhovered
+            */
+
+            void (*event_tick)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))(comp + sizeof(void (*)(void*, UICanvas*)));
+            if (event_tick != NULL)
+                event_tick(go->components.items[i], go);
+        }
+
+        // Call tick event
+        if (canvas->event_tick != NULL)
+            canvas->event_tick(canvas);
     }
 }
 
@@ -224,7 +256,7 @@ GameObject* _engineCore_registerGameObject(GameObject* go) {
     return _go;
 }
 
-int _engineCore_unregisterGameObject(int id) {
+int _engineCore_unregisterGameObject(size_t id) {
     Level* l = getLevel();
 
     for (size_t i = 0; i < l->allGameObjects.size; i++) {
@@ -233,6 +265,33 @@ int _engineCore_unregisterGameObject(int id) {
                 l->allGameObjects.items[i]->event_destroyed(l->allGameObjects.items[i]);
 
             ARRAY_REMOVE_CLEAN(l->allGameObjects, GameObject*, i);
+
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+UICanvas* _engineCore_registerUICanvas(UICanvas* canvas) {
+    UICanvas* _canvas = (UICanvas*)malloc(sizeof(UICanvas));
+
+    (*_canvas) = (*canvas);
+
+    ARRAY_ADD(getCore()->allUICanvases, UICanvas*, _canvas);
+
+    return _canvas;
+}
+
+int _engineCore_unregisterUICanvas(size_t id) {
+    EngineCore* ec = getCore();
+
+    for (size_t i = 0; i < ec->allUICanvases.size; i++) {
+        if (ec->allUICanvases.items[i]->id == id) {
+            if (ec->allUICanvases.items[i]->event_destroyed != NULL)
+                ec->allUICanvases.items[i]->event_destroyed(ec->allUICanvases.items[i]);
+
+            ARRAY_REMOVE_CLEAN(ec->allUICanvases, UICanvas*, i);
 
             return 1;
         }

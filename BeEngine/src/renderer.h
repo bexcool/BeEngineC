@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 
+#include "array.h"
 #include "color.h"
 #include "vector2.h"
 

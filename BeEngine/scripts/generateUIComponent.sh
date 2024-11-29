@@ -11,13 +11,14 @@ cat << EOT >> ../src/$HEADER_FILE
 #ifndef _$(echo "$COMPONENT_NAME" | tr 'a-z' 'A-Z')_H_
 #define _$(echo "$COMPONENT_NAME" | tr 'a-z' 'A-Z')_H_
 
+#include "uiCanvas.h"
 #include "uiComponent.h"
 
 DEFINE_UICOMPONENT_START(${COMPONENT_NAME});
 // Custom variables
 DEFINE_UICOMPONENT_END(${COMPONENT_NAME});
 
-#endif _$(echo "$COMPONENT_NAME" | tr 'a-z' 'A-Z')_H_
+#endif
 EOT
 
 cat << EOT >> ../src/$SOURCE_FILE

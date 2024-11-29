@@ -71,6 +71,7 @@ endif
 GENERATED :=
 OBJECTS :=
 
+GENERATED += $(OBJDIR)/ButtonUIComponent.o
 GENERATED += $(OBJDIR)/appManager.o
 GENERATED += $(OBJDIR)/array.o
 GENERATED += $(OBJDIR)/engineCore.o
@@ -83,6 +84,7 @@ GENERATED += $(OBJDIR)/physicsGameObjectComp.o
 GENERATED += $(OBJDIR)/renderer.o
 GENERATED += $(OBJDIR)/textureGameObjectComp.o
 GENERATED += $(OBJDIR)/uiCanvas.o
+OBJECTS += $(OBJDIR)/ButtonUIComponent.o
 OBJECTS += $(OBJDIR)/appManager.o
 OBJECTS += $(OBJDIR)/array.o
 OBJECTS += $(OBJDIR)/engineCore.o
@@ -158,6 +160,9 @@ endif
 # File Rules
 # #############################################
 
+$(OBJDIR)/ButtonUIComponent.o: src/ButtonUIComponent.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/appManager.o: src/appManager.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"

@@ -35,7 +35,7 @@ PhysicsGameObjectComp test;
 TextureGameObjectComp texture;
 
 void event_gameEngineInitialized() {
-    player = REG_GAMEOBJECT(&GAMEOBJECT(VECTOR2(10, 10), VECTOR2(10, 10), NULL, &event_draw));
+    player = REG_GAMEOBJECT(&GAMEOBJECT(VECTOR2(10, 10), VECTOR2(10, 10), NULL));
     player->objectType = MOVABLE;
     player->event_beginOverlap = &event_beginOverlap;
     player->event_endOverlap = &event_endOverlap;

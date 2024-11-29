@@ -39,7 +39,6 @@ typedef struct GameObject {
         .location = _location,                                         \
         .size = _size,                                                 \
         .properties = _properties,                                     \
-        .event_draw = _event_draw,                                     \
         .collisionType = BLOCK,                                        \
         .objectType = STATIC})
 
@@ -49,7 +48,6 @@ typedef struct GameObject {
         .location = _location,                                 \
         .size = _size,                                         \
         .properties = _properties,                             \
-        .event_draw = _event_draw,                             \
         .collisionType = BLOCK,                                \
         .objectType = STATIC})
 

@@ -6,6 +6,16 @@
 
 #define UICOMPONENT_EVENT_COUNT 4
 
+/*  event_registered
+    event_tick
+    event_draw
+    event_destroyed
+    event_clicked
+    event_pressed
+    event_released
+    event_hovered
+    event_unhovered
+*/
 #define DEFINE_UICOMPONENT_START(name)                       \
     typedef struct name {                                    \
         void (*event_registered)(struct name *, UICanvas *); \
@@ -18,11 +28,12 @@
         void (*event_hovered)(struct name *, UICanvas *);    \
         void (*event_unhovered)(struct name *, UICanvas *);  \
         size_t id;                                           \
-        Vector2 location;                                    \
+        Vector2 position;                                    \
         Vector2 size;                                        \
         Visibility visibility;                               \
         int isPressed;                                       \
-        int isHovered;
+        int isHovered;                                       \
+        int disabled;
 
 #define DEFINE_UICOMPONENT_END(name)                                \
     }                                                               \
