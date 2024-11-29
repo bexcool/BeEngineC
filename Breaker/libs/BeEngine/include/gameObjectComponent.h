@@ -6,7 +6,7 @@
 
 #define GAMEOBJECTCOMP_EVENT_COUNT 4
 
-#define PREPARE_GAMEOBJECTCOMP_START(name)                     \
+#define DEFINE_GAMEOBJECTCOMP_START(name)                      \
     typedef struct name {                                      \
         void (*event_registered)(struct name *, GameObject *); \
         void (*event_tick)(struct name *, GameObject *);       \
@@ -17,14 +17,14 @@
         Vector2 worldLocation;                                 \
         Vector2 size;
 
-#define PREPARE_GAMEOBJECTCOMP_END(name)                                                    \
-    }                                                                                       \
-    name;                                                                                   \
-                                                                                            \
-    void _##name##_registered(struct name *comp, GameObject *parent) __attribute__((weak)); \
-    void _##name##_tick(struct name *comp, GameObject *parent) __attribute__((weak));       \
-    void _##name##_draw(struct name *comp, GameObject *parent) __attribute__((weak));       \
-    void _##name##_destroyed(struct name *comp, GameObject *parent) __attribute__((weak));
+#define DEFINE_GAMEOBJECTCOMP_END(name)                               \
+    }                                                                 \
+    name;                                                             \
+                                                                      \
+    void _##name##_registered(struct name *comp, GameObject *parent); \
+    void _##name##_tick(struct name *comp, GameObject *parent);       \
+    void _##name##_draw(struct name *comp, GameObject *parent);       \
+    void _##name##_destroyed(struct name *comp, GameObject *parent);
 
 #define REG_GAMEOBJECTCOMP(name, component, parent)        \
     (component)->event_registered = &_##name##_registered; \

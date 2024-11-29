@@ -15,5 +15,5 @@ extern int debugShowCollisions, debugShowStats;
 int renderer_init();
 void renderer_render();
 
-void renderer_drawFillRectangle(const Color *color, const Vector2 *position, const Vector2 *size);
-void renderer_drawRectangle(const Color *color, const Vector2 *position, const Vector2 *size);
+void renderer_drawFillRectangle(const Color *color, const Vector2 *location, const Vector2 *size);
+void renderer_drawRectangle(const Color *color, const Vector2 *location, const Vector2 *size);

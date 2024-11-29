@@ -28,15 +28,15 @@ void logger_log(LogType type, const char *message, ...) {
     strftime(timeBuffer, sizeof(timeBuffer), "%H:%M:%S", &tm_now);
 
     switch (type) {
-        case INFO:
+        case LOG_INFO:
             snprintf(buffer, 256, "%s - [INFO] ", timeBuffer);
             break;
 
-        case WARNING:
+        case LOG_WARNING:
             snprintf(buffer, 256, "%s - [WARNING] ", timeBuffer);
             break;
 
-        case ERROR:
+        case LOG_ERROR:
             snprintf(buffer, 256, "%s - [ERROR] ", timeBuffer);
     }
 

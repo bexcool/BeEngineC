@@ -77,7 +77,7 @@ void event_anyInput(SDL_Event *event) {
 }
 
 void event_draw() {
-    // renderer_drawFillRectangle(&COLOR(255, 0, 0), &player->position, &player->size);
+    // renderer_drawFillRectangle(&COLOR(255, 0, 0), &player->location, &player->size);
 }
 
 void event_beginOverlap(GameObject *self, GameObject *collidedWith) {

@@ -79,10 +79,10 @@ GENERATED += $(OBJDIR)/gameLoop.o
 GENERATED += $(OBJDIR)/gameObject.o
 GENERATED += $(OBJDIR)/logger.o
 GENERATED += $(OBJDIR)/objSquare.o
-GENERATED += $(OBJDIR)/physicsEngine.o
 GENERATED += $(OBJDIR)/physicsGameObjectComp.o
 GENERATED += $(OBJDIR)/renderer.o
 GENERATED += $(OBJDIR)/textureGameObjectComp.o
+GENERATED += $(OBJDIR)/uiCanvas.o
 OBJECTS += $(OBJDIR)/appManager.o
 OBJECTS += $(OBJDIR)/array.o
 OBJECTS += $(OBJDIR)/engineCore.o
@@ -91,10 +91,10 @@ OBJECTS += $(OBJDIR)/gameLoop.o
 OBJECTS += $(OBJDIR)/gameObject.o
 OBJECTS += $(OBJDIR)/logger.o
 OBJECTS += $(OBJDIR)/objSquare.o
-OBJECTS += $(OBJDIR)/physicsEngine.o
 OBJECTS += $(OBJDIR)/physicsGameObjectComp.o
 OBJECTS += $(OBJDIR)/renderer.o
 OBJECTS += $(OBJDIR)/textureGameObjectComp.o
+OBJECTS += $(OBJDIR)/uiCanvas.o
 
 # Rules
 # #############################################
@@ -182,9 +182,6 @@ $(OBJDIR)/logger.o: src/logger.c
 $(OBJDIR)/objSquare.o: src/objSquare.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/physicsEngine.o: src/physicsEngine.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/physicsGameObjectComp.o: src/physicsGameObjectComp.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -192,6 +189,9 @@ $(OBJDIR)/renderer.o: src/renderer.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/textureGameObjectComp.o: src/textureGameObjectComp.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/uiCanvas.o: src/uiCanvas.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

@@ -125,7 +125,7 @@ void _engineCore_tick() {
 
         // Handle parent's properties
         if (go->parentGameObject != NULL) {
-            go->position = go->parentGameObject->position;
+            go->location = go->parentGameObject->location;
         }
 
         // Call tick event on components
@@ -145,8 +145,8 @@ void _engineCore_tick() {
                 Vector2* worldLoc = (Vector2*)(relativeLoc + sizeof(Vector2));
 
                 // Set world location
-                worldLoc->x = go->position.x + relativeLoc->x;
-                worldLoc->y = go->position.y + relativeLoc->y;
+                worldLoc->x = go->location.x + relativeLoc->x;
+                worldLoc->y = go->location.y + relativeLoc->y;
 
                 void (*event_tick)(void*, GameObject*) = *(void (**)(void*, GameObject*))(comp + sizeof(void (*)(void*, GameObject*)));
                 if (event_tick != NULL)

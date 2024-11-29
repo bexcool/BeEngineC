@@ -3,8 +3,8 @@
 
 #include "gameObjectComponent.h"
 
-PREPARE_GAMEOBJECTCOMP_START(PhysicsGameObjectComp);
+DEFINE_GAMEOBJECTCOMP_START(PhysicsGameObjectComp);
 // Custom variables
-PREPARE_GAMEOBJECTCOMP_END(PhysicsGameObjectComp);
+DEFINE_GAMEOBJECTCOMP_END(PhysicsGameObjectComp);
 
 #endif

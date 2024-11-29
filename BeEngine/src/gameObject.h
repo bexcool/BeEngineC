@@ -7,12 +7,12 @@
 #include "stdlib.h"
 #include "vector2.h"
 
-PREPARE_ARRAY(GameObjectArray, struct GameObject*);
-PREPARE_ARRAY(GameObjectCompArray, void*);
+DEFINE_ARRAY(GameObjectArray, struct GameObject*);
+DEFINE_ARRAY(GameObjectCompArray, void*);
 
 typedef struct GameObject {
     size_t id;
-    Vector2 position;
+    Vector2 location;
     Vector2 size;
     Vector2 velocity;
     CollisionType collisionType;
@@ -30,23 +30,23 @@ typedef struct GameObject {
 
 // Přidat sám sebe do nějakého arraye objektů a přidat tam svoji draw funkci
 
-#define PREPARE_GAMEOBJECT(name) \
+#define DEFINE_GAMEOBJECT(name) \
     void _##name##_draw(GameObject* gameObject);
 
-#define GAMEOBJECT_ID(_id, _position, _size, _properties, _event_draw) \
+#define GAMEOBJECT_ID(_id, _location, _size, _properties, _event_draw) \
     ((GameObject){                                                     \
         .id = _id,                                                     \
-        .position = _position,                                         \
+        .location = _location,                                         \
         .size = _size,                                                 \
         .properties = _properties,                                     \
         .event_draw = _event_draw,                                     \
         .collisionType = BLOCK,                                        \
         .objectType = STATIC})
 
-#define GAMEOBJECT(_position, _size, _properties, _event_draw) \
+#define GAMEOBJECT(_location, _size, _properties, _event_draw) \
     ((GameObject){                                             \
         .id = rand() % SIZE_T_MAX + 1,                         \
-        .position = _position,                                 \
+        .location = _location,                                 \
         .size = _size,                                         \
         .properties = _properties,                             \
         .event_draw = _event_draw,                             \

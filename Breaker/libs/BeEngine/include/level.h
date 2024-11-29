@@ -2,6 +2,7 @@
 #define _LEVEL_H_
 
 #include <stdio.h>
+
 #include "gameObject.h"
 
 typedef struct Level {
@@ -13,8 +14,8 @@ typedef struct Level {
     void (*event_loaded)();
 } Level;
 
-#define PREPARE_LEVEL(name) \
-    const Level name;\
+#define DEFINE_LEVEL(name) \
+    const Level name;      \
     void _##name##_loaded();
 
 #endif

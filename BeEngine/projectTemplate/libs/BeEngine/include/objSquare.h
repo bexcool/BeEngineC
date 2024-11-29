@@ -1,5 +1,5 @@
 #include "gameObject.h"
 
-//PREPARE_GAMEOBJECT(objSquare);
+// DEFINE_GAMEOBJECT(objSquare);
 
-//void _objSquare_draw();
+// void _objSquare_draw();

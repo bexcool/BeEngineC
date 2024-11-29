@@ -11,9 +11,9 @@ typedef struct Color {
 } Color;
 
 #define COLOR(red, green, blue) \
-    ((Color) { .r = red, .g = green, .b = blue, .a = 255 })
+    ((Color){.r = red, .g = green, .b = blue, .a = 255})
 
 #define COLOR_RGBA(red, green, blue, alpha) \
-    ((Color) { .r = red, .g = green, .b = blue, .a = alpha } )
+    ((Color){.r = red, .g = green, .b = blue, .a = alpha})
 
 #endif

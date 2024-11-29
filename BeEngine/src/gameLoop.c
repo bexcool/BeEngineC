@@ -4,7 +4,6 @@
 
 #include "engineCore.h"
 #include "logger.h"
-#include "physicsEngine.h"
 #include "renderer.h"
 
 int exitRequested = 0;

@@ -12,6 +12,6 @@ void _testLevel_loaded() {
 }
 
 void drawTest(GameObject* gameObject) {
-    renderer_drawFillRectangle(&COLOR(0, 255, 0), &go1->position, &go1->size);
-    renderer_drawFillRectangle(&COLOR(255, 255, 0), &go2->position, &go2->size);
+    renderer_drawFillRectangle(&COLOR(0, 255, 0), &go1->location, &go1->size);
+    renderer_drawFillRectangle(&COLOR(255, 255, 0), &go2->location, &go2->size);
 }

@@ -7,7 +7,7 @@
 #include "stdlib.h"
 #include "vector2.h"
 
-PREPARE_ARRAY(GameObjectArray, struct GameObject*);
+DEFINE_ARRAY(GameObjectArray, struct GameObject*);
 
 typedef struct GameObject {
     size_t id;
@@ -28,7 +28,7 @@ typedef struct GameObject {
 
 // Přidat sám sebe do nějakého arraye objektů a přidat tam svoji draw funkci
 
-#define PREPARE_GAMEOBJECT(name) \
+#define DEFINE_GAMEOBJECT(name) \
     void _##name##_draw(GameObject* gameObject);
 
 #define GAMEOBJECT_ID(_id, _position, _size, _properties, _event_draw) \

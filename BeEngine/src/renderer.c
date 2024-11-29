@@ -108,9 +108,9 @@ void renderer_render() {
 #ifndef NDEBUG
 
         if (debugShowCollisions) {
-            renderer_drawRectangle(&COLOR(255, 0, 0), &VECTOR2(go->position.x, go->position.y), &VECTOR2(go->size.x, go->size.y));
-            SDL_RenderDrawLine(gameRenderer, go->position.x, go->position.y, go->position.x + go->size.x - 1, go->position.y + go->size.y - 1);
-            SDL_RenderDrawLine(gameRenderer, go->position.x, go->position.y + go->size.y - 1, go->position.x + go->size.x - 1, go->position.y);
+            renderer_drawRectangle(&COLOR(255, 0, 0), &VECTOR2(go->location.x, go->location.y), &VECTOR2(go->size.x, go->size.y));
+            SDL_RenderDrawLine(gameRenderer, go->location.x, go->location.y, go->location.x + go->size.x - 1, go->location.y + go->size.y - 1);
+            SDL_RenderDrawLine(gameRenderer, go->location.x, go->location.y + go->size.y - 1, go->location.x + go->size.x - 1, go->location.y);
         }
 
 #endif
@@ -146,24 +146,24 @@ void renderer_render() {
     SDL_RenderPresent(gameRenderer);
 }
 
-void renderer_drawFillRectangle(const Color *color, const Vector2 *position, const Vector2 *size) {
+void renderer_drawFillRectangle(const Color *color, const Vector2 *location, const Vector2 *size) {
     SDL_SetRenderDrawColor(gameRenderer, color->r, color->g, color->b, color->a);
 
     SDL_Rect rect = {
-        .x = position->x,
-        .y = position->y,
+        .x = location->x,
+        .y = location->y,
         .w = size->x,
         .h = size->y};
 
     SDL_RenderFillRect(gameRenderer, &rect);
 }
 
-void renderer_drawRectangle(const Color *color, const Vector2 *position, const Vector2 *size) {
+void renderer_drawRectangle(const Color *color, const Vector2 *location, const Vector2 *size) {
     SDL_SetRenderDrawColor(gameRenderer, color->r, color->g, color->b, color->a);
 
     SDL_Rect rect = {
-        .x = position->x,
-        .y = position->y,
+        .x = location->x,
+        .y = location->y,
         .w = size->x,
         .h = size->y};
 

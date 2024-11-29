@@ -3,7 +3,7 @@
 
 #include "level.h"
 
-PREPARE_LEVEL(testLevel);
+DEFINE_LEVEL(testLevel);
 
 void drawTest(GameObject* gameObject);
 

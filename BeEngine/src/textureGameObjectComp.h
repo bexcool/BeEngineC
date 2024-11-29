@@ -4,9 +4,9 @@
 #include "SDL.h"
 #include "gameObjectComponent.h"
 
-PREPARE_GAMEOBJECTCOMP_START(TextureGameObjectComp);
+DEFINE_GAMEOBJECTCOMP_START(TextureGameObjectComp);
 char imagePath[256];
 SDL_Texture *texture;
-PREPARE_GAMEOBJECTCOMP_END(TextureGameObjectComp);
+DEFINE_GAMEOBJECTCOMP_END(TextureGameObjectComp);
 
 #endif
