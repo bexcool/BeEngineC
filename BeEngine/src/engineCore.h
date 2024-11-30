@@ -54,8 +54,8 @@ typedef struct {
 #define UNREG_GAMEOBJECT(id) \
     _engineCore_unregisterGameObject(id)
 
-#define REG_UICANVAS(gameObject) \
-    _engineCore_registerUICanvas(gameObject)
+#define REG_UICANVAS(uiCanvas) \
+    _engineCore_registerUICanvas(uiCanvas)
 
 #define UNREG_UICANVAS(id) \
     _engineCore_unregisterUICanvas(id)

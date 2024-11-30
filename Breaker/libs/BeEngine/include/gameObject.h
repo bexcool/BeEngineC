@@ -12,7 +12,7 @@ DEFINE_ARRAY(GameObjectCompArray, void*);
 
 typedef struct GameObject {
     size_t id;
-    Vector2 position;
+    Vector2 location;
     Vector2 size;
     Vector2 velocity;
     CollisionType collisionType;
@@ -33,25 +33,21 @@ typedef struct GameObject {
 #define DEFINE_GAMEOBJECT(name) \
     void _##name##_draw(GameObject* gameObject);
 
-#define GAMEOBJECT_ID(_id, _position, _size, _properties, _event_draw) \
-    ((GameObject){                                                     \
-        .id = _id,                                                     \
-        .position = _position,                                         \
-        .size = _size,                                                 \
-        .properties = _properties,                                     \
-        .event_draw = _event_draw,                                     \
-        .collisionType = BLOCK,                                        \
-        .objectType = STATIC})
+#define GAMEOBJECT_ID(_id, _location, _size) \
+    ((GameObject){                           \
+        .id = _id,                           \
+        .location = _location,               \
+        .size = _size,                       \
+        .collisionType = COLLISION_BLOCK,    \
+        .objectType = OBJECT_STATIC})
 
-#define GAMEOBJECT(_position, _size, _properties, _event_draw) \
-    ((GameObject){                                             \
-        .id = rand() % SIZE_T_MAX + 1,                         \
-        .position = _position,                                 \
-        .size = _size,                                         \
-        .properties = _properties,                             \
-        .event_draw = _event_draw,                             \
-        .collisionType = BLOCK,                                \
-        .objectType = STATIC})
+#define GAMEOBJECT(_location, _size)      \
+    ((GameObject){                        \
+        .id = rand() % SIZE_T_MAX + 1,    \
+        .location = _location,            \
+        .size = _size,                    \
+        .collisionType = COLLISION_BLOCK, \
+        .objectType = OBJECT_STATIC})
 
 #define GAMEOBJECT_ATTACH_COMPONENT(componentType, component) \
     ARRAY_ADD(go->components, componentType*, &component);

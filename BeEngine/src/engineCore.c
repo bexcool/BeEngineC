@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include "appManager.h"
+#include "buttonUIComponent.h"
 #include "fileHelper.h"
 #include "gameLoop.h"
 #include "level.h"
@@ -118,7 +119,6 @@ void _engineCore_cleanGameObjects() {
 void _engineCore_tick() {
     // Calculate delta time
     Uint64 currentTime = SDL_GetPerformanceCounter();
-    EngineCore* c = getCore();
     _deltaTime = (double)(currentTime - _lastTime) / (double)SDL_GetPerformanceFrequency();
     _lastTime = currentTime;
 
@@ -144,16 +144,16 @@ void _engineCore_tick() {
                 // worldLocation (Vector2)
                 // size (Vector2)
 
-                Vector2* relativeLoc = (Vector2*)(comp + (sizeof(void (*)(void*, GameObject*)) * GAMEOBJECTCOMP_EVENT_COUNT) + sizeof(size_t));
+                Vector2* relativeLoc = (Vector2*)((char*)comp + (sizeof(void (*)(void*, GameObject*)) * GAMEOBJECTCOMP_EVENT_COUNT) + sizeof(size_t));
                 Vector2* worldLoc = (Vector2*)(relativeLoc + sizeof(Vector2));
 
                 // Set world location
                 worldLoc->x = go->location.x + relativeLoc->x;
                 worldLoc->y = go->location.y + relativeLoc->y;
 
-                void (*event_tick)(void*, GameObject*) = *(void (**)(void*, GameObject*))(comp + sizeof(void (*)(void*, GameObject*)));
+                void (*event_tick)(void*, GameObject*) = *(void (**)(void*, GameObject*))((char*)comp + sizeof(void (*)(void*, GameObject*)));
                 if (event_tick != NULL)
-                    event_tick(go->components.items[i], go);
+                    event_tick(comp, go);
             }
         }
 
@@ -163,14 +163,17 @@ void _engineCore_tick() {
     }
 
     // Call tick event on every UI canvas
-    for (int i = 0; i < c->allUICanvases.size; i++) {
-        UICanvas* canvas = c->allUICanvases.items[i];
+    for (int i = 0; i < getCore()->allUICanvases.size; i++) {
+        UICanvas* canvas = getCore()->allUICanvases.items[i];
 
         // Call tick event on components
         for (int j = 0; j < canvas->uiComponents.size; j++) {
             void* comp = canvas->uiComponents.items[j];
+            int m_x, m_y;
+            Uint32 mouseState = SDL_GetMouseState(&m_x, &m_y);
+            Vector2 mousePos = VECTOR2((float)m_x, (float)m_y);
 
-            /*  event_registered
+            /*  void*, UICanvas* event_registered
                 event_tick
                 event_draw
                 event_destroyed
@@ -179,11 +182,75 @@ void _engineCore_tick() {
                 event_released
                 event_hovered
                 event_unhovered
+                size_t id
+                Vector2 position
+                Vector2 size
+                Visibility visibility
+                int isPressed
+                int isHovered
+                int disabled
             */
+            void (*event_tick)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)));
+            void (*event_draw)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 2);
+            void (*event_destroyed)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 3);
+            void (*event_clicked)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 4);
+            void (*event_pressed)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 5);
+            void (*event_released)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 6);
+            void (*event_hovered)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 7);
+            void (*event_unhovered)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 8);
+            size_t* id = (size_t*)((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 9);
+            Vector2* position = (Vector2*)((char*)id + sizeof(size_t));
+            Vector2* size = (Vector2*)((char*)position + sizeof(Vector2));
+            Visibility* visibility = (Visibility*)((char*)size + sizeof(Vector2));
+            int* isPressed = (int*)((char*)visibility + sizeof(Visibility));
+            int* isHovered = (int*)((char*)isPressed + sizeof(int));
+            int* disabled = (int*)((char*)isHovered + sizeof(int));
 
-            void (*event_tick)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))(comp + sizeof(void (*)(void*, UICanvas*)));
+            SDL_Rect compRect = vector2x2toSDL_Rect(position, size),
+                     mouseRect = vector2x2toSDL_Rect(&mousePos, &VECTOR2(1, 1));
+
+            // LOG("Mouse rect: %d, %d Comp rect: %d, %d, %d, %d", mouseRect.x, mouseRect.y, compRect.x, compRect.y, compRect.w, compRect.h);
+
+            // Is mouse over the UI Component
+            if ((*visibility) != VISIBILITY_COLLAPSED && SDL_HasIntersection(&compRect, &mouseRect)) {
+                // Hovered
+                (*isHovered) = TRUE;
+                if (event_hovered != NULL) {
+                    event_hovered(comp, canvas);
+                }
+
+                // Pressed LMB
+                if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                    (*isPressed) = TRUE;
+                    if (event_pressed != NULL)
+                        event_pressed(comp, canvas);
+                } else if ((*isPressed)) {  // Is no longer pressed
+                    (*isPressed) = FALSE;
+                    if (event_released != NULL)
+                        event_released(comp, canvas);
+
+                    // Click the button
+                    if (event_clicked != NULL)
+                        event_clicked(comp, canvas);
+                }
+            } else {  // Is not hovered
+                // Was hovered
+                if ((*isHovered)) {
+                    (*isHovered) = FALSE;
+                    if (event_unhovered != NULL)
+                        event_unhovered(comp, canvas);
+                }
+
+                // Was pressed
+                if ((*isPressed)) {
+                    (*isPressed) = FALSE;
+                    if (event_released != NULL)
+                        event_released(comp, canvas);
+                }
+            }
+
             if (event_tick != NULL)
-                event_tick(go->components.items[i], go);
+                event_tick(comp, canvas);
         }
 
         // Call tick event

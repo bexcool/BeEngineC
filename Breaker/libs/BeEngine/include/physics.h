@@ -2,11 +2,14 @@
 #define _PHYSICS_H_
 
 typedef enum CollisionType {
-    NO_COLLISION = 0, BLOCK, OVERLAP
+    COLLISION_NO_COLLISION = 0,
+    COLLISION_BLOCK,
+    COLLISION_OVERLAP
 } CollisionType;
 
 typedef enum ObjectType {
-    STATIC = 0, MOVABLE
+    OBJECT_STATIC = 0,
+    OBJECT_MOVABLE
 } ObjectType;
 
 #endif

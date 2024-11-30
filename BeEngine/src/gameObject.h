@@ -33,23 +33,21 @@ typedef struct GameObject {
 #define DEFINE_GAMEOBJECT(name) \
     void _##name##_draw(GameObject* gameObject);
 
-#define GAMEOBJECT_ID(_id, _location, _size, _properties, _event_draw) \
-    ((GameObject){                                                     \
-        .id = _id,                                                     \
-        .location = _location,                                         \
-        .size = _size,                                                 \
-        .properties = _properties,                                     \
-        .collisionType = BLOCK,                                        \
-        .objectType = STATIC})
+#define GAMEOBJECT_ID(_id, _location, _size) \
+    ((GameObject){                           \
+        .id = _id,                           \
+        .location = _location,               \
+        .size = _size,                       \
+        .collisionType = COLLISION_BLOCK,    \
+        .objectType = OBJECT_STATIC})
 
-#define GAMEOBJECT(_location, _size, _properties, _event_draw) \
-    ((GameObject){                                             \
-        .id = rand() % SIZE_T_MAX + 1,                         \
-        .location = _location,                                 \
-        .size = _size,                                         \
-        .properties = _properties,                             \
-        .collisionType = BLOCK,                                \
-        .objectType = STATIC})
+#define GAMEOBJECT(_location, _size)      \
+    ((GameObject){                        \
+        .id = rand() % SIZE_T_MAX + 1,    \
+        .location = _location,            \
+        .size = _size,                    \
+        .collisionType = COLLISION_BLOCK, \
+        .objectType = OBJECT_STATIC})
 
 #define GAMEOBJECT_ATTACH_COMPONENT(componentType, component) \
     ARRAY_ADD(go->components, componentType*, &component);

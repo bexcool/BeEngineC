@@ -6,8 +6,11 @@
 
 #include "gameObject.h"
 #include "level.h"
+#include "uiCanvas.h"
 
 // Type definitions
+DEFINE_ARRAY(UICanvasArray, UICanvas*);
+
 typedef struct EngineOptions {
     const char* projectName;
     unsigned int window_x;
@@ -25,6 +28,7 @@ typedef struct EngineEvents {
 typedef struct EngineCore {
     EngineOptions options;
     EngineEvents events;
+    UICanvasArray allUICanvases;
 } EngineCore;
 
 typedef struct {
@@ -50,6 +54,12 @@ typedef struct {
 #define UNREG_GAMEOBJECT(id) \
     _engineCore_unregisterGameObject(id)
 
+#define REG_UICANVAS(uiCanvas) \
+    _engineCore_registerUICanvas(uiCanvas)
+
+#define UNREG_UICANVAS(id) \
+    _engineCore_unregisterUICanvas(id)
+
 #define NEW_ID rand() % (SIZE_T_MAX + 1)
 
 // Public functions
@@ -71,6 +81,8 @@ void _engineCore_tick();
 void _engineCore_anyInput(SDL_Event* event);
 
 GameObject* _engineCore_registerGameObject(GameObject* go);
-int _engineCore_unregisterGameObject(int id);
+int _engineCore_unregisterGameObject(size_t id);
+UICanvas* _engineCore_registerUICanvas(UICanvas* canvas);
+int _engineCore_unregisterUICanvas(size_t id);
 
 #endif

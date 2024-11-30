@@ -1,5 +1,6 @@
-#include "ButtonUIComponent.h"
+#include "buttonUIComponent.h"
 
+#include "logger.h"
 #include "renderer.h"
 #include "uiCanvas.h"
 #include "vector2.h"
@@ -11,6 +12,9 @@ void _ButtonUIComponent_tick(ButtonUIComponent *comp, UICanvas *canvas) {
 }
 
 void _ButtonUIComponent_draw(ButtonUIComponent *comp, UICanvas *canvas) {
+    // Return if not visible
+    if (comp->visibility != VISIBILITY_VISIBLE) return;
+
     // Disabled
     if (comp->disabled) {
         if (comp->style.disabledTexture == NULL) {
@@ -61,6 +65,7 @@ void _ButtonUIComponent_destroyed(ButtonUIComponent *comp, UICanvas *canvas) {
 }
 
 void _ButtonUIComponent_clicked(ButtonUIComponent *comp, UICanvas *canvas) {
+    LOG_W("Click!");
 }
 
 void _ButtonUIComponent_pressed(ButtonUIComponent *comp, UICanvas *canvas) {

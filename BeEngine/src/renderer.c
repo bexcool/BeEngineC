@@ -116,6 +116,16 @@ void renderer_render() {
 #endif
     }
 
+    for (int i = 0; i < getCore()->allUICanvases.size; i++) {
+        UICanvas *canvas = getCore()->allUICanvases.items[i];
+
+        for (int j = 0; j < canvas->uiComponents.size; j++) {
+            void (*event_draw)(void *, UICanvas *) = *(void (**)(void *, UICanvas *))((char *)canvas->uiComponents.items[i] + sizeof(void (*)(void *, UICanvas *)) * 2);
+            if (event_draw != NULL)
+                event_draw(canvas->uiComponents.items[i], canvas);
+        }
+    }
+
 #ifndef NDEBUG
 
     if (debugShowStats) {

@@ -2,16 +2,16 @@
 #include <stdio.h>
 
 // Info
-#define LOG(message, ...) logger_log(INFO, message, ## __VA_ARGS__) // If the variable arguments are empty, ty ## removes "," in the preprocessor
+#define LOG(message, ...) logger_log(LOG_INFO, message, ##__VA_ARGS__)  // If the variable arguments are empty, ty ## removes "," in the preprocessor
 // Warning
-#define LOG_W(message, ...) logger_log(WARNING, message, ## __VA_ARGS__) 
+#define LOG_W(message, ...) logger_log(LOG_WARNING, message, ##__VA_ARGS__)
 // Error
-#define LOG_E(message, ...) logger_log(ERROR, message, ## __VA_ARGS__) 
+#define LOG_E(message, ...) logger_log(LOG_ERROR, message, ##__VA_ARGS__)
 
-typedef enum {
-    INFO,
-    WARNING,
-    ERROR
+typedef enum LogType {
+    LOG_INFO,
+    LOG_WARNING,
+    LOG_ERROR
 } LogType;
 
 extern char logger_logPath[256];

@@ -26,7 +26,7 @@
     void _##name##_draw(struct name *comp, GameObject *parent);       \
     void _##name##_destroyed(struct name *comp, GameObject *parent);
 
-#define REG_GAMEOBJECTCOMP(name, component, parent)        \
+#define ATTACH_GAMEOBJECTCOMP(name, component, parent)     \
     (component)->event_registered = &_##name##_registered; \
     (component)->event_tick = &_##name##_tick;             \
     (component)->event_draw = &_##name##_draw;             \

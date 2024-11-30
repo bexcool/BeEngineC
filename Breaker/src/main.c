@@ -2,10 +2,13 @@
 
 #include "BeEngine.h"
 #include "array.h"
+#include "buttonUIComponent.h"
 #include "gameObject.h"
 #include "physicsGameObjectComp.h"
 #include "testLevel.h"
 #include "textureGameObjectComp.h"
+#include "uiCanvas.h"
+#include "uiComponent.h"
 
 void event_gameEngineInitialized();
 void event_tick();
@@ -33,10 +36,13 @@ int main(int argc, const char *argv[]) {
 GameObject *player;
 PhysicsGameObjectComp test;
 TextureGameObjectComp texture;
+UICanvas *canvas;
+ButtonUIComponent btn1;
+ButtonStyle style;
 
 void event_gameEngineInitialized() {
-    player = REG_GAMEOBJECT(&GAMEOBJECT(VECTOR2(10, 10), VECTOR2(10, 10), NULL));
-    player->objectType = MOVABLE;
+    player = REG_GAMEOBJECT(&GAMEOBJECT(VECTOR2(10, 10), VECTOR2(10, 10)));
+    player->objectType = OBJECT_MOVABLE;
     player->event_beginOverlap = &event_beginOverlap;
     player->event_endOverlap = &event_endOverlap;
 
@@ -44,8 +50,15 @@ void event_gameEngineInitialized() {
     test = (PhysicsGameObjectComp){.id = 1};
     texture = (TextureGameObjectComp){.id = 2, .imagePath = "./assets/textures/saddam.png", .size = VECTOR2(10, 10)};
 
-    REG_GAMEOBJECTCOMP(PhysicsGameObjectComp, &test, player);
-    REG_GAMEOBJECTCOMP(TextureGameObjectComp, &texture, player);
+    ATTACH_GAMEOBJECTCOMP(PhysicsGameObjectComp, &test, player);
+    ATTACH_GAMEOBJECTCOMP(TextureGameObjectComp, &texture, player);
+
+    canvas = REG_UICANVAS(&((UICanvas){.id = NEW_ID}));
+
+    style = (ButtonStyle){.normalColor = COLOR(255, 0, 0), .hoveredColor = COLOR(0, 255, 0), .pressedColor = COLOR(0, 0, 255)};
+    btn1 = (ButtonUIComponent){.id = 123, .position = VECTOR2(1000, 100), .size = VECTOR2(100, 100), .style = style};
+
+    ATTACH_UICOMPONENT(ButtonUIComponent, &btn1, canvas);
 }
 
 // Přidávat pozici na ticku (Pak udělat physics systém kde stačí dát velocity).

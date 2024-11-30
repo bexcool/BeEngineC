@@ -71,9 +71,9 @@ endif
 GENERATED :=
 OBJECTS :=
 
-GENERATED += $(OBJDIR)/ButtonUIComponent.o
 GENERATED += $(OBJDIR)/appManager.o
 GENERATED += $(OBJDIR)/array.o
+GENERATED += $(OBJDIR)/buttonUIComponent.o
 GENERATED += $(OBJDIR)/engineCore.o
 GENERATED += $(OBJDIR)/fileHelper.o
 GENERATED += $(OBJDIR)/gameLoop.o
@@ -84,9 +84,10 @@ GENERATED += $(OBJDIR)/physicsGameObjectComp.o
 GENERATED += $(OBJDIR)/renderer.o
 GENERATED += $(OBJDIR)/textureGameObjectComp.o
 GENERATED += $(OBJDIR)/uiCanvas.o
-OBJECTS += $(OBJDIR)/ButtonUIComponent.o
+GENERATED += $(OBJDIR)/vector2.o
 OBJECTS += $(OBJDIR)/appManager.o
 OBJECTS += $(OBJDIR)/array.o
+OBJECTS += $(OBJDIR)/buttonUIComponent.o
 OBJECTS += $(OBJDIR)/engineCore.o
 OBJECTS += $(OBJDIR)/fileHelper.o
 OBJECTS += $(OBJDIR)/gameLoop.o
@@ -97,6 +98,7 @@ OBJECTS += $(OBJDIR)/physicsGameObjectComp.o
 OBJECTS += $(OBJDIR)/renderer.o
 OBJECTS += $(OBJDIR)/textureGameObjectComp.o
 OBJECTS += $(OBJDIR)/uiCanvas.o
+OBJECTS += $(OBJDIR)/vector2.o
 
 # Rules
 # #############################################
@@ -160,13 +162,13 @@ endif
 # File Rules
 # #############################################
 
-$(OBJDIR)/ButtonUIComponent.o: src/ButtonUIComponent.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/appManager.o: src/appManager.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/array.o: src/array.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/buttonUIComponent.o: src/buttonUIComponent.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/engineCore.o: src/engineCore.c
@@ -197,6 +199,9 @@ $(OBJDIR)/textureGameObjectComp.o: src/textureGameObjectComp.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/uiCanvas.o: src/uiCanvas.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/vector2.o: src/vector2.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

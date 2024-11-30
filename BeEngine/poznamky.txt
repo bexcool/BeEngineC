@@ -5,10 +5,12 @@ Pokud bude focus na UI, tak se po kliknutí zavolá ptr na fci, která zavolá u
 Bude prostě normálně input a když se klikne na UI, tak se pošle event UI. A když se klikne na hru, tak bude clicked na hru.
 Klávesnice bude zatím defaultně pro celou hru.
 
+- Udělat ButtonStyle makra jako u game objectů
 - !! Udělat komponentům registrování? Co kdyby to byly lokální proměnné, tak by se ztratily.
 - Vymyslet jak handlovat fonty a obrázky. Dát fonty do arraye (_engineCore_installFont)?
 - Jde načíst textury z paměti (xxd -i example.png > example_image.h ; SDL_RWops *rw = SDL_RWFromMem(example_png, example_png_len); ; SDL_Texture *texture = IMG_LoadTexture_RW(renderer, rw, 1);), 
 - UI layer (Font, UI renderer)
+- Přidat timed log message (Bude se přidávat co pár vteřin)
 
 DONE:
 - Udělat komponenty jako: TextureComponent? Pak by se nemusela používat funkce "draw" v game objectu
