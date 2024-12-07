@@ -13,6 +13,11 @@ project "BeEngine"
 
    files { "include/**.h", "src/**.c" } -- "src/**.h", 
 
+   vpaths {
+      ["Header Files/*"] = { "include/**.h" },
+      ["Source Files/*"] = { "src/**.c" }
+   }
+
    libdirs {
       "libs/SDL2/lib",
    }
@@ -37,9 +42,11 @@ project "BeEngine"
       defines { 
          "DEBUG"
       }
+      symbols "On"
+   
+   filter {"system:macosx", "configurations:Debug"}
       buildoptions { "-fsanitize=address" }
       linkoptions { "-fsanitize=address" }
-      symbols "On"
 
    filter "configurations:Release"
       defines { "NDEBUG" }

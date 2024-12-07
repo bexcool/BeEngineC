@@ -21,15 +21,16 @@ project "Breaker"
       "libs/BeEngine/lib"
    }
 
-   filter "system:macosx"
-      links { "BeEngine" }
-      linkoptions { "-rpath", "@executable_path/../../libs/BeEngine/lib" }
+   links { "BeEngine" }
+   linkoptions { "-rpath", "@executable_path/../../libs/BeEngine/lib" }
 
    filter "configurations:Debug"
       defines { "DEBUG" }
+      symbols "On"
+   
+   filter {"system:macosx", "configurations:Debug"}
       buildoptions { "-fsanitize=address" }
       linkoptions { "-fsanitize=address" }
-      symbols "On"
 
    filter "configurations:Release"
       defines { "NDEBUG" }

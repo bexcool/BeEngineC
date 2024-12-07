@@ -11,7 +11,7 @@ endif
 .PHONY: clean prebuild
 
 SHELLTYPE := posix
-ifeq (.exe,$(findstring .exe,$(ComSpec)))
+ifeq ($(shell echo "test"), "test")
 	SHELLTYPE := msdos
 endif
 
@@ -19,19 +19,20 @@ endif
 # #############################################
 
 ifeq ($(origin CC), default)
-  CC = clang
+  CC = gcc
 endif
 ifeq ($(origin CXX), default)
-  CXX = clang++
+  CXX = g++
 endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
-INCLUDES += -Ilibs/SDL2/include -Iinclude -Iinclude/ui -Iinclude/ui/components -Iinclude/components
+RESCOMP = windres
+INCLUDES +=
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS += -lSDL2 -lSDL2_image -lSDL2_ttf
+LIBS +=
 LDDEPS +=
 LINKCMD = $(CC) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
@@ -43,21 +44,21 @@ endef
 
 ifeq ($(config),debug)
 TARGETDIR = bin/Debug
-TARGET = $(TARGETDIR)/libBeEngine.dylib
+TARGET = $(TARGETDIR)/BeEngine.dll
 OBJDIR = obj/Debug
-DEFINES += -DSDL_MAIN_HANDLED -DBEENGINE_VERSION_MAJOR=1 -DBEENGINE_VERSION_MINOR=0 -DBEENGINE_VERSION_PATCH=0 -DBEENGINE_VERSION_BUILD=1 -DDEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g -fsanitize=address
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g -fsanitize=address
-ALL_LDFLAGS += $(LDFLAGS) -Llibs/SDL2/lib -dynamiclib -Wl,-install_name,@rpath/libBeEngine.dylib -fsanitize=address
+DEFINES += -DDEBUG
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -shared -Wl,--out-implib="bin/Debug/BeEngine.lib"
 
 else ifeq ($(config),release)
 TARGETDIR = bin/Release
-TARGET = $(TARGETDIR)/libBeEngine.dylib
+TARGET = $(TARGETDIR)/BeEngine.dll
 OBJDIR = obj/Release
-DEFINES += -DSDL_MAIN_HANDLED -DBEENGINE_VERSION_MAJOR=1 -DBEENGINE_VERSION_MINOR=0 -DBEENGINE_VERSION_PATCH=0 -DBEENGINE_VERSION_BUILD=1 -DNDEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -fPIC
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -fPIC
-ALL_LDFLAGS += $(LDFLAGS) -Llibs/SDL2/lib -dynamiclib -Wl,-install_name,@rpath/libBeEngine.dylib
+DEFINES += -DNDEBUG
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -shared -Wl,--out-implib="bin/Release/BeEngine.lib" -s
 
 endif
 
@@ -68,47 +69,6 @@ endif
 # File sets
 # #############################################
 
-GENERATED :=
-OBJECTS :=
-
-GENERATED += $(OBJDIR)/appManager.o
-GENERATED += $(OBJDIR)/borderUIComponent.o
-GENERATED += $(OBJDIR)/brush.o
-GENERATED += $(OBJDIR)/buttonUIComponent.o
-GENERATED += $(OBJDIR)/color.o
-GENERATED += $(OBJDIR)/engineCore.o
-GENERATED += $(OBJDIR)/fileHelper.o
-GENERATED += $(OBJDIR)/font.o
-GENERATED += $(OBJDIR)/gameLoop.o
-GENERATED += $(OBJDIR)/gameObject.o
-GENERATED += $(OBJDIR)/level.o
-GENERATED += $(OBJDIR)/list.o
-GENERATED += $(OBJDIR)/logger.o
-GENERATED += $(OBJDIR)/physicsGameObjectComp.o
-GENERATED += $(OBJDIR)/renderer.o
-GENERATED += $(OBJDIR)/textUIComponent.o
-GENERATED += $(OBJDIR)/textureGameObjectComp.o
-GENERATED += $(OBJDIR)/uiCanvas.o
-GENERATED += $(OBJDIR)/vector2.o
-OBJECTS += $(OBJDIR)/appManager.o
-OBJECTS += $(OBJDIR)/borderUIComponent.o
-OBJECTS += $(OBJDIR)/brush.o
-OBJECTS += $(OBJDIR)/buttonUIComponent.o
-OBJECTS += $(OBJDIR)/color.o
-OBJECTS += $(OBJDIR)/engineCore.o
-OBJECTS += $(OBJDIR)/fileHelper.o
-OBJECTS += $(OBJDIR)/font.o
-OBJECTS += $(OBJDIR)/gameLoop.o
-OBJECTS += $(OBJDIR)/gameObject.o
-OBJECTS += $(OBJDIR)/level.o
-OBJECTS += $(OBJDIR)/list.o
-OBJECTS += $(OBJDIR)/logger.o
-OBJECTS += $(OBJDIR)/physicsGameObjectComp.o
-OBJECTS += $(OBJDIR)/renderer.o
-OBJECTS += $(OBJDIR)/textUIComponent.o
-OBJECTS += $(OBJDIR)/textureGameObjectComp.o
-OBJECTS += $(OBJDIR)/uiCanvas.o
-OBJECTS += $(OBJDIR)/vector2.o
 
 # Rules
 # #############################################
@@ -116,7 +76,7 @@ OBJECTS += $(OBJDIR)/vector2.o
 all: $(TARGET)
 	@:
 
-$(TARGET): $(GENERATED) $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
+$(TARGET): $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
 	@echo Linking BeEngine
 	$(SILENT) $(LINKCMD)
@@ -171,64 +131,6 @@ endif
 
 # File Rules
 # #############################################
-
-$(OBJDIR)/appManager.o: src/appManager.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/physicsGameObjectComp.o: src/components/physicsGameObjectComp.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/textureGameObjectComp.o: src/components/textureGameObjectComp.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/engineCore.o: src/engineCore.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/fileHelper.o: src/fileHelper.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/gameLoop.o: src/gameLoop.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/gameObject.o: src/gameObject.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/level.o: src/level.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/list.o: src/list.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/logger.o: src/logger.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/renderer.o: src/renderer.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/brush.o: src/ui/brush.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/color.o: src/ui/color.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/borderUIComponent.o: src/ui/components/borderUIComponent.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/buttonUIComponent.o: src/ui/components/buttonUIComponent.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/textUIComponent.o: src/ui/components/textUIComponent.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/font.o: src/ui/font.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/uiCanvas.o: src/ui/uiCanvas.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/vector2.o: src/vector2.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
 -include $(OBJECTS:%.o=%.d)
 ifneq (,$(PCH))
