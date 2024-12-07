@@ -1,5 +1,4 @@
-#ifndef _UICOMPONENT_H_
-#define _UICOMPONENT_H_
+#pragma once
 
 #include "vector2.h"
 #include "visibility.h"
@@ -61,11 +60,4 @@
     (component)->event_tick = &_##name##_tick;             \
     (component)->event_draw = &_##name##_draw;             \
     (component)->event_destroyed = &_##name##_destroyed;   \
-    (component)->event_clicked = &_##name##_clicked;       \
-    (component)->event_pressed = &_##name##_pressed;       \
-    (component)->event_released = &_##name##_released;     \
-    (component)->event_hovered = &_##name##_hovered;       \
-    (component)->event_unhovered = &_##name##_unhovered;   \
     uiCanvas_attachUIComponent(canvas, component);
-
-#endif

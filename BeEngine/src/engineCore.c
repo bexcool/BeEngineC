@@ -19,6 +19,7 @@
 
 EngineCore _engineCore;
 Level _currentLevel;
+Renderer _renderer;
 
 GameObject* _focusedGameObject = NULL;
 
@@ -66,6 +67,9 @@ void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, in
     if (getCore()->events.event_engineInitialized != NULL)
         getCore()->events.event_engineInitialized();
 
+    // Load initial level
+    engineCore_loadLevel(&getCore()->options.initialLevel);
+
     // Start the game loop
     gameLoop_start();
 
@@ -75,6 +79,7 @@ void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, in
     quitApp(0);
 }
 
+// Getters
 EngineCore* getCore() {
     return &_engineCore;
 }
@@ -83,19 +88,21 @@ Level* getLevel() {
     return &_currentLevel;
 }
 
-double getDeltaTime() {
-    return _deltaTime;
+Renderer* getRenderer() {
+    return &_renderer;
 }
 
 GameObject* getFocusedGameObject() {
     return _focusedGameObject;
 }
 
+double getDeltaTime() {
+    return _deltaTime;
+}
+
 void _engineCore_initialize(EngineOptions* _options, EngineEvents* _events) {
     getCore()->options = *_options;
     getCore()->events = *_events;
-
-    engineCore_loadLevel(&getCore()->options.initialLevel);
 
     _lastTime = SDL_GetPerformanceCounter();
 
@@ -107,13 +114,13 @@ void _engineCore_clean() {
 }
 
 void _engineCore_cleanGameObjects() {
-    // Clean allGameObjects array
+    // Clean allGameObjects list
     for (size_t i = 0; i < getLevel()->allGameObjects.size; i++) {
         free(getLevel()->allGameObjects.items[i]);
         getLevel()->allGameObjects.items[i] = NULL;
     }
 
-    ARRAY_CLEAN(getLevel()->allGameObjects);
+    LIST_CLEAN(getLevel()->allGameObjects);
 }
 
 void _engineCore_tick() {
@@ -145,7 +152,7 @@ void _engineCore_tick() {
                 // size (Vector2)
 
                 Vector2* relativeLoc = (Vector2*)((char*)comp + (sizeof(void (*)(void*, GameObject*)) * GAMEOBJECTCOMP_EVENT_COUNT) + sizeof(size_t));
-                Vector2* worldLoc = (Vector2*)(relativeLoc + sizeof(Vector2));
+                Vector2* worldLoc = (Vector2*)((char*)relativeLoc + sizeof(Vector2));
 
                 // Set world location
                 worldLoc->x = go->location.x + relativeLoc->x;
@@ -303,7 +310,7 @@ int engineCore_loadLevel(Level* level) {
     _currentLevel = *level;
 
     LOG("Initializing new level...");
-    ARRAY_INIT(getLevel()->allGameObjects);
+    LIST_INIT(getLevel()->allGameObjects);
     LOG("Level initialized.");
 
     LOG("Level \"%s\" loaded successfully.", getLevel()->name);
@@ -318,7 +325,7 @@ GameObject* _engineCore_registerGameObject(GameObject* go) {
 
     (*_go) = (*go);
 
-    ARRAY_ADD(getLevel()->allGameObjects, GameObject*, _go);
+    LIST_ADD(getLevel()->allGameObjects, GameObject*, _go);
 
     return _go;
 }
@@ -331,7 +338,7 @@ int _engineCore_unregisterGameObject(size_t id) {
             if (l->allGameObjects.items[i]->event_destroyed != NULL)
                 l->allGameObjects.items[i]->event_destroyed(l->allGameObjects.items[i]);
 
-            ARRAY_REMOVE_CLEAN(l->allGameObjects, GameObject*, i);
+            LIST_REMOVE_CLEAN(l->allGameObjects, GameObject*, i);
 
             return 1;
         }
@@ -340,17 +347,17 @@ int _engineCore_unregisterGameObject(size_t id) {
     return 0;
 }
 
-UICanvas* _engineCore_registerUICanvas(UICanvas* canvas) {
+UICanvas* engineCore_registerUICanvas(UICanvas* canvas) {
     UICanvas* _canvas = (UICanvas*)malloc(sizeof(UICanvas));
 
     (*_canvas) = (*canvas);
 
-    ARRAY_ADD(getCore()->allUICanvases, UICanvas*, _canvas);
+    LIST_ADD(getCore()->allUICanvases, UICanvas*, _canvas);
 
     return _canvas;
 }
 
-int _engineCore_unregisterUICanvas(size_t id) {
+int engineCore_unregisterUICanvasByID(size_t id) {
     EngineCore* ec = getCore();
 
     for (size_t i = 0; i < ec->allUICanvases.size; i++) {
@@ -358,7 +365,7 @@ int _engineCore_unregisterUICanvas(size_t id) {
             if (ec->allUICanvases.items[i]->event_destroyed != NULL)
                 ec->allUICanvases.items[i]->event_destroyed(ec->allUICanvases.items[i]);
 
-            ARRAY_REMOVE_CLEAN(ec->allUICanvases, UICanvas*, i);
+            LIST_REMOVE_CLEAN(ec->allUICanvases, UICanvas*, i);
 
             return 1;
         }

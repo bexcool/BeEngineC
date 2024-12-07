@@ -6,9 +6,9 @@ void cleanupApp() {
     LOG("Cleaning up...");
 
     // Destroy SDL window
-    if (gameWindow != NULL) {
+    if (getRenderer()->gameWindow != NULL) {
         LOG("Destroying SDL window...");
-        SDL_DestroyWindow(gameWindow);
+        SDL_DestroyWindow(getRenderer()->gameWindow);
     }
 
     // Quit SDL

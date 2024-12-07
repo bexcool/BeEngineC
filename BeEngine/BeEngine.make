@@ -27,7 +27,7 @@ endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
-INCLUDES += -Ilibs/SDL2/include
+INCLUDES += -Ilibs/SDL2/include -Iinclude -Iinclude/ui -Iinclude/ui/components -Iinclude/components
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -45,7 +45,7 @@ ifeq ($(config),debug)
 TARGETDIR = bin/Debug
 TARGET = $(TARGETDIR)/libBeEngine.dylib
 OBJDIR = obj/Debug
-DEFINES += -DSDL_MAIN_HANDLED -DDEBUG -DBEENGINE_VERSION_MAJOR=1 -DBEENGINE_VERSION_MINOR=0 -DBEENGINE_VERSION_PATCH=0 -DBEENGINE_VERSION_BUILD=1
+DEFINES += -DSDL_MAIN_HANDLED -DBEENGINE_VERSION_MAJOR=1 -DBEENGINE_VERSION_MINOR=0 -DBEENGINE_VERSION_PATCH=0 -DBEENGINE_VERSION_BUILD=1 -DDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fPIC -g -fsanitize=address
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -fPIC -g -fsanitize=address
 ALL_LDFLAGS += $(LDFLAGS) -Llibs/SDL2/lib -dynamiclib -Wl,-install_name,@rpath/libBeEngine.dylib -fsanitize=address
@@ -54,7 +54,7 @@ else ifeq ($(config),release)
 TARGETDIR = bin/Release
 TARGET = $(TARGETDIR)/libBeEngine.dylib
 OBJDIR = obj/Release
-DEFINES += -DSDL_MAIN_HANDLED -DNDEBUG
+DEFINES += -DSDL_MAIN_HANDLED -DBEENGINE_VERSION_MAJOR=1 -DBEENGINE_VERSION_MINOR=0 -DBEENGINE_VERSION_PATCH=0 -DBEENGINE_VERSION_BUILD=1 -DNDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -fPIC
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -fPIC
 ALL_LDFLAGS += $(LDFLAGS) -Llibs/SDL2/lib -dynamiclib -Wl,-install_name,@rpath/libBeEngine.dylib
@@ -72,30 +72,40 @@ GENERATED :=
 OBJECTS :=
 
 GENERATED += $(OBJDIR)/appManager.o
-GENERATED += $(OBJDIR)/array.o
+GENERATED += $(OBJDIR)/borderUIComponent.o
+GENERATED += $(OBJDIR)/brush.o
 GENERATED += $(OBJDIR)/buttonUIComponent.o
+GENERATED += $(OBJDIR)/color.o
 GENERATED += $(OBJDIR)/engineCore.o
 GENERATED += $(OBJDIR)/fileHelper.o
+GENERATED += $(OBJDIR)/font.o
 GENERATED += $(OBJDIR)/gameLoop.o
 GENERATED += $(OBJDIR)/gameObject.o
+GENERATED += $(OBJDIR)/level.o
+GENERATED += $(OBJDIR)/list.o
 GENERATED += $(OBJDIR)/logger.o
-GENERATED += $(OBJDIR)/objSquare.o
 GENERATED += $(OBJDIR)/physicsGameObjectComp.o
 GENERATED += $(OBJDIR)/renderer.o
+GENERATED += $(OBJDIR)/textUIComponent.o
 GENERATED += $(OBJDIR)/textureGameObjectComp.o
 GENERATED += $(OBJDIR)/uiCanvas.o
 GENERATED += $(OBJDIR)/vector2.o
 OBJECTS += $(OBJDIR)/appManager.o
-OBJECTS += $(OBJDIR)/array.o
+OBJECTS += $(OBJDIR)/borderUIComponent.o
+OBJECTS += $(OBJDIR)/brush.o
 OBJECTS += $(OBJDIR)/buttonUIComponent.o
+OBJECTS += $(OBJDIR)/color.o
 OBJECTS += $(OBJDIR)/engineCore.o
 OBJECTS += $(OBJDIR)/fileHelper.o
+OBJECTS += $(OBJDIR)/font.o
 OBJECTS += $(OBJDIR)/gameLoop.o
 OBJECTS += $(OBJDIR)/gameObject.o
+OBJECTS += $(OBJDIR)/level.o
+OBJECTS += $(OBJDIR)/list.o
 OBJECTS += $(OBJDIR)/logger.o
-OBJECTS += $(OBJDIR)/objSquare.o
 OBJECTS += $(OBJDIR)/physicsGameObjectComp.o
 OBJECTS += $(OBJDIR)/renderer.o
+OBJECTS += $(OBJDIR)/textUIComponent.o
 OBJECTS += $(OBJDIR)/textureGameObjectComp.o
 OBJECTS += $(OBJDIR)/uiCanvas.o
 OBJECTS += $(OBJDIR)/vector2.o
@@ -165,10 +175,10 @@ endif
 $(OBJDIR)/appManager.o: src/appManager.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/array.o: src/array.c
+$(OBJDIR)/physicsGameObjectComp.o: src/components/physicsGameObjectComp.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/buttonUIComponent.o: src/buttonUIComponent.c
+$(OBJDIR)/textureGameObjectComp.o: src/components/textureGameObjectComp.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/engineCore.o: src/engineCore.c
@@ -183,22 +193,37 @@ $(OBJDIR)/gameLoop.o: src/gameLoop.c
 $(OBJDIR)/gameObject.o: src/gameObject.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/level.o: src/level.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/list.o: src/list.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/logger.o: src/logger.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/objSquare.o: src/objSquare.c
-	@echo "$(notdir $<)"
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/physicsGameObjectComp.o: src/physicsGameObjectComp.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/renderer.o: src/renderer.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/textureGameObjectComp.o: src/textureGameObjectComp.c
+$(OBJDIR)/brush.o: src/ui/brush.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/uiCanvas.o: src/uiCanvas.c
+$(OBJDIR)/color.o: src/ui/color.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/borderUIComponent.o: src/ui/components/borderUIComponent.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/buttonUIComponent.o: src/ui/components/buttonUIComponent.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/textUIComponent.o: src/ui/components/textUIComponent.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/font.o: src/ui/font.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/uiCanvas.o: src/ui/uiCanvas.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/vector2.o: src/vector2.c

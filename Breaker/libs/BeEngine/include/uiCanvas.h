@@ -1,16 +1,15 @@
-#ifndef _UICANVAS_H_
-#define _UICANVAS_H_
+#pragma once
 
-#include "array.h"
+#include "list.h"
 #include "uiComponent.h"
 #include "visibility.h"
 
 // Type definitions
-DEFINE_ARRAY(UIComponentArray, void *);
+DEFINE_LIST(UIComponentList, void *);
 
 typedef struct UICanvas {
     size_t id;
-    UIComponentArray uiComponents;
+    UIComponentList uiComponents;
     Visibility visibility;
     void (*event_register)(struct UICanvas *);
     void (*event_tick)(struct UICanvas *);
@@ -24,5 +23,3 @@ typedef struct UICanvas {
         .position = _position})
 
 void uiCanvas_attachUIComponent(UICanvas *canvas, void *uiComponent);
-
-#endif

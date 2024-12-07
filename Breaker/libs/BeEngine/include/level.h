@@ -1,21 +1,22 @@
-#ifndef _LEVEL_H_
-#define _LEVEL_H_
+#pragma once
 
 #include <stdio.h>
 
 #include "gameObject.h"
+#include "vector2.h"
 
 typedef struct Level {
     size_t id;
-    char *name;
+    char* name;
     // Game objects
-    GameObjectArray allGameObjects;
+    GameObjectList allGameObjects;
     // Functions
     void (*event_loaded)();
 } Level;
 
 #define DEFINE_LEVEL(name) \
-    const Level name;      \
+    Level name;            \
     void _##name##_loaded();
 
-#endif
+GameObject* level_spawnGameObject(GameObjectSpawn* gameObjectToSpawn, Vector2* location);
+int level_destroyGameObject(GameObject* gameObject);

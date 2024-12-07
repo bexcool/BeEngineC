@@ -6,18 +6,15 @@
 #include "appManager.h"
 #include "color.h"
 #include "engineCore.h"
+#include "font.h"
 #include "gameObject.h"
+#include "list.h"
 #include "logger.h"
-#include "objSquare.h"
 #include "vector2.h"
 
-SDL_Renderer *gameRenderer;
-SDL_Window *gameWindow;
-
-SDL_Texture *saddamTexture;
 SDL_Surface *surfaceMessage, *statsTextSurface;
 SDL_Texture *textureMessage, *statsTextTexture;
-TTF_Font *font;
+TTF_Font *debugFont;
 
 #ifndef NDEBUG
 
@@ -29,29 +26,30 @@ int renderer_init() {
     LOG("Initializing renderer...");
 
     EngineOptions opt = getCore()->options;
+    Renderer *r = getRenderer();
 
     LOG("Renderer: Creating SDL window...");
-    gameWindow = SDL_CreateWindow(
+    r->gameWindow = SDL_CreateWindow(
         opt.projectName,
         opt.window_x,
         opt.window_y,
         opt.window_width,
         opt.window_height,
-        SDL_WINDOW_SHOWN);
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
-    if (gameWindow == NULL) {
+    if (r->gameWindow == NULL) {
         LOG_E("Renderer: Could not create window: %s\n", SDL_GetError());
         return -1;
     }
     LOG("Renderer: SDL window created.");
 
     LOG("Renderer: Creating SDL renderer...");
-    gameRenderer = SDL_CreateRenderer(
-        gameWindow,
+    r->gameRenderer = SDL_CreateRenderer(
+        r->gameWindow,
         -1,
-        SDL_RENDERER_ACCELERATED);  //| SDL_RENDERER_PRESENTVSYNC);
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);  //| SDL_RENDERER_PRESENTVSYNC);
 
-    if (gameRenderer == NULL) {
+    if (r->gameRenderer == NULL) {
         LOG_E("Renderer: Could not create renderer: %s\n", SDL_GetError());
         return -1;
     }
@@ -71,13 +69,7 @@ int renderer_init() {
     }
     LOG("Renderer: SDL_ttf initialized.");
 
-    saddamTexture = IMG_LoadTexture(gameRenderer, "./assets/textures/saddam.png");
-    font = TTF_OpenFont("./assets/fonts/AvrileSansUI-Regular.ttf", 24);
-
-    SDL_Color color = {255, 255, 255, 255};
-
-    surfaceMessage = TTF_RenderText_Solid(font, "KVARK RULES!", color);
-    textureMessage = SDL_CreateTextureFromSurface(gameRenderer, surfaceMessage);
+    debugFont = font_load("./assets/fonts/AvrileSansUI-Regular.ttf", 24);
 
     LOG("Renderer initialized.");
 
@@ -85,9 +77,11 @@ int renderer_init() {
 }
 
 void renderer_render() {
+    Renderer *r = getRenderer();
+
     static size_t frame = 0;
-    SDL_SetRenderDrawColor(gameRenderer, 0, 0, 0, 255);
-    SDL_RenderClear(gameRenderer);
+    SDL_SetRenderDrawColor(r->gameRenderer, 0, 0, 0, 255);
+    SDL_RenderClear(r->gameRenderer);
 
     Level *l = getLevel();
 
@@ -107,10 +101,10 @@ void renderer_render() {
 
 #ifndef NDEBUG
 
-        if (debugShowCollisions) {
+        if (debugShowCollisions && go->collisionType != COLLISION_NO_COLLISION) {
             renderer_drawRectangle(&COLOR(255, 0, 0), &VECTOR2(go->location.x, go->location.y), &VECTOR2(go->size.x, go->size.y));
-            SDL_RenderDrawLine(gameRenderer, go->location.x, go->location.y, go->location.x + go->size.x - 1, go->location.y + go->size.y - 1);
-            SDL_RenderDrawLine(gameRenderer, go->location.x, go->location.y + go->size.y - 1, go->location.x + go->size.x - 1, go->location.y);
+            SDL_RenderDrawLine(r->gameRenderer, go->location.x, go->location.y, go->location.x + go->size.x - 1, go->location.y + go->size.y - 1);
+            SDL_RenderDrawLine(r->gameRenderer, go->location.x, go->location.y + go->size.y - 1, go->location.x + go->size.x - 1, go->location.y);
         }
 
 #endif
@@ -120,9 +114,10 @@ void renderer_render() {
         UICanvas *canvas = getCore()->allUICanvases.items[i];
 
         for (int j = 0; j < canvas->uiComponents.size; j++) {
-            void (*event_draw)(void *, UICanvas *) = *(void (**)(void *, UICanvas *))((char *)canvas->uiComponents.items[i] + sizeof(void (*)(void *, UICanvas *)) * 2);
-            if (event_draw != NULL)
-                event_draw(canvas->uiComponents.items[i], canvas);
+            void (*event_draw)(void *, UICanvas *) = *(void (**)(void *, UICanvas *))((char *)canvas->uiComponents.items[j] + sizeof(void (*)(void *, UICanvas *)) * 2);
+            if (event_draw != NULL) {
+                event_draw(canvas->uiComponents.items[j], canvas);
+            }
         }
     }
 
@@ -134,11 +129,11 @@ void renderer_render() {
 
         snprintf(statsBuff, 256, "FPS: %.2f", 1.0 / getDeltaTime());
 
-        statsTextSurface = TTF_RenderText_Solid(font, statsBuff, color);
-        statsTextTexture = SDL_CreateTextureFromSurface(gameRenderer, statsTextSurface);
+        statsTextSurface = TTF_RenderText_Solid(debugFont, statsBuff, color);
+        statsTextTexture = SDL_CreateTextureFromSurface(r->gameRenderer, statsTextSurface);
 
         SDL_Rect statsTextRect = {.x = 5, .y = 5, .w = surfaceMessage->w, surfaceMessage->h};
-        SDL_RenderCopy(gameRenderer, statsTextTexture, NULL, &statsTextRect);
+        SDL_RenderCopy(r->gameRenderer, statsTextTexture, NULL, &statsTextRect);
 
         SDL_FreeSurface(statsTextSurface);
         SDL_DestroyTexture(statsTextTexture);
@@ -146,18 +141,11 @@ void renderer_render() {
 
 #endif
 
-    SDL_Rect textRect = {.x = 500, .y = 20, .w = surfaceMessage->w, surfaceMessage->h};
-    // TTF_SizeText(font, "put your text here", &textRect.w, &textRect.h);
-    SDL_RenderCopy(gameRenderer, textureMessage, NULL, &textRect);
-
-    SDL_Rect dstRect = {500, 100, 356, 200};  // Destination rectangle (x, y, w, h)
-    SDL_RenderCopy(gameRenderer, saddamTexture, NULL, &dstRect);
-
-    SDL_RenderPresent(gameRenderer);
+    SDL_RenderPresent(r->gameRenderer);
 }
 
 void renderer_drawFillRectangle(const Color *color, const Vector2 *location, const Vector2 *size) {
-    SDL_SetRenderDrawColor(gameRenderer, color->r, color->g, color->b, color->a);
+    SDL_SetRenderDrawColor(getRenderer()->gameRenderer, color->r, color->g, color->b, color->a);
 
     SDL_Rect rect = {
         .x = location->x,
@@ -165,11 +153,11 @@ void renderer_drawFillRectangle(const Color *color, const Vector2 *location, con
         .w = size->x,
         .h = size->y};
 
-    SDL_RenderFillRect(gameRenderer, &rect);
+    SDL_RenderFillRect(getRenderer()->gameRenderer, &rect);
 }
 
 void renderer_drawRectangle(const Color *color, const Vector2 *location, const Vector2 *size) {
-    SDL_SetRenderDrawColor(gameRenderer, color->r, color->g, color->b, color->a);
+    SDL_SetRenderDrawColor(getRenderer()->gameRenderer, color->r, color->g, color->b, color->a);
 
     SDL_Rect rect = {
         .x = location->x,
@@ -177,5 +165,5 @@ void renderer_drawRectangle(const Color *color, const Vector2 *location, const V
         .w = size->x,
         .h = size->y};
 
-    SDL_RenderDrawRect(gameRenderer, &rect);
+    SDL_RenderDrawRect(getRenderer()->gameRenderer, &rect);
 }

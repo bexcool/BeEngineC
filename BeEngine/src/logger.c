@@ -13,6 +13,8 @@ void logger_init(const char *filePath) {
     strcpy(logger_logPath, filePath);
     logger_logFile = fopen(logger_logPath, "w+");
 
+    // freopen(logger_logPath, "w", stdout);
+
     LOG("Logger initialized. Log path: \"%s\"", realpath(logger_logPath, NULL));
 }
 

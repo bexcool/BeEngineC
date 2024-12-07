@@ -1,3 +1,5 @@
+#!/bin/bash
+
 brew install sdl2 sdl2_image sdl2_ttf
 
 mkdir -p ./libs/SDL2/include

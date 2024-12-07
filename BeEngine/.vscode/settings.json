@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "__locale": "cpp",
+        "variant": "cpp",
+        "__hash_table": "cpp",
+        "array": "cpp",
+        "type_traits": "cpp",
+        "limits": "cpp",
+        "ratio": "cpp",
+        "tuple": "cpp",
+        "typeinfo": "cpp",
+        "queue": "c",
+        "sdl_ttf.h": "c"
+    }
+}
