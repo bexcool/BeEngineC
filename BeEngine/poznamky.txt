@@ -1,3 +1,5 @@
+!!! PŘESUNUTO NA TODOIST !!!
+
 - Input bude fungovat jako v Unrealu. Buď focus na UI nebo na hru.
 Hra bude managovat kliknutí pomocí ptr na fci. Bude existovat funkce getGameObjectByMousePos().
 Pokud bude focus na UI, tak se po kliknutí zavolá ptr na fci, která zavolá určitému objektu fci "clicked".

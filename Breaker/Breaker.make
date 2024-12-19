@@ -11,7 +11,7 @@ endif
 .PHONY: clean prebuild
 
 SHELLTYPE := posix
-ifeq ($(shell echo "test"), "test")
+ifeq (.exe,$(findstring .exe,$(ComSpec)))
 	SHELLTYPE := msdos
 endif
 
@@ -19,20 +19,19 @@ endif
 # #############################################
 
 ifeq ($(origin CC), default)
-  CC = gcc
+  CC = clang
 endif
 ifeq ($(origin CXX), default)
-  CXX = g++
+  CXX = clang++
 endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
-RESCOMP = windres
-INCLUDES +=
+INCLUDES += -Ilibs/BeEngine/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS +=
+LIBS += -lBeEngine
 LDDEPS +=
 LINKCMD = $(CC) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
@@ -44,21 +43,21 @@ endef
 
 ifeq ($(config),debug)
 TARGETDIR = bin/Debug
-TARGET = $(TARGETDIR)/Breaker.exe
+TARGET = $(TARGETDIR)/Breaker
 OBJDIR = obj/Debug
 DEFINES += -DDEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -fsanitize=address
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -fsanitize=address
+ALL_LDFLAGS += $(LDFLAGS) -Llibs/BeEngine/lib -rpath @executable_path/../../libs/BeEngine/lib -fsanitize=address
 
 else ifeq ($(config),release)
 TARGETDIR = bin/Release
-TARGET = $(TARGETDIR)/Breaker.exe
+TARGET = $(TARGETDIR)/Breaker
 OBJDIR = obj/Release
 DEFINES += -DNDEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2
+ALL_LDFLAGS += $(LDFLAGS) -Llibs/BeEngine/lib -rpath @executable_path/../../libs/BeEngine/lib
 
 endif
 
@@ -69,6 +68,15 @@ endif
 # File sets
 # #############################################
 
+GENERATED :=
+OBJECTS :=
+
+GENERATED += $(OBJDIR)/main.o
+GENERATED += $(OBJDIR)/mainMenuLevel.o
+GENERATED += $(OBJDIR)/testLevel.o
+OBJECTS += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/mainMenuLevel.o
+OBJECTS += $(OBJDIR)/testLevel.o
 
 # Rules
 # #############################################
@@ -76,7 +84,7 @@ endif
 all: $(TARGET)
 	@:
 
-$(TARGET): $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
+$(TARGET): $(GENERATED) $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
 	@echo Linking Breaker
 	$(SILENT) $(LINKCMD)
@@ -131,6 +139,16 @@ endif
 
 # File Rules
 # #############################################
+
+$(OBJDIR)/main.o: src/main.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/mainMenuLevel.o: src/mainMenuLevel.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/testLevel.o: src/testLevel.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
 -include $(OBJECTS:%.o=%.d)
 ifneq (,$(PCH))

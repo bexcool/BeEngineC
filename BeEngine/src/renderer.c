@@ -12,8 +12,8 @@
 #include "logger.h"
 #include "vector2.h"
 
-SDL_Surface *surfaceMessage, *statsTextSurface;
-SDL_Texture *textureMessage, *statsTextTexture;
+SDL_Surface *statsTextSurface;
+SDL_Texture *statsTextTexture;
 TTF_Font *debugFont;
 
 #ifndef NDEBUG
@@ -44,10 +44,13 @@ int renderer_init() {
     LOG("Renderer: SDL window created.");
 
     LOG("Renderer: Creating SDL renderer...");
+    // Set OpenGL as the rendering driver
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+
     r->gameRenderer = SDL_CreateRenderer(
         r->gameWindow,
         -1,
-        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);  //| SDL_RENDERER_PRESENTVSYNC);
+        SDL_RENDERER_ACCELERATED);  //| SDL_RENDERER_PRESENTVSYNC);
 
     if (r->gameRenderer == NULL) {
         LOG_E("Renderer: Could not create renderer: %s\n", SDL_GetError());
@@ -132,7 +135,7 @@ void renderer_render() {
         statsTextSurface = TTF_RenderText_Solid(debugFont, statsBuff, color);
         statsTextTexture = SDL_CreateTextureFromSurface(r->gameRenderer, statsTextSurface);
 
-        SDL_Rect statsTextRect = {.x = 5, .y = 5, .w = surfaceMessage->w, surfaceMessage->h};
+        SDL_Rect statsTextRect = {.x = 5, .y = 5, .w = statsTextSurface->w, statsTextSurface->h};
         SDL_RenderCopy(r->gameRenderer, statsTextTexture, NULL, &statsTextRect);
 
         SDL_FreeSurface(statsTextSurface);
