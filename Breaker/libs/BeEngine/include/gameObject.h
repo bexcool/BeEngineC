@@ -30,6 +30,7 @@ typedef struct GameObject {
     CollisionType collisionType;
     ObjectType objectType;
     struct GameObject* parentGameObject;
+    Vector2 relativeLocation;
     GameObjectList overlappedGameObjects;
     GameObjectCompList components;
     void* properties;

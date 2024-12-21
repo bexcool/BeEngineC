@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "gameObject.h"
+#include "input.h"
 #include "level.h"
 #include "renderer.h"
 #include "uiCanvas.h"
@@ -29,6 +30,7 @@ typedef struct EngineCore {
     EngineOptions options;
     EngineEvents events;
     UICanvasList allUICanvases;
+    InputFocus _inputFocus;
 } EngineCore;
 
 typedef struct {
@@ -59,6 +61,8 @@ typedef struct {
 // Public functions
 void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, int argc, const char* argv[]);
 int engineCore_loadLevel(Level* level);
+void engineCore_setInputFocus(InputFocus focus);
+InputFocus engineCore_getInputFocus();
 
 // Getters
 EngineCore* getCore();
@@ -73,6 +77,8 @@ void _engineCore_clean();
 void _engineCore_cleanGameObjects();
 
 void _engineCore_tick();
+void _engineCore_tickGameObjects();
+void _engineCore_tickInput();
 void _engineCore_anyInput(SDL_Event* event);
 
 GameObject* _engineCore_registerGameObject(GameObject* go);

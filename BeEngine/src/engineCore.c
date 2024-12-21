@@ -129,13 +129,18 @@ void _engineCore_tick() {
     _deltaTime = (double)(currentTime - _lastTime) / (double)SDL_GetPerformanceFrequency();
     _lastTime = currentTime;
 
+    _engineCore_tickGameObjects();
+    _engineCore_tickInput();
+}
+
+void _engineCore_tickGameObjects() {
     // Call tick event on every game object
     for (size_t i = 0; i < getLevel()->allGameObjects.size; i++) {
         GameObject* go = getLevel()->allGameObjects.items[i];
 
         // Handle parent's properties
         if (go->parentGameObject != NULL) {
-            go->location = go->parentGameObject->location;
+            go->location = vector2_add(&go->parentGameObject->location, &go->relativeLocation);
         }
 
         // Call tick event on components
@@ -168,7 +173,9 @@ void _engineCore_tick() {
         if (go->event_tick != NULL)
             go->event_tick(go);
     }
+}
 
+void _engineCore_tickInput() {
     // Call tick event on every UI canvas
     for (int i = 0; i < getCore()->allUICanvases.size; i++) {
         UICanvas* canvas = getCore()->allUICanvases.items[i];
@@ -218,41 +225,43 @@ void _engineCore_tick() {
 
             // LOG("Mouse rect: %d, %d Comp rect: %d, %d, %d, %d", mouseRect.x, mouseRect.y, compRect.x, compRect.y, compRect.w, compRect.h);
 
-            // Is mouse over the UI Component
-            if ((*visibility) != VISIBILITY_COLLAPSED && SDL_HasIntersection(&compRect, &mouseRect)) {
-                // Hovered
-                (*isHovered) = TRUE;
-                if (event_hovered != NULL) {
-                    event_hovered(comp, canvas);
-                }
+            if (engineCore_getInputFocus() != INPUT_GAME) {
+                // Is mouse over the UI Component
+                if ((*visibility) != VISIBILITY_COLLAPSED && SDL_HasIntersection(&compRect, &mouseRect)) {
+                    // Hovered
+                    (*isHovered) = TRUE;
+                    if (event_hovered != NULL) {
+                        event_hovered(comp, canvas);
+                    }
 
-                // Pressed LMB
-                if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-                    (*isPressed) = TRUE;
-                    if (event_pressed != NULL)
-                        event_pressed(comp, canvas);
-                } else if ((*isPressed)) {  // Is no longer pressed
-                    (*isPressed) = FALSE;
-                    if (event_released != NULL)
-                        event_released(comp, canvas);
+                    // Pressed LMB
+                    if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                        (*isPressed) = TRUE;
+                        if (event_pressed != NULL)
+                            event_pressed(comp, canvas);
+                    } else if ((*isPressed)) {  // Is no longer pressed
+                        (*isPressed) = FALSE;
+                        if (event_released != NULL)
+                            event_released(comp, canvas);
 
-                    // Click the button
-                    if (event_clicked != NULL)
-                        event_clicked(comp, canvas);
-                }
-            } else {  // Is not hovered
-                // Was hovered
-                if ((*isHovered)) {
-                    (*isHovered) = FALSE;
-                    if (event_unhovered != NULL)
-                        event_unhovered(comp, canvas);
-                }
+                        // Click the button
+                        if (event_clicked != NULL)
+                            event_clicked(comp, canvas);
+                    }
+                } else {  // Is not hovered
+                    // Was hovered
+                    if ((*isHovered)) {
+                        (*isHovered) = FALSE;
+                        if (event_unhovered != NULL)
+                            event_unhovered(comp, canvas);
+                    }
 
-                // Was pressed
-                if ((*isPressed)) {
-                    (*isPressed) = FALSE;
-                    if (event_released != NULL)
-                        event_released(comp, canvas);
+                    // Was pressed
+                    if ((*isPressed)) {
+                        (*isPressed) = FALSE;
+                        if (event_released != NULL)
+                            event_released(comp, canvas);
+                    }
                 }
             }
 
@@ -281,7 +290,9 @@ void _engineCore_anyInput(SDL_Event* event) {
 
 #endif
 
-    if (getCore()->events.event_anyInput != NULL) getCore()->events.event_anyInput(event);
+    if (engineCore_getInputFocus() != INPUT_UI) {
+        if (getCore()->events.event_anyInput != NULL) getCore()->events.event_anyInput(event);
+    }
 }
 
 int engineCore_loadLevel(Level* level) {
@@ -318,6 +329,14 @@ int engineCore_loadLevel(Level* level) {
         getLevel()->event_loaded();
 
     return 1;
+}
+
+void engineCore_setInputFocus(InputFocus focus) {
+    getCore()->_inputFocus = focus;
+}
+
+InputFocus engineCore_getInputFocus() {
+    return getCore()->_inputFocus;
 }
 
 GameObject* _engineCore_registerGameObject(GameObject* go) {

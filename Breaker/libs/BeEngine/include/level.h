@@ -18,5 +18,7 @@ typedef struct Level {
     Level name;            \
     void _##name##_loaded();
 
+#define DECLARE_LEVEL
+
 GameObject* level_spawnGameObject(GameObjectSpawn* gameObjectToSpawn, Vector2* location);
 int level_destroyGameObject(GameObject* gameObject);

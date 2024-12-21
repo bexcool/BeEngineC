@@ -2,6 +2,7 @@
 
 #include "buttonUIComponent.h"
 #include "engineCore.h"
+#include "input.h"
 #include "testLevel.h"
 
 Level mainMenuLevel = {.id = 2, .name = "mainMenuLevel", .event_loaded = &_mainMenuLevel_loaded};
