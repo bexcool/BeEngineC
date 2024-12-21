@@ -30,7 +30,10 @@ typedef struct EngineCore {
     EngineOptions options;
     EngineEvents events;
     UICanvasList allUICanvases;
+    SDL_Event* lastInputEvent;
     InputFocus _inputFocus;
+    UICanvas* _focusedUICanvas;
+    void* _focusedUIComponent;
 } EngineCore;
 
 typedef struct {
@@ -63,6 +66,9 @@ void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, in
 int engineCore_loadLevel(Level* level);
 void engineCore_setInputFocus(InputFocus focus);
 InputFocus engineCore_getInputFocus();
+void engineCore_setFocusedUIComponent(UICanvas* canvas, void* component);
+UICanvas* engineCore_getFocusedUICanvas();
+void* engineCore_getFocusedUIComponent();
 
 // Getters
 EngineCore* getCore();
@@ -78,7 +84,7 @@ void _engineCore_cleanGameObjects();
 
 void _engineCore_tick();
 void _engineCore_tickGameObjects();
-void _engineCore_tickInput();
+void _engineCore_tickUI();
 void _engineCore_anyInput(SDL_Event* event);
 
 GameObject* _engineCore_registerGameObject(GameObject* go);

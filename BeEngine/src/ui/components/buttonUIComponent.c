@@ -66,19 +66,30 @@ void _ButtonUIComponent_draw(ButtonUIComponent *comp, UICanvas *canvas) {
 }
 
 void _ButtonUIComponent_destroyed(ButtonUIComponent *comp, UICanvas *canvas) {
+    if (comp->event_destroyed) comp->event_destroyed(comp, canvas);
 }
 
 void _ButtonUIComponent_clicked(ButtonUIComponent *comp, UICanvas *canvas) {
+    if (comp->event_clicked) comp->event_clicked(comp, canvas);
 }
 
 void _ButtonUIComponent_pressed(ButtonUIComponent *comp, UICanvas *canvas) {
+    if (comp->event_pressed) comp->event_pressed(comp, canvas);
+    engineCore_setFocusedUIComponent(canvas, comp);
 }
 
 void _ButtonUIComponent_released(ButtonUIComponent *comp, UICanvas *canvas) {
+    if (comp->event_released) comp->event_released(comp, canvas);
 }
 
 void _ButtonUIComponent_hovered(ButtonUIComponent *comp, UICanvas *canvas) {
+    if (comp->event_hovered) comp->event_hovered(comp, canvas);
 }
 
 void _ButtonUIComponent_unhovered(ButtonUIComponent *comp, UICanvas *canvas) {
+    if (comp->event_unhovered) comp->event_unhovered(comp, canvas);
+}
+
+void _ButtonUIComponent_input(ButtonUIComponent *comp, UICanvas *canvas) {
+    if (comp->event_input) comp->event_input(comp, canvas);
 }

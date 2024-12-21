@@ -17,11 +17,17 @@ typedef struct UICanvas {
 } UICanvas;
 
 // Macros
-#define UICANVAS_ATTACH_COMP(name, component, canvas)      \
-    (component)->event_registered = &_##name##_registered; \
-    (component)->event_tick = &_##name##_tick;             \
-    (component)->event_draw = &_##name##_draw;             \
-    (component)->event_destroyed = &_##name##_destroyed;   \
+#define UICANVAS_ATTACH_COMP(name, component, canvas)        \
+    (component)->__event_registered = &_##name##_registered; \
+    (component)->__event_tick = &_##name##_tick;             \
+    (component)->__event_draw = &_##name##_draw;             \
+    (component)->__event_destroyed = &_##name##_destroyed;   \
+    (component)->__event_clicked = &_##name##_clicked;       \
+    (component)->__event_pressed = &_##name##_pressed;       \
+    (component)->__event_released = &_##name##_released;     \
+    (component)->__event_hovered = &_##name##_hovered;       \
+    (component)->__event_unhovered = &_##name##_unhovered;   \
+    (component)->__event_input = &_##name##_input;           \
     uiCanvas_attachUIComponent(canvas, component);
 
 void uiCanvas_attachUIComponent(UICanvas *canvas, void *uiComponent);

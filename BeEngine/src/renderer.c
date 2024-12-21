@@ -147,7 +147,7 @@ void renderer_render() {
     SDL_RenderPresent(r->gameRenderer);
 }
 
-void renderer_drawFillRectangle(const Color *color, const Vector2 *location, const Vector2 *size) {
+void renderer_drawFillRectangle(Color *color, Vector2 *location, Vector2 *size) {
     SDL_SetRenderDrawColor(getRenderer()->gameRenderer, color->r, color->g, color->b, color->a);
 
     SDL_Rect rect = {
@@ -159,7 +159,7 @@ void renderer_drawFillRectangle(const Color *color, const Vector2 *location, con
     SDL_RenderFillRect(getRenderer()->gameRenderer, &rect);
 }
 
-void renderer_drawRectangle(const Color *color, const Vector2 *location, const Vector2 *size) {
+void renderer_drawRectangle(Color *color, Vector2 *location, Vector2 *size) {
     SDL_SetRenderDrawColor(getRenderer()->gameRenderer, color->r, color->g, color->b, color->a);
 
     SDL_Rect rect = {

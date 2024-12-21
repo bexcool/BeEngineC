@@ -12,7 +12,6 @@ int lastSize;
 void _TextUIComponent_registered(TextUIComponent *comp, UICanvas *canvas) {
     comp->font._ttfFont = font_load(comp->font.path, comp->font.size);
 
-    // TODO: Initialize font again when text or size changes (Check this in tick)
     comp->_textSurface = TTF_RenderText_Solid(comp->font._ttfFont, comp->text, color_toSDL_Color(&comp->font.color));
     comp->_textTexture = SDL_CreateTextureFromSurface(getRenderer()->gameRenderer, comp->_textSurface);
 
@@ -37,7 +36,7 @@ void _TextUIComponent_tick(TextUIComponent *comp, UICanvas *canvas) {
 }
 
 void _TextUIComponent_draw(TextUIComponent *comp, UICanvas *canvas) {
-    SDL_Rect textRect = {.x = comp->position.x, .y = comp->position.y, .w = comp->_textSurface->w, comp->_textSurface->h};
+    SDL_Rect textRect = {.x = comp->position.x, .y = comp->position.y, .w = comp->_textSurface->w, .h = comp->_textSurface->h};
     // TTF_SizeText(font, "put your text here", &textRect.w, &textRect.h);
     SDL_RenderCopy(getRenderer()->gameRenderer, comp->_textTexture, NULL, &textRect);
 }
@@ -58,4 +57,7 @@ void _TextUIComponent_hovered(TextUIComponent *comp, UICanvas *canvas) {
 }
 
 void _TextUIComponent_unhovered(TextUIComponent *comp, UICanvas *canvas) {
+}
+
+void _TextUIComponent_input(TextUIComponent *comp, UICanvas *canvas) {
 }

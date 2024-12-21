@@ -1,38 +1,478 @@
-17:47:47 - [INFO] Logger initialized. Log path: "/Volumes/Santuv M.2 Drive/Programming/C Applications/Game Engine/Breaker/bin/Debug/log.txt"
-17:47:47 - [INFO] Running engine in DEBUG configuration.
-17:47:47 - [INFO] Starting application...
-17:47:47 - [INFO] Initializing engine core...
-17:47:47 - [INFO] Engine core initialized.
-17:47:47 - [INFO] Initializing SDL...
-17:47:47 - [INFO] SDL initialized.
-17:47:47 - [INFO] Initializing renderer...
-17:47:47 - [INFO] Renderer: Creating SDL window...
-17:47:47 - [INFO] Renderer: SDL window created.
-17:47:47 - [INFO] Renderer: Creating SDL renderer...
-17:47:47 - [INFO] Renderer: SDL renderer created.
-17:47:47 - [INFO] Renderer: Initializing SDL_image...
-17:47:47 - [INFO] Renderer: SDL_image initialized.
-17:47:47 - [INFO] Renderer: Initializing SDL_ttf...
-17:47:47 - [INFO] Renderer: SDL_ttf initialized.
-17:47:47 - [INFO] Font: Cached a new font "./assets/fonts/AvrileSansUI-Regular.ttf" with size "24".
-17:47:47 - [INFO] Renderer initialized.
-17:47:47 - [INFO] Requested to load level "mainMenuLevel".
-17:47:47 - [INFO] Cleaning game objects in the current level.
-17:47:47 - [INFO] Transitioning from "(null)" to "mainMenuLevel"...
-17:47:47 - [INFO] Initializing new level...
-17:47:47 - [INFO] Level initialized.
-17:47:47 - [INFO] Level "mainMenuLevel" loaded successfully.
-17:47:47 - [INFO] Starting game loop...
-17:47:49 - [INFO] Requested to load level "testLevel".
-17:47:49 - [INFO] Cleaning game objects in the current level.
-17:47:49 - [INFO] Transitioning from "mainMenuLevel" to "testLevel"...
-17:47:49 - [INFO] Initializing new level...
-17:47:49 - [INFO] Level initialized.
-17:47:49 - [INFO] Level "testLevel" loaded successfully.
-17:47:49 - [INFO] Font: Cached a new size "50" for font "./assets/fonts/AvrileSansUI-Regular.ttf".
-17:48:09 - [INFO] Game loop: Exit requested. Starting the exit sequence...
-17:48:09 - [INFO] Cleaning up...
-17:48:09 - [INFO] Destroying SDL window...
-17:48:09 - [INFO] Quitting SDL...
-17:48:09 - [INFO] Cleaning engine core...
-17:48:09 - [INFO] Quitting application with code 0.
+19:19:47 - [INFO] Logger initialized. Log path: "/Volumes/Santuv M.2 Drive/Programming/C Applications/Game Engine/Breaker/bin/Debug/log.txt"
+19:19:47 - [INFO] Running engine in DEBUG configuration.
+19:19:47 - [INFO] Starting application...
+19:19:47 - [INFO] Initializing engine core...
+19:19:47 - [INFO] Engine core initialized.
+19:19:47 - [INFO] Initializing SDL...
+19:19:47 - [INFO] SDL initialized.
+19:19:47 - [INFO] Initializing renderer...
+19:19:47 - [INFO] Renderer: Creating SDL window...
+19:19:47 - [INFO] Renderer: SDL window created.
+19:19:47 - [INFO] Renderer: Creating SDL renderer...
+19:19:47 - [INFO] Renderer: SDL renderer created.
+19:19:47 - [INFO] Renderer: Initializing SDL_image...
+19:19:47 - [INFO] Renderer: SDL_image initialized.
+19:19:47 - [INFO] Renderer: Initializing SDL_ttf...
+19:19:47 - [INFO] Renderer: SDL_ttf initialized.
+19:19:47 - [INFO] Font: Cached a new font "./assets/fonts/AvrileSansUI-Regular.ttf" with size "24".
+19:19:47 - [INFO] Renderer initialized.
+19:19:47 - [INFO] Requested to load level "mainMenuLevel".
+19:19:47 - [INFO] Cleaning game objects in the current level.
+19:19:47 - [INFO] Transitioning from "(null)" to "mainMenuLevel"...
+19:19:47 - [INFO] Initializing new level...
+19:19:47 - [INFO] Level initialized.
+19:19:47 - [INFO] Level "mainMenuLevel" loaded successfully.
+19:19:47 - [INFO] Starting game loop...
+19:19:48 - [INFO] Requested to load level "testLevel".
+19:19:48 - [INFO] Cleaning game objects in the current level.
+19:19:48 - [INFO] Transitioning from "mainMenuLevel" to "testLevel"...
+19:19:48 - [INFO] Initializing new level...
+19:19:48 - [INFO] Level initialized.
+19:19:48 - [INFO] Level "testLevel" loaded successfully.
+19:19:48 - [INFO] Font: Cached a new size "50" for font "./assets/fonts/AvrileSansUI-Regular.ttf".
+19:19:50 - [WARNING] Text: A
+19:19:50 - [WARNING] Last text: 
+19:19:50 - [WARNING] Text: Ah
+19:19:50 - [WARNING] Last text: A
+19:19:50 - [WARNING] Text: Aho
+19:19:50 - [WARNING] Last text: Ah
+19:19:50 - [WARNING] Text: Ahoj
+19:19:50 - [WARNING] Last text: Aho
+19:19:51 - [WARNING] Text: Ahoj 
+19:19:51 - [WARNING] Last text: Ahoj
+19:19:51 - [WARNING] Text: Ahoj k
+19:19:51 - [WARNING] Last text: Ahoj 
+19:19:51 - [WARNING] Text: Ahoj ká
+19:19:51 - [WARNING] Last text: Ahoj k
+19:19:51 - [WARNING] Text: Ahoj kám
+19:19:51 - [WARNING] Last text: Ahoj ká
+19:19:51 - [WARNING] Text: Ahoj kámo
+19:19:51 - [WARNING] Last text: Ahoj kám
+19:19:52 - [WARNING] Text: Ahoj kám
+19:19:52 - [WARNING] Last text: Ahoj kámo
+19:19:52 - [WARNING] Text: Ahoj ká
+19:19:52 - [WARNING] Last text: Ahoj kám
+19:19:52 - [WARNING] Text: Ahoj k�
+19:19:52 - [WARNING] Last text: Ahoj ká
+19:19:52 - [WARNING] Text: Ahoj k
+19:19:52 - [WARNING] Last text: Ahoj k�
+19:19:52 - [WARNING] Text: Ahoj ka
+19:19:52 - [WARNING] Last text: Ahoj k
+19:19:52 - [WARNING] Text: Ahoj kam
+19:19:52 - [WARNING] Last text: Ahoj ka
+19:19:52 - [WARNING] Text: Ahoj kamo
+19:19:52 - [WARNING] Last text: Ahoj kam
+19:19:53 - [WARNING] Text: Ahoj kamo 
+19:19:53 - [WARNING] Last text: Ahoj kamo
+19:19:53 - [WARNING] Text: Ahoj kamo :
+19:19:53 - [WARNING] Last text: Ahoj kamo 
+19:19:53 - [WARNING] Text: Ahoj kamo :D
+19:19:53 - [WARNING] Last text: Ahoj kamo :
+19:19:57 - [WARNING] Text: Ahoj kamo :Dd
+19:19:57 - [WARNING] Last text: Ahoj kamo :D
+19:19:57 - [WARNING] Text: Ahoj kamo :Ddd
+19:19:57 - [WARNING] Last text: Ahoj kamo :Dd
+19:19:57 - [WARNING] Text: Ahoj kamo :Dddd
+19:19:57 - [WARNING] Last text: Ahoj kamo :Ddd
+19:19:57 - [WARNING] Text: Ahoj kamo :Ddddd
+19:19:57 - [WARNING] Last text: Ahoj kamo :Dddd
+19:19:57 - [WARNING] Text: Ahoj kamo :Dddddd
+19:19:57 - [WARNING] Last text: Ahoj kamo :Ddddd
+19:19:57 - [WARNING] Text: Ahoj kamo :Ddddddd
+19:19:57 - [WARNING] Last text: Ahoj kamo :Dddddd
+19:19:57 - [WARNING] Text: Ahoj kamo :Dddddddd
+19:19:57 - [WARNING] Last text: Ahoj kamo :Ddddddd
+19:19:58 - [WARNING] Text: Ahoj kamo :Ddddddddd
+19:19:58 - [WARNING] Last text: Ahoj kamo :Dddddddd
+19:19:58 - [WARNING] Text: Ahoj kamo :Dddddddd
+19:19:58 - [WARNING] Last text: Ahoj kamo :Ddddddddd
+19:19:58 - [WARNING] Text: Ahoj kamo :Ddddddd
+19:19:58 - [WARNING] Last text: Ahoj kamo :Dddddddd
+19:19:58 - [WARNING] Text: Ahoj kamo :Dddddd
+19:19:58 - [WARNING] Last text: Ahoj kamo :Ddddddd
+19:19:58 - [WARNING] Text: Ahoj kamo :Ddddd
+19:19:58 - [WARNING] Last text: Ahoj kamo :Dddddd
+19:19:59 - [WARNING] Text: Ahoj kamo :Dddd
+19:19:59 - [WARNING] Last text: Ahoj kamo :Ddddd
+19:19:59 - [WARNING] Text: Ahoj kamo :Ddd
+19:19:59 - [WARNING] Last text: Ahoj kamo :Dddd
+19:19:59 - [WARNING] Text: Ahoj kamo :Dd
+19:19:59 - [WARNING] Last text: Ahoj kamo :Ddd
+19:19:59 - [WARNING] Text: Ahoj kamo :D
+19:19:59 - [WARNING] Last text: Ahoj kamo :Dd
+19:19:59 - [WARNING] Text: Ahoj kamo :Dd
+19:19:59 - [WARNING] Last text: Ahoj kamo :D
+19:20:00 - [WARNING] Text: Ahoj kamo :Ddd
+19:20:00 - [WARNING] Last text: Ahoj kamo :Dd
+19:20:00 - [WARNING] Text: Ahoj kamo :Dddd
+19:20:00 - [WARNING] Last text: Ahoj kamo :Ddd
+19:20:00 - [WARNING] Text: Ahoj kamo :Ddddd
+19:20:00 - [WARNING] Last text: Ahoj kamo :Dddd
+19:20:00 - [WARNING] Text: Ahoj kamo :Dddddd
+19:20:00 - [WARNING] Last text: Ahoj kamo :Ddddd
+19:20:00 - [WARNING] Text: Ahoj kamo :Ddddddd
+19:20:00 - [WARNING] Last text: Ahoj kamo :Dddddd
+19:20:00 - [WARNING] Text: Ahoj kamo :Dddddd
+19:20:00 - [WARNING] Last text: Ahoj kamo :Ddddddd
+19:20:01 - [WARNING] Text: Ahoj kamo :Ddddd
+19:20:01 - [WARNING] Last text: Ahoj kamo :Dddddd
+19:20:01 - [WARNING] Text: Ahoj kamo :Dddd
+19:20:01 - [WARNING] Last text: Ahoj kamo :Ddddd
+19:20:01 - [WARNING] Text: Ahoj kamo :Ddd
+19:20:01 - [WARNING] Last text: Ahoj kamo :Dddd
+19:20:01 - [WARNING] Text: Ahoj kamo :Dd
+19:20:01 - [WARNING] Last text: Ahoj kamo :Ddd
+19:20:01 - [WARNING] Text: Ahoj kamo :D
+19:20:01 - [WARNING] Last text: Ahoj kamo :Dd
+19:20:01 - [WARNING] Text: Ahoj kamo :Da
+19:20:01 - [WARNING] Last text: Ahoj kamo :D
+19:20:02 - [WARNING] Text: Ahoj kamo :Daa
+19:20:02 - [WARNING] Last text: Ahoj kamo :Da
+19:20:02 - [WARNING] Text: Ahoj kamo :Daaa
+19:20:02 - [WARNING] Last text: Ahoj kamo :Daa
+19:20:02 - [WARNING] Text: Ahoj kamo :Daaaa
+19:20:02 - [WARNING] Last text: Ahoj kamo :Daaa
+19:20:03 - [WARNING] Text: Ahoj kamo :Daaa
+19:20:03 - [WARNING] Last text: Ahoj kamo :Daaaa
+19:20:03 - [WARNING] Text: Ahoj kamo :Daa
+19:20:03 - [WARNING] Last text: Ahoj kamo :Daaa
+19:20:03 - [WARNING] Text: Ahoj kamo :Da
+19:20:03 - [WARNING] Last text: Ahoj kamo :Daa
+19:20:03 - [WARNING] Text: Ahoj kamo :D
+19:20:03 - [WARNING] Last text: Ahoj kamo :Da
+19:20:07 - [WARNING] Text: Ahoj kamo :
+19:20:07 - [WARNING] Last text: Ahoj kamo :D
+19:20:07 - [WARNING] Text: Ahoj kamo 
+19:20:07 - [WARNING] Last text: Ahoj kamo :
+19:20:07 - [WARNING] Text: Ahoj kamo
+19:20:07 - [WARNING] Last text: Ahoj kamo 
+19:20:08 - [WARNING] Text: Ahoj kam
+19:20:08 - [WARNING] Last text: Ahoj kamo
+19:20:08 - [WARNING] Text: Ahoj ka
+19:20:08 - [WARNING] Last text: Ahoj kam
+19:20:08 - [WARNING] Text: Ahoj k
+19:20:08 - [WARNING] Last text: Ahoj ka
+19:20:08 - [WARNING] Text: Ahoj 
+19:20:08 - [WARNING] Last text: Ahoj k
+19:20:08 - [WARNING] Text: Ahoj
+19:20:08 - [WARNING] Last text: Ahoj 
+19:20:08 - [WARNING] Text: Aho
+19:20:08 - [WARNING] Last text: Ahoj
+19:20:08 - [WARNING] Text: Ah
+19:20:08 - [WARNING] Last text: Aho
+19:20:08 - [WARNING] Text: A
+19:20:08 - [WARNING] Last text: Ah
+19:20:08 - [WARNING] Text: 
+19:20:08 - [WARNING] Last text: A
+19:20:17 - [WARNING] SIZE: 50
+19:20:17 - [INFO] Font: Cached a new size "10" for font "./assets/fonts/AvrileSansUI-Regular.ttf".
+19:20:19 - [WARNING] Text: A
+19:20:19 - [WARNING] Last text: 
+19:20:19 - [WARNING] Text: Ah
+19:20:19 - [WARNING] Last text: A
+19:20:19 - [WARNING] Text: Aho
+19:20:19 - [WARNING] Last text: Ah
+19:20:19 - [WARNING] Text: Ahoj
+19:20:19 - [WARNING] Last text: Aho
+19:20:19 - [WARNING] Text: Ahoj 
+19:20:19 - [WARNING] Last text: Ahoj
+19:20:20 - [WARNING] Text: Ahoj R
+19:20:20 - [WARNING] Last text: Ahoj 
+19:20:20 - [WARNING] Text: Ahoj Ra
+19:20:20 - [WARNING] Last text: Ahoj R
+19:20:20 - [WARNING] Text: Ahoj Rad
+19:20:20 - [WARNING] Last text: Ahoj Ra
+19:20:20 - [WARNING] Text: Ahoj Radk
+19:20:20 - [WARNING] Last text: Ahoj Rad
+19:20:20 - [WARNING] Text: Ahoj Radku
+19:20:20 - [WARNING] Last text: Ahoj Radk
+19:20:20 - [WARNING] Text: Ahoj Radku 
+19:20:20 - [WARNING] Last text: Ahoj Radku
+19:20:21 - [WARNING] Text: Ahoj Radku :
+19:20:21 - [WARNING] Last text: Ahoj Radku 
+19:20:21 - [WARNING] Text: Ahoj Radku :D
+19:20:21 - [WARNING] Last text: Ahoj Radku :
+19:20:22 - [WARNING] Text: Ahoj Radku :
+19:20:22 - [WARNING] Last text: Ahoj Radku :D
+19:20:23 - [WARNING] Text: Ahoj Radku 
+19:20:23 - [WARNING] Last text: Ahoj Radku :
+19:20:23 - [WARNING] Text: Ahoj Radku
+19:20:23 - [WARNING] Last text: Ahoj Radku 
+19:20:23 - [WARNING] Text: Ahoj Radk
+19:20:23 - [WARNING] Last text: Ahoj Radku
+19:20:23 - [WARNING] Text: Ahoj Rad
+19:20:23 - [WARNING] Last text: Ahoj Radk
+19:20:23 - [WARNING] Text: Ahoj Ra
+19:20:23 - [WARNING] Last text: Ahoj Rad
+19:20:23 - [WARNING] Text: Ahoj R
+19:20:23 - [WARNING] Last text: Ahoj Ra
+19:20:23 - [WARNING] Text: Ahoj 
+19:20:23 - [WARNING] Last text: Ahoj R
+19:20:24 - [WARNING] Text: Ahoj
+19:20:24 - [WARNING] Last text: Ahoj 
+19:20:24 - [WARNING] Text: Aho
+19:20:24 - [WARNING] Last text: Ahoj
+19:20:24 - [WARNING] Text: Ah
+19:20:24 - [WARNING] Last text: Aho
+19:20:24 - [WARNING] Text: A
+19:20:24 - [WARNING] Last text: Ah
+19:20:24 - [WARNING] Text: 
+19:20:24 - [WARNING] Last text: A
+19:20:26 - [WARNING] Text: T
+19:20:26 - [WARNING] Last text: 
+19:20:26 - [WARNING] Text: To
+19:20:26 - [WARNING] Last text: T
+19:20:26 - [WARNING] Text: Toh
+19:20:26 - [WARNING] Last text: To
+19:20:26 - [WARNING] Text: Tohl
+19:20:26 - [WARNING] Last text: Toh
+19:20:26 - [WARNING] Text: Tohle
+19:20:26 - [WARNING] Last text: Tohl
+19:20:26 - [WARNING] Text: Tohle 
+19:20:26 - [WARNING] Last text: Tohle
+19:20:26 - [WARNING] Text: Tohle j
+19:20:26 - [WARNING] Last text: Tohle 
+19:20:27 - [WARNING] Text: Tohle je
+19:20:27 - [WARNING] Last text: Tohle j
+19:20:27 - [WARNING] Text: Tohle je 
+19:20:27 - [WARNING] Last text: Tohle je
+19:20:27 - [WARNING] Text: Tohle je t
+19:20:27 - [WARNING] Last text: Tohle je 
+19:20:27 - [WARNING] Text: Tohle je 
+19:20:27 - [WARNING] Last text: Tohle je t
+19:20:28 - [WARNING] Text: Tohle je T
+19:20:28 - [WARNING] Last text: Tohle je 
+19:20:28 - [WARNING] Text: Tohle je Te
+19:20:28 - [WARNING] Last text: Tohle je T
+19:20:28 - [WARNING] Text: Tohle je Tex
+19:20:28 - [WARNING] Last text: Tohle je Te
+19:20:28 - [WARNING] Text: Tohle je Text
+19:20:28 - [WARNING] Last text: Tohle je Tex
+19:20:28 - [WARNING] Text: Tohle je TextB
+19:20:28 - [WARNING] Last text: Tohle je Text
+19:20:29 - [WARNING] Text: Tohle je TextBo
+19:20:29 - [WARNING] Last text: Tohle je TextB
+19:20:29 - [WARNING] Text: Tohle je TextBox
+19:20:29 - [WARNING] Last text: Tohle je TextBo
+19:20:29 - [WARNING] Text: Tohle je TextBox 
+19:20:29 - [WARNING] Last text: Tohle je TextBox
+19:20:30 - [WARNING] Text: Tohle je TextBox B
+19:20:30 - [WARNING] Last text: Tohle je TextBox 
+19:20:30 - [WARNING] Text: Tohle je TextBox B)
+19:20:30 - [WARNING] Last text: Tohle je TextBox B
+19:20:31 - [WARNING] Text: Tohle je TextBox B
+19:20:31 - [WARNING] Last text: Tohle je TextBox B)
+19:20:31 - [WARNING] Text: Tohle je TextBox 
+19:20:31 - [WARNING] Last text: Tohle je TextBox B
+19:20:32 - [WARNING] Text: Tohle je TextBox
+19:20:32 - [WARNING] Last text: Tohle je TextBox 
+19:20:32 - [WARNING] Text: Tohle je TextBox 
+19:20:32 - [WARNING] Last text: Tohle je TextBox
+19:20:32 - [WARNING] Text: Tohle je TextBox 1
+19:20:32 - [WARNING] Last text: Tohle je TextBox 
+19:20:32 - [WARNING] Text: Tohle je TextBox 12
+19:20:32 - [WARNING] Last text: Tohle je TextBox 1
+19:20:33 - [WARNING] Text: Tohle je TextBox 123
+19:20:33 - [WARNING] Last text: Tohle je TextBox 12
+19:20:33 - [WARNING] Text: Tohle je TextBox 1234
+19:20:33 - [WARNING] Last text: Tohle je TextBox 123
+19:20:33 - [WARNING] Text: Tohle je TextBox 12345
+19:20:33 - [WARNING] Last text: Tohle je TextBox 1234
+19:20:34 - [WARNING] Text: Tohle je TextBox 1234
+19:20:34 - [WARNING] Last text: Tohle je TextBox 12345
+19:20:34 - [WARNING] Text: Tohle je TextBox 123
+19:20:34 - [WARNING] Last text: Tohle je TextBox 1234
+19:20:34 - [WARNING] Text: Tohle je TextBox 12
+19:20:34 - [WARNING] Last text: Tohle je TextBox 123
+19:20:34 - [WARNING] Text: Tohle je TextBox 1
+19:20:34 - [WARNING] Last text: Tohle je TextBox 12
+19:23:23 - [WARNING] Text: Tohle je TextBox 
+19:23:23 - [WARNING] Last text: Tohle je TextBox 1
+19:23:24 - [WARNING] Text: Tohle je TextBox
+19:23:24 - [WARNING] Last text: Tohle je TextBox 
+19:23:24 - [WARNING] Text: Tohle je TextBo
+19:23:24 - [WARNING] Last text: Tohle je TextBox
+19:23:25 - [WARNING] Text: Tohle je TextB
+19:23:25 - [WARNING] Last text: Tohle je TextBo
+19:23:25 - [WARNING] Text: Tohle je Text
+19:23:25 - [WARNING] Last text: Tohle je TextB
+19:23:25 - [WARNING] Text: Tohle je Tex
+19:23:25 - [WARNING] Last text: Tohle je Text
+19:23:25 - [WARNING] Text: Tohle je Te
+19:23:25 - [WARNING] Last text: Tohle je Tex
+19:23:25 - [WARNING] Text: Tohle je T
+19:23:25 - [WARNING] Last text: Tohle je Te
+19:23:26 - [WARNING] Text: Tohle je 
+19:23:26 - [WARNING] Last text: Tohle je T
+19:23:26 - [WARNING] Text: Tohle je
+19:23:26 - [WARNING] Last text: Tohle je 
+19:23:26 - [WARNING] Text: Tohle j
+19:23:26 - [WARNING] Last text: Tohle je
+19:23:26 - [WARNING] Text: Tohle 
+19:23:26 - [WARNING] Last text: Tohle j
+19:23:26 - [WARNING] Text: Tohle
+19:23:26 - [WARNING] Last text: Tohle 
+19:23:27 - [WARNING] Text: Tohl
+19:23:27 - [WARNING] Last text: Tohle
+19:23:27 - [WARNING] Text: Toh
+19:23:27 - [WARNING] Last text: Tohl
+19:23:27 - [WARNING] Text: To
+19:23:27 - [WARNING] Last text: Toh
+19:23:27 - [WARNING] Text: T
+19:23:27 - [WARNING] Last text: To
+19:23:27 - [WARNING] Text: 
+19:23:27 - [WARNING] Last text: T
+19:23:28 - [WARNING] Text: :
+19:23:28 - [WARNING] Last text: 
+19:23:28 - [WARNING] Text: :D
+19:23:28 - [WARNING] Last text: :
+19:23:29 - [WARNING] Text: :D 
+19:23:29 - [WARNING] Last text: :D
+19:23:29 - [WARNING] Text: :D !
+19:23:29 - [WARNING] Last text: :D 
+19:23:29 - [WARNING] Text: :D !;
+19:23:29 - [WARNING] Last text: :D !
+19:23:30 - [WARNING] Text: :D !;'
+19:23:30 - [WARNING] Last text: :D !;
+19:23:30 - [WARNING] Text: :D !;
+19:23:30 - [WARNING] Last text: :D !;'
+19:23:31 - [WARNING] Text: :D !
+19:23:31 - [WARNING] Last text: :D !;
+19:23:31 - [WARNING] Text: :D 
+19:23:31 - [WARNING] Last text: :D !
+19:23:31 - [WARNING] Text: :D ;
+19:23:31 - [WARNING] Last text: :D 
+19:23:32 - [WARNING] Text: :D ;)
+19:23:32 - [WARNING] Last text: :D ;
+19:23:33 - [WARNING] Text: :D ;
+19:23:33 - [WARNING] Last text: :D ;)
+19:23:33 - [WARNING] Text: :D 
+19:23:33 - [WARNING] Last text: :D ;
+19:23:33 - [WARNING] Text: :D
+19:23:33 - [WARNING] Last text: :D 
+19:23:33 - [WARNING] Text: :
+19:23:33 - [WARNING] Last text: :D
+19:23:34 - [WARNING] Text: 
+19:23:34 - [WARNING] Last text: :
+19:23:34 - [WARNING] Text: J
+19:23:34 - [WARNING] Last text: 
+19:23:34 - [WARNING] Text: Je
+19:23:34 - [WARNING] Last text: J
+19:23:34 - [WARNING] Text: Je 
+19:23:34 - [WARNING] Last text: Je
+19:23:34 - [WARNING] Text: Je t
+19:23:34 - [WARNING] Last text: Je 
+19:23:34 - [WARNING] Text: Je to
+19:23:34 - [WARNING] Last text: Je t
+19:23:35 - [WARNING] Text: Je to 
+19:23:35 - [WARNING] Last text: Je to
+19:23:35 - [WARNING] Text: Je to c
+19:23:35 - [WARNING] Last text: Je to 
+19:23:35 - [WARNING] Text: Je to co
+19:23:35 - [WARNING] Last text: Je to c
+19:23:35 - [WARNING] Text: Je to coo
+19:23:35 - [WARNING] Last text: Je to co
+19:23:35 - [WARNING] Text: Je to cool
+19:23:35 - [WARNING] Last text: Je to coo
+19:23:35 - [WARNING] Text: Je to cool 
+19:23:35 - [WARNING] Last text: Je to cool
+19:23:36 - [WARNING] Text: Je to cool f
+19:23:36 - [WARNING] Last text: Je to cool 
+19:23:36 - [WARNING] Text: Je to cool fe
+19:23:36 - [WARNING] Last text: Je to cool f
+19:23:36 - [WARNING] Text: Je to cool fea
+19:23:36 - [WARNING] Last text: Je to cool fe
+19:23:36 - [WARNING] Text: Je to cool feat
+19:23:36 - [WARNING] Last text: Je to cool fea
+19:23:36 - [WARNING] Text: Je to cool featu
+19:23:36 - [WARNING] Last text: Je to cool feat
+19:23:36 - [WARNING] Text: Je to cool featur
+19:23:36 - [WARNING] Last text: Je to cool featu
+19:23:36 - [WARNING] Text: Je to cool feature
+19:23:36 - [WARNING] Last text: Je to cool featur
+19:23:37 - [WARNING] Text: Je to cool feature 
+19:23:37 - [WARNING] Last text: Je to cool feature
+19:23:37 - [WARNING] Text: Je to cool feature k
+19:23:37 - [WARNING] Last text: Je to cool feature 
+19:23:37 - [WARNING] Text: Je to cool feature ká
+19:23:37 - [WARNING] Last text: Je to cool feature k
+19:23:37 - [WARNING] Text: Je to cool feature kám
+19:23:37 - [WARNING] Last text: Je to cool feature ká
+19:23:37 - [WARNING] Text: Je to cool feature kámo
+19:23:37 - [WARNING] Last text: Je to cool feature kám
+19:23:38 - [WARNING] Text: Je to cool feature kám
+19:23:38 - [WARNING] Last text: Je to cool feature kámo
+19:23:38 - [WARNING] Text: Je to cool feature ká
+19:23:38 - [WARNING] Last text: Je to cool feature kám
+19:23:38 - [WARNING] Text: Je to cool feature k�
+19:23:38 - [WARNING] Last text: Je to cool feature ká
+19:23:38 - [WARNING] Text: Je to cool feature k
+19:23:38 - [WARNING] Last text: Je to cool feature k�
+19:23:38 - [WARNING] Text: Je to cool feature ká
+19:23:38 - [WARNING] Last text: Je to cool feature k
+19:23:39 - [WARNING] Text: Je to cool feature k�
+19:23:39 - [WARNING] Last text: Je to cool feature ká
+19:23:39 - [WARNING] Text: Je to cool feature k
+19:23:39 - [WARNING] Last text: Je to cool feature k�
+19:23:39 - [WARNING] Text: Je to cool feature 
+19:23:39 - [WARNING] Last text: Je to cool feature k
+19:23:40 - [WARNING] Text: Je to cool feature k
+19:23:40 - [WARNING] Last text: Je to cool feature 
+19:23:40 - [WARNING] Text: Je to cool feature ka
+19:23:40 - [WARNING] Last text: Je to cool feature k
+19:23:40 - [WARNING] Text: Je to cool feature kam
+19:23:40 - [WARNING] Last text: Je to cool feature ka
+19:23:40 - [WARNING] Text: Je to cool feature kamo
+19:23:40 - [WARNING] Last text: Je to cool feature kam
+19:23:41 - [WARNING] Text: Je to cool feature kam
+19:23:41 - [WARNING] Last text: Je to cool feature kamo
+19:23:41 - [WARNING] Text: Je to cool feature ka
+19:23:41 - [WARNING] Last text: Je to cool feature kam
+19:23:41 - [WARNING] Text: Je to cool feature k
+19:23:41 - [WARNING] Last text: Je to cool feature ka
+19:23:41 - [WARNING] Text: Je to cool feature 
+19:23:41 - [WARNING] Last text: Je to cool feature k
+19:23:42 - [WARNING] Text: Je to cool feature
+19:23:42 - [WARNING] Last text: Je to cool feature 
+19:23:42 - [WARNING] Text: Je to cool featur
+19:23:42 - [WARNING] Last text: Je to cool feature
+19:23:42 - [WARNING] Text: Je to cool featu
+19:23:42 - [WARNING] Last text: Je to cool featur
+19:23:42 - [WARNING] Text: Je to cool feat
+19:23:42 - [WARNING] Last text: Je to cool featu
+19:23:42 - [WARNING] Text: Je to cool fea
+19:23:42 - [WARNING] Last text: Je to cool feat
+19:23:42 - [WARNING] Text: Je to cool fe
+19:23:42 - [WARNING] Last text: Je to cool fea
+19:23:42 - [WARNING] Text: Je to cool f
+19:23:42 - [WARNING] Last text: Je to cool fe
+19:23:42 - [WARNING] Text: Je to cool 
+19:23:42 - [WARNING] Last text: Je to cool f
+19:23:42 - [WARNING] Text: Je to cool
+19:23:42 - [WARNING] Last text: Je to cool 
+19:23:42 - [WARNING] Text: Je to coo
+19:23:42 - [WARNING] Last text: Je to cool
+19:23:42 - [WARNING] Text: Je to co
+19:23:42 - [WARNING] Last text: Je to coo
+19:23:43 - [WARNING] Text: Je to c
+19:23:43 - [WARNING] Last text: Je to co
+19:23:43 - [WARNING] Text: Je to 
+19:23:43 - [WARNING] Last text: Je to c
+19:23:43 - [WARNING] Text: Je to
+19:23:43 - [WARNING] Last text: Je to 
+19:23:43 - [WARNING] Text: Je t
+19:23:43 - [WARNING] Last text: Je to
+19:23:43 - [WARNING] Text: Je 
+19:23:43 - [WARNING] Last text: Je t
+19:23:43 - [WARNING] Text: Je
+19:23:43 - [WARNING] Last text: Je 
+19:23:43 - [WARNING] Text: J
+19:23:43 - [WARNING] Last text: Je
+19:23:43 - [WARNING] Text: 
+19:23:43 - [WARNING] Last text: J
+19:23:46 - [INFO] Game loop: Exit requested. Starting the exit sequence...
+19:23:46 - [INFO] Cleaning up...
+19:23:46 - [INFO] Destroying SDL window...
+19:23:46 - [INFO] Quitting SDL...
+19:23:46 - [INFO] Cleaning engine core...
+19:23:46 - [INFO] Quitting application with code 0.

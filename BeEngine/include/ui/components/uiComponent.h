@@ -3,7 +3,7 @@
 #include "vector2.h"
 #include "visibility.h"
 
-#define UICOMPONENT_EVENT_COUNT 9
+#define UICOMPONENT_EVENT_COUNT 10
 
 /*  void*, UICanvas* event_registered
     event_tick
@@ -22,24 +22,35 @@
     int isHovered
     int disabled
 */
-#define DEFINE_UICOMPONENT_START(name)                       \
-    typedef struct name {                                    \
-        void (*event_registered)(struct name *, UICanvas *); \
-        void (*event_tick)(struct name *, UICanvas *);       \
-        void (*event_draw)(struct name *, UICanvas *);       \
-        void (*event_destroyed)(struct name *, UICanvas *);  \
-        void (*event_clicked)(struct name *, UICanvas *);    \
-        void (*event_pressed)(struct name *, UICanvas *);    \
-        void (*event_released)(struct name *, UICanvas *);   \
-        void (*event_hovered)(struct name *, UICanvas *);    \
-        void (*event_unhovered)(struct name *, UICanvas *);  \
-        size_t id;                                           \
-        Vector2 position;                                    \
-        Vector2 size;                                        \
-        Visibility visibility;                               \
-        int isPressed;                                       \
-        int isHovered;                                       \
-        int disabled;
+#define DEFINE_UICOMPONENT_START(name)                         \
+    typedef struct name {                                      \
+        void (*__event_registered)(struct name *, UICanvas *); \
+        void (*__event_tick)(struct name *, UICanvas *);       \
+        void (*__event_draw)(struct name *, UICanvas *);       \
+        void (*__event_destroyed)(struct name *, UICanvas *);  \
+        void (*__event_clicked)(struct name *, UICanvas *);    \
+        void (*__event_pressed)(struct name *, UICanvas *);    \
+        void (*__event_released)(struct name *, UICanvas *);   \
+        void (*__event_hovered)(struct name *, UICanvas *);    \
+        void (*__event_unhovered)(struct name *, UICanvas *);  \
+        void (*__event_input)(struct name *, UICanvas *);      \
+        size_t id;                                             \
+        Vector2 position;                                      \
+        Vector2 size;                                          \
+        Visibility visibility;                                 \
+        int isPressed;                                         \
+        int isHovered;                                         \
+        int disabled;                                          \
+        void (*event_registered)(struct name *, UICanvas *);   \
+        void (*event_tick)(struct name *, UICanvas *);         \
+        void (*event_draw)(struct name *, UICanvas *);         \
+        void (*event_destroyed)(struct name *, UICanvas *);    \
+        void (*event_clicked)(struct name *, UICanvas *);      \
+        void (*event_pressed)(struct name *, UICanvas *);      \
+        void (*event_released)(struct name *, UICanvas *);     \
+        void (*event_hovered)(struct name *, UICanvas *);      \
+        void (*event_unhovered)(struct name *, UICanvas *);    \
+        void (*event_input)(struct name *, UICanvas *);
 
 #define DEFINE_UICOMPONENT_END(name)                                \
     }                                                               \
@@ -53,4 +64,5 @@
     void _##name##_pressed(struct name *comp, UICanvas *canvas);    \
     void _##name##_released(struct name *comp, UICanvas *canvas);   \
     void _##name##_hovered(struct name *comp, UICanvas *canvas);    \
-    void _##name##_unhovered(struct name *comp, UICanvas *canvas);
+    void _##name##_unhovered(struct name *comp, UICanvas *canvas);  \
+    void _##name##_input(struct name *comp, UICanvas *canvas);

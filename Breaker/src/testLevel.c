@@ -4,6 +4,7 @@
 #include "borderUIComponent.h"
 #include "buttonUIComponent.h"
 #include "physicsGameObjectComp.h"
+#include "textBoxUIComponent.h"
 #include "textUIComponent.h"
 #include "textureGameObjectComp.h"
 #include "uiCanvas.h"
@@ -22,6 +23,7 @@ ButtonUIComponent btn1;
 BorderUIComponent border1;
 ButtonStyle style;
 TextUIComponent txt1;
+TextBoxUIComponent txtBox1;
 
 void event_clicked(ButtonUIComponent *comp, UICanvas *canvas) {
     LOG_W("SIZE: %d", txt1.font.size);
@@ -58,10 +60,12 @@ void _testLevel_loaded() {
     btn1 = (ButtonUIComponent){.id = 123, .position = VECTOR2(1000, 100), .size = VECTOR2(100, 100), .style = style, .event_clicked = &event_clicked};
     txt1 = (TextUIComponent){.id = 120, .position = VECTOR2(10, 500), .font = (Font){.path = "./assets/fonts/AvrileSansUI-Regular.ttf", .size = 50, .color = COLOR_BLACK}, .text = "Large text"};
     border1 = (BorderUIComponent){.fillBrush = newTextureBrush(&COLOR_WHITE, NULL), .position = VECTOR2(10, 500), .size = VECTOR2(500, 100)};
+    txtBox1 = (TextBoxUIComponent){.position = VECTOR2(500, 350), .size = VECTOR2(500, 100), .font = (Font){.path = "./assets/fonts/AvrileSansUI-Regular.ttf", .size = 50, .color = COLOR_BLACK}, .backgroundBrush = newTextureBrush(&COLOR_WHITE, NULL), .borderBrush = (BorderBrush){.color = COLOR_GRAY, .thickness = 2}, .focusedBorderBrush = (BorderBrush){.color = COLOR_RED, .thickness = 2}};
 
-    ATTACH_UICOMPONENT(ButtonUIComponent, &btn1, canvas);
-    ATTACH_UICOMPONENT(BorderUIComponent, &border1, canvas);
-    ATTACH_UICOMPONENT(TextUIComponent, &txt1, canvas);
+    UICANVAS_ATTACH_COMP(ButtonUIComponent, &btn1, canvas);
+    UICANVAS_ATTACH_COMP(BorderUIComponent, &border1, canvas);
+    UICANVAS_ATTACH_COMP(TextUIComponent, &txt1, canvas);
+    UICANVAS_ATTACH_COMP(TextBoxUIComponent, &txtBox1, canvas);
 
     go1 = level_spawnGameObject(&((GameObjectSpawn){
                                     .size = VECTOR2(50, 100),

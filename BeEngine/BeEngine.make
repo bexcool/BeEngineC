@@ -86,6 +86,7 @@ GENERATED += $(OBJDIR)/list.o
 GENERATED += $(OBJDIR)/logger.o
 GENERATED += $(OBJDIR)/physicsGameObjectComp.o
 GENERATED += $(OBJDIR)/renderer.o
+GENERATED += $(OBJDIR)/textBoxUIComponent.o
 GENERATED += $(OBJDIR)/textUIComponent.o
 GENERATED += $(OBJDIR)/textureGameObjectComp.o
 GENERATED += $(OBJDIR)/uiCanvas.o
@@ -105,6 +106,7 @@ OBJECTS += $(OBJDIR)/list.o
 OBJECTS += $(OBJDIR)/logger.o
 OBJECTS += $(OBJDIR)/physicsGameObjectComp.o
 OBJECTS += $(OBJDIR)/renderer.o
+OBJECTS += $(OBJDIR)/textBoxUIComponent.o
 OBJECTS += $(OBJDIR)/textUIComponent.o
 OBJECTS += $(OBJDIR)/textureGameObjectComp.o
 OBJECTS += $(OBJDIR)/uiCanvas.o
@@ -215,6 +217,9 @@ $(OBJDIR)/borderUIComponent.o: src/ui/components/borderUIComponent.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/buttonUIComponent.o: src/ui/components/buttonUIComponent.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/textBoxUIComponent.o: src/ui/components/textBoxUIComponent.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/textUIComponent.o: src/ui/components/textUIComponent.c

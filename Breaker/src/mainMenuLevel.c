@@ -20,7 +20,7 @@ void _mainMenuLevel_loaded() {
 
     playButton = (ButtonUIComponent){.position = VECTOR2(100, 100), .size = VECTOR2(200, 50), .style = style, .event_clicked = &_playButton_clicked};
 
-    ATTACH_UICOMPONENT(ButtonUIComponent, &playButton, canvas);
+    UICANVAS_ATTACH_COMP(ButtonUIComponent, &playButton, canvas);
 }
 
 void _playButton_clicked(ButtonUIComponent *comp, UICanvas *canvas) {

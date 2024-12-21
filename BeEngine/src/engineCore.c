@@ -130,7 +130,7 @@ void _engineCore_tick() {
     _lastTime = currentTime;
 
     _engineCore_tickGameObjects();
-    _engineCore_tickInput();
+    _engineCore_tickUI();
 }
 
 void _engineCore_tickGameObjects() {
@@ -175,7 +175,7 @@ void _engineCore_tickGameObjects() {
     }
 }
 
-void _engineCore_tickInput() {
+void _engineCore_tickUI() {
     // Call tick event on every UI canvas
     for (int i = 0; i < getCore()->allUICanvases.size; i++) {
         UICanvas* canvas = getCore()->allUICanvases.items[i];
@@ -196,6 +196,7 @@ void _engineCore_tickInput() {
                 event_released
                 event_hovered
                 event_unhovered
+                event_input
                 size_t id
                 Vector2 position
                 Vector2 size
@@ -212,7 +213,8 @@ void _engineCore_tickInput() {
             void (*event_released)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 6);
             void (*event_hovered)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 7);
             void (*event_unhovered)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 8);
-            size_t* id = (size_t*)((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 9);
+            void (*event_input)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 9);
+            size_t* id = (size_t*)((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 10);
             Vector2* position = (Vector2*)((char*)id + sizeof(size_t));
             Vector2* size = (Vector2*)((char*)position + sizeof(Vector2));
             Visibility* visibility = (Visibility*)((char*)size + sizeof(Vector2));
@@ -222,8 +224,6 @@ void _engineCore_tickInput() {
 
             SDL_Rect compRect = vector2x2toSDL_Rect(position, size),
                      mouseRect = vector2x2toSDL_Rect(&mousePos, &VECTOR2(1, 1));
-
-            // LOG("Mouse rect: %d, %d Comp rect: %d, %d, %d, %d", mouseRect.x, mouseRect.y, compRect.x, compRect.y, compRect.w, compRect.h);
 
             if (engineCore_getInputFocus() != INPUT_GAME) {
                 // Is mouse over the UI Component
@@ -236,9 +236,10 @@ void _engineCore_tickInput() {
 
                     // Pressed LMB
                     if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-                        (*isPressed) = TRUE;
-                        if (event_pressed != NULL)
+                        if (event_pressed != NULL && !(*isPressed))
                             event_pressed(comp, canvas);
+
+                        (*isPressed) = TRUE;
                     } else if ((*isPressed)) {  // Is no longer pressed
                         (*isPressed) = FALSE;
                         if (event_released != NULL)
@@ -276,6 +277,10 @@ void _engineCore_tickInput() {
 }
 
 void _engineCore_anyInput(SDL_Event* event) {
+    getCore()->lastInputEvent = event;
+
+    // TODO: Call this only when event happened
+
     SDL_Keycode code = event->key.keysym.sym;
 
 #ifndef NDEBUG
@@ -292,6 +297,14 @@ void _engineCore_anyInput(SDL_Event* event) {
 
     if (engineCore_getInputFocus() != INPUT_UI) {
         if (getCore()->events.event_anyInput != NULL) getCore()->events.event_anyInput(event);
+    }
+
+    if (engineCore_getInputFocus() != INPUT_GAME && engineCore_getFocusedUIComponent() != NULL) {
+        void (*event_input)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)engineCore_getFocusedUIComponent() + sizeof(void (*)(void*, UICanvas*)) * 9);
+
+        if (event_input != NULL) {
+            event_input(engineCore_getFocusedUIComponent(), engineCore_getFocusedUICanvas());
+        }
     }
 }
 
@@ -337,6 +350,19 @@ void engineCore_setInputFocus(InputFocus focus) {
 
 InputFocus engineCore_getInputFocus() {
     return getCore()->_inputFocus;
+}
+
+void engineCore_setFocusedUIComponent(UICanvas* canvas, void* component) {
+    getCore()->_focusedUICanvas = canvas;
+    getCore()->_focusedUIComponent = component;
+}
+
+void* engineCore_getFocusedUIComponent() {
+    return getCore()->_focusedUIComponent;
+}
+
+UICanvas* engineCore_getFocusedUICanvas() {
+    return getCore()->_focusedUICanvas;
 }
 
 GameObject* _engineCore_registerGameObject(GameObject* go) {
