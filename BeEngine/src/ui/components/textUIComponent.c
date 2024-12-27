@@ -10,6 +10,9 @@ char lastText[256];
 int lastSize;
 
 void _TextUIComponent_registered(TextUIComponent *comp, UICanvas *canvas) {
+    snprintf(comp->displayName, sizeof(comp->displayName), "TextUIComponent_%zu", comp->id);
+    if (comp->event_registered) comp->event_registered(comp, canvas);
+
     comp->font._ttfFont = font_load(comp->font.path, comp->font.size);
 
     comp->_textSurface = TTF_RenderText_Solid(comp->font._ttfFont, comp->text, color_toSDL_Color(&comp->font.color));
@@ -36,7 +39,7 @@ void _TextUIComponent_tick(TextUIComponent *comp, UICanvas *canvas) {
 }
 
 void _TextUIComponent_draw(TextUIComponent *comp, UICanvas *canvas) {
-    SDL_Rect textRect = {.x = comp->position.x, .y = comp->position.y, .w = comp->_textSurface->w, .h = comp->_textSurface->h};
+    SDL_Rect textRect = {.x = comp->_actualPosition.x, .y = comp->_actualPosition.y, .w = comp->_textSurface->w, .h = comp->_textSurface->h};
     // TTF_SizeText(font, "put your text here", &textRect.w, &textRect.h);
     SDL_RenderCopy(getRenderer()->gameRenderer, comp->_textTexture, NULL, &textRect);
 }

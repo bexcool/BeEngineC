@@ -10,7 +10,7 @@
 DEFINE_LIST(GameObjectList, struct GameObject*);
 DEFINE_LIST(GameObjectCompList, void*);
 
-typedef struct GameObjectSpawn {
+typedef struct GameObjectConstructor {
     Vector2 size;
     CollisionType collisionType;
     ObjectType objectType;
@@ -20,7 +20,7 @@ typedef struct GameObjectSpawn {
     void (*event_destroyed)(struct GameObject*);
     void (*event_beginOverlap)(struct GameObject*, struct GameObject*);  // Self, Collided object
     void (*event_endOverlap)(struct GameObject*, struct GameObject*);    // Self, Collided object
-} GameObjectSpawn;
+} GameObjectConstructor;
 
 typedef struct GameObject {
     size_t id;
@@ -63,8 +63,8 @@ typedef struct GameObject {
 int _gameObject_attachComponent(GameObject* go, void* component);
 
 // Public
-void gameObject_attackToGameObject(GameObject* go, GameObject* goParent);
-void gameObject_setVelocity(GameObject* go, Vector2 velocity);
-void gameObject_addVelocity(GameObject* go, Vector2 velocity);
+void gameObject_attachToGameObject(GameObject* go, GameObject* goParent);
+void gameObject_setVelocity(GameObject* go, Vector2* velocity);
+void gameObject_addVelocity(GameObject* go, Vector2* velocity);
 
 #endif

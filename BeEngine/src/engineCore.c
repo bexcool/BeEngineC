@@ -8,6 +8,7 @@
 
 #include "appManager.h"
 #include "buttonUIComponent.h"
+#include "constraint.h"
 #include "fileHelper.h"
 #include "gameLoop.h"
 #include "level.h"
@@ -111,11 +112,16 @@ void _engineCore_initialize(EngineOptions* _options, EngineEvents* _events) {
 
 void _engineCore_clean() {
     _engineCore_cleanGameObjects();
+    _engineCore_cleanUICanvases();
 }
 
 void _engineCore_cleanGameObjects() {
+    if (getLevel()->allGameObjects.size == 0) return;
+
     // Clean allGameObjects list
     for (size_t i = 0; i < getLevel()->allGameObjects.size; i++) {
+        LIST_CLEAN(getLevel()->allGameObjects.items[i]->components);
+
         free(getLevel()->allGameObjects.items[i]);
         getLevel()->allGameObjects.items[i] = NULL;
     }
@@ -123,11 +129,32 @@ void _engineCore_cleanGameObjects() {
     LIST_CLEAN(getLevel()->allGameObjects);
 }
 
+void _engineCore_cleanUICanvases() {
+    if (getCore()->allUICanvases.size == 0) return;
+
+    return;
+    // TODO: Vyřešit memory leak - UI canvas se stále používá i po free
+    // Kdysi to vyřešilo přejmenování stejného jména proměnné v jiném souboru
+
+    // Clean allUICanvases list
+    for (size_t i = 0; i < getCore()->allUICanvases.size; i++) {
+        LIST_CLEAN(getCore()->allUICanvases.items[i]->uiComponents);
+
+        free(getCore()->allUICanvases.items[i]);
+        getCore()->allUICanvases.items[i] = NULL;
+    }
+
+    LIST_CLEAN(getCore()->allUICanvases);
+}
+
 void _engineCore_tick() {
     // Calculate delta time
     Uint64 currentTime = SDL_GetPerformanceCounter();
     _deltaTime = (double)(currentTime - _lastTime) / (double)SDL_GetPerformanceFrequency();
     _lastTime = currentTime;
+
+    // Do not tick if loading level
+    if (getCore()->_loadingLevel) return;
 
     _engineCore_tickGameObjects();
     _engineCore_tickUI();
@@ -176,13 +203,25 @@ void _engineCore_tickGameObjects() {
 }
 
 void _engineCore_tickUI() {
+    SDL_Rect viewport;
+    SDL_RenderGetViewport(getRenderer()->gameRenderer, &viewport);
+
     // Call tick event on every UI canvas
     for (int i = 0; i < getCore()->allUICanvases.size; i++) {
         UICanvas* canvas = getCore()->allUICanvases.items[i];
+        if (canvas == NULL) {
+            LOG_E("Engine core: Tick UI: Canvas is NULL at index %d", i);
+            continue;
+        }
 
         // Call tick event on components
         for (int j = 0; j < canvas->uiComponents.size; j++) {
             void* comp = canvas->uiComponents.items[j];
+            if (comp == NULL) {
+                LOG_E("Engine core: Tick UI: Component is NULL at index %d", j);
+                continue;
+            }
+
             int m_x, m_y;
             Uint32 mouseState = SDL_GetMouseState(&m_x, &m_y);
             Vector2 mousePos = VECTOR2((float)m_x, (float)m_y);
@@ -198,6 +237,7 @@ void _engineCore_tickUI() {
                 event_unhovered
                 event_input
                 size_t id
+                char displayName[64]
                 Vector2 position
                 Vector2 size
                 Visibility visibility
@@ -215,14 +255,25 @@ void _engineCore_tickUI() {
             void (*event_unhovered)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 8);
             void (*event_input)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 9);
             size_t* id = (size_t*)((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 10);
-            Vector2* position = (Vector2*)((char*)id + sizeof(size_t));
-            Vector2* size = (Vector2*)((char*)position + sizeof(Vector2));
+            char* displayName = (char*)((char*)id + sizeof(size_t));
+            Vector2* position = (Vector2*)((char*)displayName + sizeof(char) * 64);
+            Vector2* _actualPosition = (Vector2*)((char*)position + sizeof(Vector2));
+            Thickness* margin = (Thickness*)((char*)_actualPosition + sizeof(Vector2));
+            Vector2* size = (Vector2*)((char*)margin + sizeof(Thickness));
             Visibility* visibility = (Visibility*)((char*)size + sizeof(Vector2));
             int* isPressed = (int*)((char*)visibility + sizeof(Visibility));
             int* isHovered = (int*)((char*)isPressed + sizeof(int));
             int* disabled = (int*)((char*)isHovered + sizeof(int));
+            ConstraintType* horizontalConstraint = (ConstraintType*)((char*)disabled + sizeof(int));
+            ConstraintType* verticalConstraint = (ConstraintType*)((char*)horizontalConstraint + sizeof(ConstraintType));
 
-            SDL_Rect compRect = vector2x2toSDL_Rect(position, size),
+            (*_actualPosition) = constraint_apply(&TRANSFORM(VECTOR2_ZERO, VECTOR2(viewport.w, viewport.h)),
+                                                  &TRANSFORM(*position, *size),
+                                                  margin,
+                                                  *horizontalConstraint,
+                                                  *verticalConstraint);
+
+            SDL_Rect compRect = vector2x2toSDL_Rect(_actualPosition, size),
                      mouseRect = vector2x2toSDL_Rect(&mousePos, &VECTOR2(1, 1));
 
             if (engineCore_getInputFocus() != INPUT_GAME) {
@@ -271,8 +322,9 @@ void _engineCore_tickUI() {
         }
 
         // Call tick event
-        if (canvas->event_tick != NULL)
+        if (canvas->event_tick != NULL) {
             canvas->event_tick(canvas);
+        }
     }
 }
 
@@ -308,8 +360,72 @@ void _engineCore_anyInput(SDL_Event* event) {
     }
 }
 
+GameObject* _engineCore_registerGameObject(GameObject* go) {
+    GameObject* _go = (GameObject*)malloc(sizeof(GameObject));
+
+    (*_go) = (*go);
+
+    LIST_INIT(_go->components);
+
+    LIST_ADD(getLevel()->allGameObjects, GameObject*, _go);
+
+    return _go;
+}
+
+int _engineCore_unregisterGameObject(size_t id) {
+    Level* l = getLevel();
+
+    for (size_t i = 0; i < l->allGameObjects.size; i++) {
+        if (l->allGameObjects.items[i]->id == id) {
+            if (l->allGameObjects.items[i]->event_destroyed != NULL)
+                l->allGameObjects.items[i]->event_destroyed(l->allGameObjects.items[i]);
+
+            LIST_REMOVE_CLEAN(l->allGameObjects, GameObject*, i);
+
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+UICanvas* _engineCore_registerUICanvas() {
+    UICanvas* canvas = (UICanvas*)malloc(sizeof(UICanvas));
+
+    canvas->id = rand() % SIZE_T_MAX + 1;
+    canvas->visibility = VISIBILITY_VISIBLE;
+    canvas->event_register = NULL;
+    canvas->event_tick = NULL;
+    canvas->event_destroyed = NULL;
+
+    LIST_INIT(canvas->uiComponents);
+
+    LIST_ADD(getCore()->allUICanvases, UICanvas*, canvas);
+
+    return canvas;
+}
+
+int _engineCore_unregisterUICanvas(size_t id) {
+    EngineCore* ec = getCore();
+
+    for (size_t i = 0; i < ec->allUICanvases.size; i++) {
+        if (ec->allUICanvases.items[i]->id == id) {
+            if (ec->allUICanvases.items[i]->event_destroyed != NULL)
+                ec->allUICanvases.items[i]->event_destroyed(ec->allUICanvases.items[i]);
+
+            LIST_CLEAN(ec->allUICanvases.items[i]->uiComponents);
+            LIST_REMOVE_CLEAN(ec->allUICanvases, UICanvas*, i);
+
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 int engineCore_loadLevel(Level* level) {
     LOG("Requested to load level \"%s\".", level->name);
+    getCore()->_loadingLevel = 1;
 
     if (level->name == NULL) {
         LOG_E("Failed to load level! Level name is NULL.");
@@ -330,14 +446,20 @@ int engineCore_loadLevel(Level* level) {
     LOG("Cleaning game objects in the current level.");
     _engineCore_cleanGameObjects();
 
+    LOG("Cleaning UI canvases.");
+    _engineCore_cleanUICanvases();
+
     LOG("Transitioning from \"%s\" to \"%s\"...", getLevel()->name, level->name);
     _currentLevel = *level;
 
     LOG("Initializing new level...");
     LIST_INIT(getLevel()->allGameObjects);
+    LIST_INIT(getCore()->allUICanvases);
     LOG("Level initialized.");
 
     LOG("Level \"%s\" loaded successfully.", getLevel()->name);
+    getCore()->_loadingLevel = 0;
+
     if (getLevel()->event_loaded != NULL)
         getLevel()->event_loaded();
 
@@ -363,60 +485,6 @@ void* engineCore_getFocusedUIComponent() {
 
 UICanvas* engineCore_getFocusedUICanvas() {
     return getCore()->_focusedUICanvas;
-}
-
-GameObject* _engineCore_registerGameObject(GameObject* go) {
-    GameObject* _go = (GameObject*)malloc(sizeof(GameObject));
-
-    (*_go) = (*go);
-
-    LIST_ADD(getLevel()->allGameObjects, GameObject*, _go);
-
-    return _go;
-}
-
-int _engineCore_unregisterGameObject(size_t id) {
-    Level* l = getLevel();
-
-    for (size_t i = 0; i < l->allGameObjects.size; i++) {
-        if (l->allGameObjects.items[i]->id == id) {
-            if (l->allGameObjects.items[i]->event_destroyed != NULL)
-                l->allGameObjects.items[i]->event_destroyed(l->allGameObjects.items[i]);
-
-            LIST_REMOVE_CLEAN(l->allGameObjects, GameObject*, i);
-
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-UICanvas* engineCore_registerUICanvas(UICanvas* canvas) {
-    UICanvas* _canvas = (UICanvas*)malloc(sizeof(UICanvas));
-
-    (*_canvas) = (*canvas);
-
-    LIST_ADD(getCore()->allUICanvases, UICanvas*, _canvas);
-
-    return _canvas;
-}
-
-int engineCore_unregisterUICanvasByID(size_t id) {
-    EngineCore* ec = getCore();
-
-    for (size_t i = 0; i < ec->allUICanvases.size; i++) {
-        if (ec->allUICanvases.items[i]->id == id) {
-            if (ec->allUICanvases.items[i]->event_destroyed != NULL)
-                ec->allUICanvases.items[i]->event_destroyed(ec->allUICanvases.items[i]);
-
-            LIST_REMOVE_CLEAN(ec->allUICanvases, UICanvas*, i);
-
-            return 1;
-        }
-    }
-
-    return 0;
 }
 
 /**

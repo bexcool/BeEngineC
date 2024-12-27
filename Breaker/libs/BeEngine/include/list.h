@@ -102,10 +102,12 @@
     index;                                                                      \
 })
 
-#define LIST_CLEAN(listStruct)   \
-    {                            \
-        free(listStruct.items);  \
-        listStruct.items = NULL; \
+#define LIST_CLEAN(listStruct)    \
+    {                             \
+        free(listStruct.items);   \
+        listStruct.items = NULL;  \
+        listStruct.size = 0;      \
+        listStruct._capacity = 0; \
     }
 
 #define LIST_FOREACH(listStruct, itemType, itemName, iteratorName)                                                                     \

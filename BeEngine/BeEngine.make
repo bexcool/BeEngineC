@@ -75,7 +75,9 @@ GENERATED += $(OBJDIR)/appManager.o
 GENERATED += $(OBJDIR)/borderUIComponent.o
 GENERATED += $(OBJDIR)/brush.o
 GENERATED += $(OBJDIR)/buttonUIComponent.o
+GENERATED += $(OBJDIR)/cameraGameObjectComp.o
 GENERATED += $(OBJDIR)/color.o
+GENERATED += $(OBJDIR)/constraint.o
 GENERATED += $(OBJDIR)/engineCore.o
 GENERATED += $(OBJDIR)/fileHelper.o
 GENERATED += $(OBJDIR)/font.o
@@ -95,7 +97,9 @@ OBJECTS += $(OBJDIR)/appManager.o
 OBJECTS += $(OBJDIR)/borderUIComponent.o
 OBJECTS += $(OBJDIR)/brush.o
 OBJECTS += $(OBJDIR)/buttonUIComponent.o
+OBJECTS += $(OBJDIR)/cameraGameObjectComp.o
 OBJECTS += $(OBJDIR)/color.o
+OBJECTS += $(OBJDIR)/constraint.o
 OBJECTS += $(OBJDIR)/engineCore.o
 OBJECTS += $(OBJDIR)/fileHelper.o
 OBJECTS += $(OBJDIR)/font.o
@@ -177,10 +181,16 @@ endif
 $(OBJDIR)/appManager.o: src/appManager.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/cameraGameObjectComp.o: src/components/cameraGameObjectComp.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/physicsGameObjectComp.o: src/components/physicsGameObjectComp.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/textureGameObjectComp.o: src/components/textureGameObjectComp.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/constraint.o: src/constraint.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/engineCore.o: src/engineCore.c

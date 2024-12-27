@@ -11,6 +11,8 @@
         "tuple": "cpp",
         "typeinfo": "cpp",
         "queue": "c",
-        "sdl_ttf.h": "c"
+        "sdl_ttf.h": "c",
+        "filehelper.h": "c",
+        "buttonuicomponent.h": "c"
     }
 }

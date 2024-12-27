@@ -2,6 +2,7 @@
 
 #include "engineCore.h"
 #include "list.h"
+#include "logger.h"
 
 void uiCanvas_attachUIComponent(UICanvas *canvas, void *uiComponent) {
     LIST_ADD(canvas->uiComponents, void *, uiComponent);

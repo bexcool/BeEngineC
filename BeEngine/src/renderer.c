@@ -56,6 +56,9 @@ int renderer_init() {
         LOG_E("Renderer: Could not create renderer: %s\n", SDL_GetError());
         return -1;
     }
+
+    SDL_SetRenderDrawBlendMode(r->gameRenderer, SDL_BLENDMODE_BLEND);
+
     LOG("Renderer: SDL renderer created.");
 
     LOG("Renderer: Initializing SDL_image...");
@@ -81,6 +84,8 @@ int renderer_init() {
 
 void renderer_render() {
     Renderer *r = getRenderer();
+
+    if (getCore()->_loadingLevel) return;
 
     static size_t frame = 0;
     SDL_SetRenderDrawColor(r->gameRenderer, 0, 0, 0, 255);
@@ -147,6 +152,42 @@ void renderer_render() {
     SDL_RenderPresent(r->gameRenderer);
 }
 
+Vector2 renderer_getViewportLocation() {
+    if (getRenderer()->focusedCamera == NULL)
+        return VECTOR2_ZERO;
+
+    return getRenderer()->focusedCamera->_viewportWorldLocation;
+}
+
+void renderer_rectAdjustByCamera(SDL_Rect *rect) {
+    rect->x -= renderer_getViewportLocation().x;
+    rect->y -= renderer_getViewportLocation().y;
+}
+
+void renderer_UI_drawFillRectangle(Color *color, Vector2 *location, Vector2 *size) {
+    SDL_SetRenderDrawColor(getRenderer()->gameRenderer, color->r, color->g, color->b, color->a);
+
+    SDL_Rect rect = {
+        .x = location->x,
+        .y = location->y,
+        .w = size->x,
+        .h = size->y};
+
+    SDL_RenderFillRect(getRenderer()->gameRenderer, &rect);
+}
+
+void renderer_UI_drawRectangle(Color *color, Vector2 *location, Vector2 *size) {
+    SDL_SetRenderDrawColor(getRenderer()->gameRenderer, color->r, color->g, color->b, color->a);
+
+    SDL_Rect rect = {
+        .x = location->x,
+        .y = location->y,
+        .w = size->x,
+        .h = size->y};
+
+    SDL_RenderDrawRect(getRenderer()->gameRenderer, &rect);
+}
+
 void renderer_drawFillRectangle(Color *color, Vector2 *location, Vector2 *size) {
     SDL_SetRenderDrawColor(getRenderer()->gameRenderer, color->r, color->g, color->b, color->a);
 
@@ -155,6 +196,8 @@ void renderer_drawFillRectangle(Color *color, Vector2 *location, Vector2 *size) 
         .y = location->y,
         .w = size->x,
         .h = size->y};
+
+    renderer_rectAdjustByCamera(&rect);
 
     SDL_RenderFillRect(getRenderer()->gameRenderer, &rect);
 }
@@ -167,6 +210,8 @@ void renderer_drawRectangle(Color *color, Vector2 *location, Vector2 *size) {
         .y = location->y,
         .w = size->x,
         .h = size->y};
+
+    renderer_rectAdjustByCamera(&rect);
 
     SDL_RenderDrawRect(getRenderer()->gameRenderer, &rect);
 }

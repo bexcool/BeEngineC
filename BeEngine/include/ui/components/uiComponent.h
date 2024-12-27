@@ -1,5 +1,6 @@
 #pragma once
 
+#include "constraint.h"
 #include "vector2.h"
 #include "visibility.h"
 
@@ -14,6 +15,7 @@
     event_released
     event_hovered
     event_unhovered
+    char displayName[64]
     size_t id
     Vector2 position
     Vector2 size
@@ -21,6 +23,8 @@
     int isPressed
     int isHovered
     int disabled
+    ConstraintType horizontalConstraint
+    ConstraintType verticalConstraint
 */
 #define DEFINE_UICOMPONENT_START(name)                         \
     typedef struct name {                                      \
@@ -35,12 +39,17 @@
         void (*__event_unhovered)(struct name *, UICanvas *);  \
         void (*__event_input)(struct name *, UICanvas *);      \
         size_t id;                                             \
+        char displayName[64];                                  \
         Vector2 position;                                      \
+        Vector2 _actualPosition;                               \
+        Thickness margin;                                      \
         Vector2 size;                                          \
         Visibility visibility;                                 \
         int isPressed;                                         \
         int isHovered;                                         \
         int disabled;                                          \
+        ConstraintType horizontalConstraint;                   \
+        ConstraintType verticalConstraint;                     \
         void (*event_registered)(struct name *, UICanvas *);   \
         void (*event_tick)(struct name *, UICanvas *);         \
         void (*event_draw)(struct name *, UICanvas *);         \

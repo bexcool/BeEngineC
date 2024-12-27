@@ -10,6 +10,6 @@ Vector2 vector2_add(Vector2 *v1, Vector2 *v2) {
     return VECTOR2(v1->x + v2->x, v1->y + v2->y);
 }
 
-Vector2 vector2_subtract(Vector2 *v1, Vector2 *v2) {
+Vector2 vector2_sub(Vector2 *v1, Vector2 *v2) {
     return VECTOR2(v1->x - v2->x, v1->y - v2->y);
 }

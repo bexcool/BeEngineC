@@ -71,9 +71,11 @@ endif
 GENERATED :=
 OBJECTS :=
 
+GENERATED += $(OBJDIR)/idkLevel.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/mainMenuLevel.o
 GENERATED += $(OBJDIR)/testLevel.o
+OBJECTS += $(OBJDIR)/idkLevel.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/mainMenuLevel.o
 OBJECTS += $(OBJDIR)/testLevel.o
@@ -140,6 +142,9 @@ endif
 # File Rules
 # #############################################
 
+$(OBJDIR)/idkLevel.o: src/idkLevel.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: src/main.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"

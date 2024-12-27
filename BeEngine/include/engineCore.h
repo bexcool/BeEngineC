@@ -31,6 +31,7 @@ typedef struct EngineCore {
     EngineEvents events;
     UICanvasList allUICanvases;
     SDL_Event* lastInputEvent;
+    int _loadingLevel;
     InputFocus _inputFocus;
     UICanvas* _focusedUICanvas;
     void* _focusedUIComponent;
@@ -81,6 +82,7 @@ double getDeltaTime();
 void _engineCore_initialize(EngineOptions* _options, EngineEvents* _events);
 void _engineCore_clean();
 void _engineCore_cleanGameObjects();
+void _engineCore_cleanUICanvases();
 
 void _engineCore_tick();
 void _engineCore_tickGameObjects();
@@ -89,5 +91,5 @@ void _engineCore_anyInput(SDL_Event* event);
 
 GameObject* _engineCore_registerGameObject(GameObject* go);
 int _engineCore_unregisterGameObject(size_t id);
-UICanvas* engineCore_registerUICanvas(UICanvas* canvas);
-int engineCore_unregisterUICanvasByID(size_t id);
+UICanvas* _engineCore_registerUICanvas();
+int _engineCore_unregisterUICanvas(size_t id);

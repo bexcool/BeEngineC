@@ -18,3 +18,36 @@ int _gameObject_attachComponent(GameObject *go, void *component) {
 
     return 0;
 }
+
+void gameObject_attachToGameObject(GameObject *go, GameObject *goParent) {
+    go->parentGameObject = goParent;
+    go->relativeLocation = VECTOR2(go->location.x - goParent->location.x, go->location.y - goParent->location.y);
+}
+
+void gameObject_setVelocity(GameObject *go, Vector2 *velocity) {
+    if (go->objectType != OBJECT_MOVABLE) {
+        LOG_W("Game object: Cannot set velocity to a non-movable game object (ID: %d).", go->id);
+        return;
+    }
+
+    if (go->parentGameObject != NULL) {
+        LOG_W("Game object: Cannot set velocity to a child game object (ID: %d).", go->id);
+        return;
+    }
+
+    go->velocity = *velocity;
+}
+
+void gameObject_addVelocity(GameObject *go, Vector2 *velocity) {
+    if (go->objectType != OBJECT_MOVABLE) {
+        LOG_W("Game object: Cannot add velocity to a non-movable game object (ID: %d).", go->id);
+        return;
+    }
+
+    if (go->parentGameObject != NULL) {
+        LOG_W("Game object: Cannot add velocity to a child game object (ID: %d).", go->id);
+        return;
+    }
+
+    vector2_add(&go->velocity, velocity);
+}

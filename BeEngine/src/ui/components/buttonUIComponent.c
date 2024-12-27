@@ -7,6 +7,8 @@
 #include "vector2.h"
 
 void _ButtonUIComponent_registered(ButtonUIComponent *comp, UICanvas *canvas) {
+    snprintf(comp->displayName, sizeof(comp->displayName), "ButtonUIComponent_%zu", comp->id);
+    if (comp->event_registered) comp->event_registered(comp, canvas);
 }
 
 void _ButtonUIComponent_tick(ButtonUIComponent *comp, UICanvas *canvas) {
@@ -22,11 +24,11 @@ void _ButtonUIComponent_draw(ButtonUIComponent *comp, UICanvas *canvas) {
     // Disabled
     if (comp->disabled) {
         if (comp->style.disabledBrush.texture == NULL) {
-            renderer_drawFillRectangle(&comp->style.disabledBrush.color, &comp->position, &comp->size);
+            renderer_UI_drawFillRectangle(&comp->style.disabledBrush.color, &comp->_actualPosition, &comp->size);
             return;
         }
 
-        SDL_Rect rect = vector2x2toSDL_Rect(&comp->position, &comp->size);
+        SDL_Rect rect = vector2x2toSDL_Rect(&comp->_actualPosition, &comp->size);
         SDL_RenderCopy(r->gameRenderer, comp->style.disabledBrush.texture, NULL, &rect);
         return;
     }
@@ -34,11 +36,11 @@ void _ButtonUIComponent_draw(ButtonUIComponent *comp, UICanvas *canvas) {
     // Pressed
     if (comp->isPressed) {
         if (comp->style.presssedBrush.texture == NULL) {
-            renderer_drawFillRectangle(&comp->style.presssedBrush.color, &comp->position, &comp->size);
+            renderer_UI_drawFillRectangle(&comp->style.presssedBrush.color, &comp->_actualPosition, &comp->size);
             return;
         }
 
-        SDL_Rect rect = vector2x2toSDL_Rect(&comp->position, &comp->size);
+        SDL_Rect rect = vector2x2toSDL_Rect(&comp->_actualPosition, &comp->size);
         SDL_RenderCopy(r->gameRenderer, comp->style.presssedBrush.texture, NULL, &rect);
         return;
     }
@@ -46,22 +48,22 @@ void _ButtonUIComponent_draw(ButtonUIComponent *comp, UICanvas *canvas) {
     // Hovered
     if (comp->isHovered) {
         if (comp->style.hoveredBrush.texture == NULL) {
-            renderer_drawFillRectangle(&comp->style.hoveredBrush.color, &comp->position, &comp->size);
+            renderer_UI_drawFillRectangle(&comp->style.hoveredBrush.color, &comp->_actualPosition, &comp->size);
             return;
         }
 
-        SDL_Rect rect = vector2x2toSDL_Rect(&comp->position, &comp->size);
+        SDL_Rect rect = vector2x2toSDL_Rect(&comp->_actualPosition, &comp->size);
         SDL_RenderCopy(r->gameRenderer, comp->style.hoveredBrush.texture, NULL, &rect);
         return;
     }
 
     // Normal
     if (comp->style.normalBrush.texture == NULL) {
-        renderer_drawFillRectangle(&comp->style.normalBrush.color, &comp->position, &comp->size);
+        renderer_UI_drawFillRectangle(&comp->style.normalBrush.color, &comp->_actualPosition, &comp->size);
         return;
     }
 
-    SDL_Rect rect = vector2x2toSDL_Rect(&comp->position, &comp->size);
+    SDL_Rect rect = vector2x2toSDL_Rect(&comp->_actualPosition, &comp->size);
     SDL_RenderCopy(r->gameRenderer, comp->style.normalBrush.texture, NULL, &rect);
 }
 

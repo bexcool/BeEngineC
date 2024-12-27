@@ -1,8 +1,10 @@
 #include "level.h"
 
 #include "engineCore.h"
+#include "uiCanvas.h"
 
-GameObject* level_spawnGameObject(GameObjectSpawn* gameObjectToSpawn, Vector2* location) {
+// Game Object
+GameObject* level_spawnGameObject(GameObjectConstructor* gameObjectToSpawn, Vector2* location) {
     GameObject go = {
         .id = rand() % SIZE_T_MAX + 1,
         .location = (*location),
@@ -21,4 +23,30 @@ GameObject* level_spawnGameObject(GameObjectSpawn* gameObjectToSpawn, Vector2* l
 
 int level_destroyGameObject(GameObject* gameObject) {
     return _engineCore_unregisterGameObject(gameObject->id);
+}
+
+int level_destroyGameObjectByID(size_t id) {
+    return _engineCore_unregisterGameObject(id);
+}
+
+// UI Canvas
+UICanvas* level_createUICanvas() {
+    return _engineCore_registerUICanvas();
+}
+
+int level_destroyUICanvas(UICanvas* canvas) {
+    return _engineCore_unregisterUICanvas(canvas->id);
+}
+
+int level_destroyUICanvasByID(size_t id) {
+    return _engineCore_unregisterUICanvas(id);
+}
+
+// Camera
+void level_focusCamera(CameraGameObjectComp* camera, SDL_Rect* bounds) {
+    if (bounds == NULL)
+        camera->_viewportBounds = (SDL_Rect){-1, -1, -1, -1};
+    else
+        camera->_viewportBounds = *bounds;
+    getRenderer()->focusedCamera = camera;
 }

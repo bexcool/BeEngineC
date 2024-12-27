@@ -2,7 +2,9 @@
 
 #include <stdio.h>
 
+#include "cameraGameObjectComp.h"
 #include "gameObject.h"
+#include "uiCanvas.h"
 #include "vector2.h"
 
 typedef struct Level {
@@ -20,5 +22,8 @@ typedef struct Level {
 
 #define DECLARE_LEVEL
 
-GameObject* level_spawnGameObject(GameObjectSpawn* gameObjectToSpawn, Vector2* location);
+GameObject* level_spawnGameObject(GameObjectConstructor* gameObjectToSpawn, Vector2* location);
+UICanvas* level_createUICanvas();
 int level_destroyGameObject(GameObject* gameObject);
+int level_destroyGameObjectByID(size_t id);
+void level_focusCamera(CameraGameObjectComp* camera, SDL_Rect* bounds);

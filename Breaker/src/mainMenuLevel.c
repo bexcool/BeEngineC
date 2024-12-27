@@ -2,6 +2,7 @@
 
 #include "buttonUIComponent.h"
 #include "engineCore.h"
+#include "idkLevel.h"
 #include "input.h"
 #include "testLevel.h"
 
@@ -16,9 +17,10 @@ void _mainMenuLevel_loaded() {
                                     newTextureBrush(&COLOR(0, 0, 255), NULL),
                                     TEXTUREBRUSH_DEFAULT);
 
-    canvas = engineCore_registerUICanvas(&((UICanvas){.id = NEW_ID}));
+    canvas = level_createUICanvas();
 
-    playButton = (ButtonUIComponent){.position = VECTOR2(100, 100), .size = VECTOR2(200, 50), .style = style, .event_clicked = &_playButton_clicked};
+    playButton = (ButtonUIComponent){.id = 10, .position = VECTOR2(100, 100), .size = VECTOR2(200, 50), .style = style, .event_clicked = &_playButton_clicked};
+    playButton.horizontalConstraint = CONSTRAINT_CENTERED;
 
     UICANVAS_ATTACH_COMP(ButtonUIComponent, &playButton, canvas);
 }
