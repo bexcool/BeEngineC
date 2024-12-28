@@ -43,9 +43,9 @@ int level_destroyUICanvasByID(size_t id) {
 }
 
 // Camera
-void level_focusCamera(CameraGameObjectComp* camera, SDL_Rect* bounds) {
+void level_focusCamera(CameraGameObjectComp* camera, Vector2* bounds) {
     if (bounds == NULL)
-        camera->_viewportBounds = (SDL_Rect){-1, -1, -1, -1};
+        camera->_viewportBounds = VECTOR2(-1, -1);
     else
         camera->_viewportBounds = *bounds;
     getRenderer()->focusedCamera = camera;

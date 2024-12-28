@@ -26,4 +26,4 @@ GameObject* level_spawnGameObject(GameObjectConstructor* gameObjectToSpawn, Vect
 UICanvas* level_createUICanvas();
 int level_destroyGameObject(GameObject* gameObject);
 int level_destroyGameObjectByID(size_t id);
-void level_focusCamera(CameraGameObjectComp* camera, SDL_Rect* bounds);
+void level_focusCamera(CameraGameObjectComp* camera, Vector2* bounds);

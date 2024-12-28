@@ -13,6 +13,7 @@
         "queue": "c",
         "sdl_ttf.h": "c",
         "filehelper.h": "c",
-        "buttonuicomponent.h": "c"
+        "buttonuicomponent.h": "c",
+        "enginecore.h": "c"
     }
 }

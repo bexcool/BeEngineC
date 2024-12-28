@@ -330,6 +330,7 @@ void _engineCore_tickUI() {
 
 void _engineCore_anyInput(SDL_Event* event) {
     getCore()->lastInputEvent = event;
+    Renderer* r = getRenderer();
 
     // TODO: Call this only when event happened
 
@@ -339,9 +340,9 @@ void _engineCore_anyInput(SDL_Event* event) {
     // Debug keys
     if (event->type == SDL_KEYDOWN) {
         if (code == SDLK_F1) {
-            debugShowStats = !debugShowStats;
+            r->debugShowStats = !r->debugShowStats;
         } else if (code == SDLK_F2) {
-            debugShowCollisions = !debugShowCollisions;
+            r->debugShowCollisions = !r->debugShowCollisions;
         }
     }
 

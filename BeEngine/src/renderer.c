@@ -12,16 +12,6 @@
 #include "logger.h"
 #include "vector2.h"
 
-SDL_Surface *statsTextSurface;
-SDL_Texture *statsTextTexture;
-TTF_Font *debugFont;
-
-#ifndef NDEBUG
-
-int debugShowStats = 0, debugShowCollisions = 0;
-
-#endif
-
 int renderer_init() {
     LOG("Initializing renderer...");
 
@@ -75,7 +65,7 @@ int renderer_init() {
     }
     LOG("Renderer: SDL_ttf initialized.");
 
-    debugFont = font_load("./assets/fonts/AvrileSansUI-Regular.ttf", 24);
+    r->debugFont = font_load("./assets/fonts/AvrileSansUI-Regular.ttf", 24);
 
     LOG("Renderer initialized.");
 
@@ -109,7 +99,7 @@ void renderer_render() {
 
 #ifndef NDEBUG
 
-        if (debugShowCollisions && go->collisionType != COLLISION_NO_COLLISION) {
+        if (r->debugShowCollisions && go->collisionType != COLLISION_NO_COLLISION) {
             renderer_drawRectangle(&COLOR(255, 0, 0), &VECTOR2(go->location.x, go->location.y), &VECTOR2(go->size.x, go->size.y));
             SDL_RenderDrawLine(r->gameRenderer, go->location.x, go->location.y, go->location.x + go->size.x - 1, go->location.y + go->size.y - 1);
             SDL_RenderDrawLine(r->gameRenderer, go->location.x, go->location.y + go->size.y - 1, go->location.x + go->size.x - 1, go->location.y);
@@ -131,20 +121,20 @@ void renderer_render() {
 
 #ifndef NDEBUG
 
-    if (debugShowStats) {
+    if (r->debugShowStats) {
         SDL_Color color = {255, 255, 255, 255};
         char statsBuff[256];
 
         snprintf(statsBuff, 256, "FPS: %.2f", 1.0 / getDeltaTime());
 
-        statsTextSurface = TTF_RenderText_Solid(debugFont, statsBuff, color);
-        statsTextTexture = SDL_CreateTextureFromSurface(r->gameRenderer, statsTextSurface);
+        r->_statsTextSurface = TTF_RenderText_Solid(r->debugFont, statsBuff, color);
+        r->_statsTextTexture = SDL_CreateTextureFromSurface(r->gameRenderer, r->_statsTextSurface);
 
-        SDL_Rect statsTextRect = {.x = 5, .y = 5, .w = statsTextSurface->w, statsTextSurface->h};
-        SDL_RenderCopy(r->gameRenderer, statsTextTexture, NULL, &statsTextRect);
+        SDL_Rect statsTextRect = {.x = 5, .y = 5, .w = r->_statsTextSurface->w, r->_statsTextSurface->h};
+        SDL_RenderCopy(r->gameRenderer, r->_statsTextTexture, NULL, &statsTextRect);
 
-        SDL_FreeSurface(statsTextSurface);
-        SDL_DestroyTexture(statsTextTexture);
+        SDL_FreeSurface(r->_statsTextSurface);
+        SDL_DestroyTexture(r->_statsTextTexture);
     }
 
 #endif

@@ -13,13 +13,14 @@ typedef struct Renderer {
     SDL_Renderer *gameRenderer;
     TTF_FontCacheList loadedTtfFonts;
     CameraGameObjectComp *focusedCamera;
+    TTF_Font *debugFont;
 #ifndef NDEBUG
     int debugShowCollisions;
     int debugShowStats;
+    SDL_Surface *_statsTextSurface;
+    SDL_Texture *_statsTextTexture;
 #endif
 } Renderer;
-
-extern int debugShowCollisions, debugShowStats;
 
 int renderer_init();
 void renderer_render();

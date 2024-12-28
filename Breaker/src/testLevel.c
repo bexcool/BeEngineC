@@ -54,9 +54,9 @@ void _testLevel_loaded() {
     GAMEOBJECT_ATTACH_COMP(player, TextureGameObjectComp, &texture);
     GAMEOBJECT_ATTACH_COMP(player, CameraGameObjectComp, &camera);
 
-    SDL_Rect cameraRect = (SDL_Rect){0, 0, 1500, 2000};
+    Vector2 cameraBounds = VECTOR2(1500, 2000);
 
-    level_focusCamera(&camera, &cameraRect);
+    level_focusCamera(&camera, &cameraBounds);
 
     _canvas = level_createUICanvas();
 
@@ -108,7 +108,7 @@ void drawTest(GameObject *gameObject) {
 void event_anyInput(SDL_Event *event) {
     SDL_Keycode code = event->key.keysym.sym;
 
-    float vel = 100;
+    float vel = 500;
 
     if (event->type == SDL_KEYDOWN) {
         if (code == SDLK_a)
