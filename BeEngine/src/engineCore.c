@@ -18,12 +18,7 @@
 #include "time.h"
 #include "uiCanvas.h"
 
-EngineCore _engineCore;
-Level _currentLevel;
-Renderer _renderer;
-
-GameObject* _focusedGameObject = NULL;
-
+EngineCore ___engineCore;
 Uint64 _lastTime;
 
 double _deltaTime;
@@ -82,19 +77,15 @@ void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, in
 
 // Getters
 EngineCore* getCore() {
-    return &_engineCore;
+    return &___engineCore;
 }
 
 Level* getLevel() {
-    return &_currentLevel;
+    return &getCore()->_currentLevel;
 }
 
 Renderer* getRenderer() {
-    return &_renderer;
-}
-
-GameObject* getFocusedGameObject() {
-    return _focusedGameObject;
+    return &getCore()->_renderer;
 }
 
 double getDeltaTime() {
@@ -451,7 +442,7 @@ int engineCore_loadLevel(Level* level) {
     _engineCore_cleanUICanvases();
 
     LOG("Transitioning from \"%s\" to \"%s\"...", getLevel()->name, level->name);
-    _currentLevel = *level;
+    getCore()->_currentLevel = *level;
 
     LOG("Initializing new level...");
     LIST_INIT(getLevel()->allGameObjects);
@@ -486,11 +477,4 @@ void* engineCore_getFocusedUIComponent() {
 
 UICanvas* engineCore_getFocusedUICanvas() {
     return getCore()->_focusedUICanvas;
-}
-
-/**
- * Sends input to this game object.
- */
-void engineCore_focusGameObject(GameObject* go) {
-    _focusedGameObject = go;
 }

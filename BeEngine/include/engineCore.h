@@ -31,6 +31,8 @@ typedef struct EngineCore {
     EngineEvents events;
     UICanvasList allUICanvases;
     SDL_Event* lastInputEvent;
+    Renderer _renderer;
+    Level _currentLevel;
     int _loadingLevel;
     InputFocus _inputFocus;
     UICanvas* _focusedUICanvas;
@@ -75,7 +77,6 @@ void* engineCore_getFocusedUIComponent();
 EngineCore* getCore();
 Level* getLevel();
 Renderer* getRenderer();
-GameObject* getFocusedGameObject();
 double getDeltaTime();
 
 // Private functions

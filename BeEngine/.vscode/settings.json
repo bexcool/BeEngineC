@@ -14,6 +14,7 @@
         "sdl_ttf.h": "c",
         "filehelper.h": "c",
         "buttonuicomponent.h": "c",
-        "enginecore.h": "c"
+        "enginecore.h": "c",
+        "physicsgameobjectcomp.h": "c"
     }
 }
