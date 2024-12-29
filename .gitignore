@@ -8,6 +8,13 @@ libs/
 # MacOS
 .DS_Store
 
+# Project files
+*.make
+*.vcxproj
+*.vcxproj.user
+make.log
+Makefile
+
 # Prerequisites
 *.d
 
