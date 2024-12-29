@@ -2,8 +2,9 @@
 bin/
 obj/
 projectTemplate/
-include/
 libs/
+.vs/
+.vscode/
 
 # MacOS
 .DS_Store
