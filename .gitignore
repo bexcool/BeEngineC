@@ -4,6 +4,9 @@ projectTemplate/
 include/
 libs/
 
+# MacOS
+.DS_Store
+
 # Prerequisites
 *.d
 
