@@ -83,7 +83,6 @@ project "${NAME}"
 EOT
 
 find ./include -type f -exec cp {} ./projectTemplate/${NAME}/libs/BeEngine/include \;
-cp ./premake5 ./projectTemplate/${NAME}/premake5
 cp ./premake.sh ./projectTemplate/${NAME}/premake.sh
 cp ./buildDebug.sh ./projectTemplate/${NAME}/buildDebug.sh
 cp ./buildRelease.sh ./projectTemplate/${NAME}/buildRelease.sh
