@@ -19,3 +19,5 @@ typedef struct Vector2 {
 SDL_Rect vector2x2toSDL_Rect(Vector2 *v1, Vector2 *v2);
 Vector2 vector2_add(Vector2 *v1, Vector2 *v2);
 Vector2 vector2_sub(Vector2 *v1, Vector2 *v2);
+Vector2 vector2_mul(Vector2 *v1, float val);
+Vector2 vector2_div(Vector2 *v1, float val);

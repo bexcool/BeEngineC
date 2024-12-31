@@ -55,15 +55,19 @@ void _PhysicsGameObjectComp_tick(PhysicsGameObjectComp *comp, GameObject *parent
             .h = parent->size.y};
 
         // Do not check velocity collision for static object
-        if (parent->objectType != OBJECT_STATIC) {
+        if (parent->objectType != OBJECT_STATIC && parent->collisionType == COLLISION_BLOCK) {
             goRect.y = parent->location.y - newlocation.y;
 
             if (SDL_HasIntersection(&goRect, &checkGoRect)) {
                 if (checkGo->collisionType == COLLISION_BLOCK) {
-                    if (parent->velocity.x > 0)
+                    if (parent->velocity.x > 0) {
                         parent->location.x = checkGo->location.x - parent->size.x;
-                    if (parent->velocity.x < 0)
+                        if (parent->event_hit) parent->event_hit(parent, checkGo, &VECTOR2(1, 0));
+                    }
+                    if (parent->velocity.x < 0) {
                         parent->location.x = checkGo->location.x + checkGo->size.x;
+                        if (parent->event_hit) parent->event_hit(parent, checkGo, &VECTOR2(-1, 0));
+                    }
                 }
             }
 
@@ -73,10 +77,14 @@ void _PhysicsGameObjectComp_tick(PhysicsGameObjectComp *comp, GameObject *parent
 
             if (SDL_HasIntersection(&goRect, &checkGoRect)) {
                 if (checkGo->collisionType == COLLISION_BLOCK) {
-                    if (parent->velocity.y > 0)
+                    if (parent->velocity.y > 0) {
                         parent->location.y = checkGo->location.y + checkGo->size.y;
-                    if (parent->velocity.y < 0)
+                        if (parent->event_hit) parent->event_hit(parent, checkGo, &VECTOR2(0, 1));
+                    }
+                    if (parent->velocity.y < 0) {
                         parent->location.y = checkGo->location.y - parent->size.y;
+                        if (parent->event_hit) parent->event_hit(parent, checkGo, &VECTOR2(0, -1));
+                    }
                 }
             }
 
@@ -93,8 +101,8 @@ void _PhysicsGameObjectComp_tick(PhysicsGameObjectComp *comp, GameObject *parent
                     parent->event_beginOverlap(parent, checkGo);
             }
         } else {
-            if (LIST_CONTAINS(parent->overlappedGameObjects, GameObject *, ->id, checkGo->id)) {
-                size_t index = LIST_FIND_INDEX(parent->overlappedGameObjects, GameObject *, ->id, checkGo->id);
+            size_t index = LIST_FIND_INDEX(parent->overlappedGameObjects, GameObject *, ->id, checkGo->id);
+            if (index != -1) {
                 LIST_REMOVE(parent->overlappedGameObjects, GameObject *, index);
                 if (parent->event_endOverlap != NULL)
                     parent->event_endOverlap(parent, checkGo);

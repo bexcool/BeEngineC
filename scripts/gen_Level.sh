@@ -22,9 +22,9 @@ cat << EOT >> ../src/$SOURCE_FILE
 
 #include "engineCore.h"
 
-Level ${NAME_NCAPITAL} = {.id = ${ID}, .name = "${NAME}", .event_loaded = &_${NAME}_loaded};
+Level ${NAME_CAPITAL} = {.id = ${ID}, .name = "${NAME}", .event_loaded = &_${NAME}_loaded};
 
-void _${NAME_NCAPITAL}_loaded() {
+void _${NAME_CAPITAL}_loaded() {
 
 }
 EOT

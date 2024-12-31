@@ -16,7 +16,8 @@ GameObject* level_spawnGameObject(GameObjectConstructor* gameObjectToSpawn, Vect
         .event_tick = gameObjectToSpawn->event_tick,
         .event_destroyed = gameObjectToSpawn->event_destroyed,
         .event_beginOverlap = gameObjectToSpawn->event_beginOverlap,
-        .event_endOverlap = gameObjectToSpawn->event_endOverlap};
+        .event_endOverlap = gameObjectToSpawn->event_endOverlap,
+        .event_hit = gameObjectToSpawn->event_hit};
 
     return _engineCore_registerGameObject(&go);
 }

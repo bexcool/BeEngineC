@@ -12,6 +12,10 @@ void _CameraGameObjectComp_tick(CameraGameObjectComp *comp, GameObject *parent) 
         SDL_Rect viewport;
         SDL_RenderGetViewport(getRenderer()->gameRenderer, &viewport);
 
+        comp->_viewportWorldLocation =
+            VECTOR2(comp->worldLocation.x - viewport.w / 2,
+                    comp->worldLocation.y - viewport.h / 2);
+
         if (comp->_viewportBounds.x != -1) {
             Vector2 *bounds = &comp->_viewportBounds;
 
@@ -24,6 +28,10 @@ void _CameraGameObjectComp_tick(CameraGameObjectComp *comp, GameObject *parent) 
             } else {
                 comp->_viewportWorldLocation.x = 0;
             }
+        }
+
+        if (comp->_viewportBounds.y != -1) {
+            Vector2 *bounds = &comp->_viewportBounds;
 
             if (comp->_viewportBounds.y > viewport.h && comp->worldLocation.y - viewport.h / 2 > 0) {
                 if (comp->worldLocation.y + viewport.h / 2 < bounds->y) {
@@ -34,10 +42,6 @@ void _CameraGameObjectComp_tick(CameraGameObjectComp *comp, GameObject *parent) 
             } else {
                 comp->_viewportWorldLocation.y = 0;
             }
-        } else {
-            comp->_viewportWorldLocation =
-                VECTOR2(comp->worldLocation.x - viewport.w / 2,
-                        comp->worldLocation.y - viewport.h / 2);
         }
     }
 }

@@ -17,8 +17,9 @@ typedef struct GameObjectConstructor {
     void (*event_draw)(struct GameObject*);
     void (*event_tick)(struct GameObject*);
     void (*event_destroyed)(struct GameObject*);
-    void (*event_beginOverlap)(struct GameObject*, struct GameObject*);  // Self, Collided object
-    void (*event_endOverlap)(struct GameObject*, struct GameObject*);    // Self, Collided object
+    void (*event_beginOverlap)(struct GameObject*, struct GameObject*);   // Self, Collided object
+    void (*event_endOverlap)(struct GameObject*, struct GameObject*);     // Self, Collided object
+    void (*event_hit)(struct GameObject*, struct GameObject*, Vector2*);  // Self, Collided object, Hit normal
 } GameObjectConstructor;
 
 typedef struct GameObject {
@@ -36,14 +37,10 @@ typedef struct GameObject {
     void (*event_draw)(struct GameObject*);
     void (*event_tick)(struct GameObject*);
     void (*event_destroyed)(struct GameObject*);
-    void (*event_beginOverlap)(struct GameObject*, struct GameObject*);  // Self, Collided object
-    void (*event_endOverlap)(struct GameObject*, struct GameObject*);    // Self, Collided object
+    void (*event_beginOverlap)(struct GameObject*, struct GameObject*);   // Self, Collided object
+    void (*event_endOverlap)(struct GameObject*, struct GameObject*);     // Self, Collided object
+    void (*event_hit)(struct GameObject*, struct GameObject*, Vector2*);  // Self, Collided object, Hit normal
 } GameObject;
-
-// Přidat sám sebe do nějakého liste objektů a přidat tam svoji draw funkci
-
-#define DEFINE_GAMEOBJECT(name) \
-    void _##name##_draw(GameObject* gameObject);
 
 #define GAMEOBJECT_ATTACH_COMP(gameObject, type, component) \
     (component)->event_registered = &_##type##_registered;  \

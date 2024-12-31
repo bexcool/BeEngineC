@@ -24,3 +24,6 @@
     void _##name##_tick(struct name *comp, GameObject *parent);       \
     void _##name##_draw(struct name *comp, GameObject *parent);       \
     void _##name##_destroyed(struct name *comp, GameObject *parent);
+
+#define NEW_GAMEOBJECTCOMP(name) \
+    (name *)malloc(sizeof(name))

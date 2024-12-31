@@ -15,8 +15,19 @@ int gameLoop_start() {
 
     while (!exitRequested) {
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                exitRequested = 1;
+            switch (event.type) {
+                case SDL_QUIT:
+                    exitRequested = 1;
+                    break;
+
+                case SDL_WINDOWEVENT:
+                    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+                        getRenderer()->event_viewportResized(&VECTOR2(event.window.data1, event.window.data2));
+                    }
+                    break;
+
+                default:
+                    break;
             }
 
             _engineCore_anyInput(&event);

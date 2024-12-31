@@ -25,7 +25,7 @@ int renderer_init() {
         opt.window_y,
         opt.window_width,
         opt.window_height,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+        opt.window_flags | SDL_WINDOW_SHOWN);
 
     if (r->gameWindow == NULL) {
         LOG_E("Renderer: Could not create window: %s\n", SDL_GetError());
@@ -147,6 +147,12 @@ Vector2 renderer_getViewportLocation() {
         return VECTOR2_ZERO;
 
     return getRenderer()->focusedCamera->_viewportWorldLocation;
+}
+
+Vector2 renderer_getViewportSize() {
+    SDL_Rect viewport;
+    SDL_RenderGetViewport(getRenderer()->gameRenderer, &viewport);
+    return VECTOR2(viewport.w, viewport.h);
 }
 
 void renderer_rectAdjustByCamera(SDL_Rect *rect) {

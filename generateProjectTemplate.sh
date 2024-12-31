@@ -22,7 +22,7 @@ void event_gameEngineInitialized();
 
 int main(int argc, char* argv[]) {
     EngineOptions options = {
-        .projectName = "BeEngine Project",
+        .projectName = "BeEngineC Project",
         .window_x = 200,
         .window_y = 200,
         .window_width = 800,

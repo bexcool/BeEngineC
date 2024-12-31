@@ -14,6 +14,7 @@ typedef struct Renderer {
     TTF_FontCacheList loadedTtfFonts;
     CameraGameObjectComp *focusedCamera;
     TTF_Font *debugFont;
+    void (*event_viewportResized)(Vector2 *);
 #ifndef NDEBUG
     int debugShowCollisions;
     int debugShowStats;
@@ -26,6 +27,7 @@ int renderer_init();
 void renderer_render();
 
 Vector2 renderer_getViewportLocation();
+Vector2 renderer_getViewportSize();
 void renderer_rectAdjustByCamera(SDL_Rect *rect);
 
 void renderer_UI_drawFillRectangle(Color *color, Vector2 *location, Vector2 *size);

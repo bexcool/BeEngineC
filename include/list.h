@@ -79,6 +79,7 @@
         }                                                                                                     \
     }
 
+// TODO: List contains může mít v sobě LIST_FIND_INDEX a nemusí se tak opakovat ta samá logika
 #define LIST_CONTAINS(listStruct, itemType, propertyToCheck, valueToCheck) ({ \
     int result = 0;                                                           \
     for (size_t i = 0; i < listStruct.size; i++) {                            \

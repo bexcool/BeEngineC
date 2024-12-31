@@ -111,9 +111,28 @@ void _engineCore_cleanGameObjects() {
 
     // Clean allGameObjects list
     for (size_t i = 0; i < getLevel()->allGameObjects.size; i++) {
-        LIST_CLEAN(getLevel()->allGameObjects.items[i]->components);
+        GameObject* go = getLevel()->allGameObjects.items[i];
 
-        free(getLevel()->allGameObjects.items[i]);
+        for (size_t j = 0; j < go->components.size; j++) {
+            void* comp = go->components.items[j];
+            if (comp == NULL) {
+                LOG_E("Engine core: Clean game objects: Component is NULL at index %d", j);
+                continue;
+            }
+
+            void (*event_destroyed)(void*, GameObject*) = *(void (**)(void*, GameObject*))((char*)comp + sizeof(void (*)(void*, GameObject*)) * 3);
+            if (event_destroyed != NULL)
+                event_destroyed(comp, go);
+
+            free(comp);
+            go->components.items[j] = NULL;
+        }
+        LIST_CLEAN(go->components);
+
+        if (go->event_destroyed)
+            go->event_destroyed(go);
+
+        free(go);
         getLevel()->allGameObjects.items[i] = NULL;
     }
 
@@ -372,7 +391,23 @@ int _engineCore_unregisterGameObject(size_t id) {
             if (l->allGameObjects.items[i]->event_destroyed != NULL)
                 l->allGameObjects.items[i]->event_destroyed(l->allGameObjects.items[i]);
 
+            // Todo: Clean components
+            for (size_t j = 0; j < l->allGameObjects.items[i]->components.size; j++) {
+                void* comp = l->allGameObjects.items[i]->components.items[j];
+                if (comp == NULL) {
+                    LOG_E("Engine core: Unregister game object: Component is NULL at index %d", j);
+                    continue;
+                }
+
+                void (*event_destroyed)(void*, GameObject*) = *(void (**)(void*, GameObject*))((char*)comp + sizeof(void (*)(void*, GameObject*)) * 3);
+                if (event_destroyed != NULL)
+                    event_destroyed(comp, l->allGameObjects.items[i]);
+
+                free(comp);
+                l->allGameObjects.items[i]->components.items[j] = NULL;
+            }
             LIST_REMOVE_CLEAN(l->allGameObjects, GameObject*, i);
+            LOG("Engine core: Game object with ID %d unregistered.", id);
 
             return 1;
         }

@@ -17,6 +17,7 @@ typedef struct EngineOptions {
     unsigned int window_y;
     unsigned int window_width;
     unsigned int window_height;
+    Uint32 window_flags;
     Level initialLevel;
 } EngineOptions;
 
