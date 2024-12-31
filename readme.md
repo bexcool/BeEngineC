@@ -22,7 +22,7 @@ Bla bla bla
 #### Compiling
 1. Run the "initializeProjectLinux.sh"
 2. Then run "buildRelease.sh"
-3. Engine is now compiled in "bin/Release/libBeEngine.dylib"
+3. Engine is now compiled in "bin/Release/libBeEngine.so"
 
 ### Windows
 - Not yet supported, sorry :C
