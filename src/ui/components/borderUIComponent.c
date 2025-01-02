@@ -8,17 +8,19 @@
 void _BorderUIComponent_registered(BorderUIComponent *comp, UICanvas *canvas) {
     snprintf(comp->displayName, sizeof(comp->displayName), "BorderUIComponent_%zu", comp->id);
     if (comp->event_registered) comp->event_registered(comp, canvas);
+
+    comp->fillBrush._SDL_Texture = renderer_loadTexture(comp->fillBrush.texturePath);
 }
 
 void _BorderUIComponent_tick(BorderUIComponent *comp, UICanvas *canvas) {
 }
 
 void _BorderUIComponent_draw(BorderUIComponent *comp, UICanvas *canvas) {
-    if (comp->fillBrush.texture == NULL) {
+    if (comp->fillBrush._SDL_Texture == NULL) {
         renderer_UI_drawFillRectangle(&comp->fillBrush.color, &comp->_actualPosition, &comp->size);
     } else {
         SDL_Rect rect = vector2x2toSDL_Rect(&comp->_actualPosition, &comp->size);
-        SDL_RenderCopy(getRenderer()->gameRenderer, comp->fillBrush.texture, NULL, &rect);
+        SDL_RenderCopy(getRenderer()->gameRenderer, comp->fillBrush._SDL_Texture, NULL, &rect);
     }
 
     // Border

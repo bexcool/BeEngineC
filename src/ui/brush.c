@@ -1,7 +1,7 @@
 #include "brush.h"
 
-TextureBrush newTextureBrush(const Color *color, SDL_Texture *texture) {
-    return (TextureBrush){(*color), texture};
+TextureBrush newTextureBrush(Color *color, char *texturePath) {
+    return (TextureBrush){.color = *color, .texturePath = texturePath};
 }
 
 Thickness newThickness1(const unsigned int amount) {

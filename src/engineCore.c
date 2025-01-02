@@ -25,10 +25,13 @@ Uint64 _lastTime;
 double _deltaTime;
 
 void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, int argc, const char* argv[]) {
-    char appParentFolderPath[255];
+    char loggerFilePath[256];
 
-    getParentDirectoryPath(argv[0], appParentFolderPath);
-    logger_init(strcat(appParentFolderPath, "/log.txt"));
+    getParentDirectoryPath(argv[0], ___engineCore._executableFolderPath);
+    strcpy(loggerFilePath, ___engineCore._executableFolderPath);
+    strcat(loggerFilePath, "/log.txt");
+
+    logger_init(loggerFilePath);
 
 #ifdef DEBUG
     LOG("Running engine in DEBUG configuration.");
@@ -92,6 +95,10 @@ double getDeltaTime() {
     return _deltaTime;
 }
 
+char* getExecutableFolderPath() {
+    return ___engineCore._executableFolderPath;
+}
+
 void _engineCore_initialize(EngineOptions* _options, EngineEvents* _events) {
     getCore()->options = *_options;
     getCore()->events = *_events;
@@ -108,13 +115,30 @@ void _engineCore_clean() {
 
 void _engineCore_cleanGameObjects() {
     if (getLevel()->allGameObjects.size == 0) return;
+    if (TRUE) {
+        // Temp (Je to ale memory leak :/)
+        for (size_t i = 0; i < getLevel()->allGameObjects.size; i++) {
+            GameObject* go = getLevel()->allGameObjects.items[0];
+
+            if (go == NULL) {
+                LOG_E("Engine core: Clean game objects: Game object is NULL at index %d", i);
+                continue;
+            }
+
+            go->location = VECTOR2(-1000, 0);
+        }
+
+        return;
+    }
 
     // Clean allGameObjects list
-    for (size_t i = 0; i < getLevel()->allGameObjects.size; i++) {
-        GameObject* go = getLevel()->allGameObjects.items[i];
+    int iLoops = getLevel()->allGameObjects.size;
+    for (size_t i = 0; i < iLoops; i++) {
+        GameObject* go = getLevel()->allGameObjects.items[0];
 
-        for (size_t j = 0; j < go->components.size; j++) {
-            void* comp = go->components.items[j];
+        int jLoops = go->components.size;
+        for (size_t j = 0; j < jLoops; j++) {
+            void* comp = go->components.items[0];
             if (comp == NULL) {
                 LOG_E("Engine core: Clean game objects: Component is NULL at index %d", j);
                 continue;
@@ -124,16 +148,14 @@ void _engineCore_cleanGameObjects() {
             if (event_destroyed != NULL)
                 event_destroyed(comp, go);
 
-            free(comp);
-            go->components.items[j] = NULL;
+            LIST_REMOVE_CLEAN(go->components, void*, 0);
         }
         LIST_CLEAN(go->components);
 
         if (go->event_destroyed)
             go->event_destroyed(go);
 
-        free(go);
-        getLevel()->allGameObjects.items[i] = NULL;
+        LIST_REMOVE_CLEAN(getLevel()->allGameObjects, GameObject*, 0);
     }
 
     LIST_CLEAN(getLevel()->allGameObjects);
@@ -142,15 +164,65 @@ void _engineCore_cleanGameObjects() {
 void _engineCore_cleanUICanvases() {
     if (getLevel()->allUICanvases.size == 0) return;
 
+    // Temp (Je to ale memory leak :/)
+    // Kvůli tomuto: Ale nedává to smysl, crashne to až po načtení levelu co se načte fully.
+    /*
+    AddressSanitizer: heap-use-after-free on address 0x606000092790 at pc 0x0001027e9718 bp 0x00016d68a7d0 sp 0x00016d68a7c8
+    READ of size 8 at 0x606000092790 thread T0
+    #0 0x1027e9714 in _engineCore_tickUI engineCore.c:272
+    #1 0x1027e8908 in _engineCore_tick engineCore.c:204
+    #2 0x1027eea6c in gameLoop_start gameLoop.c:36
+    #3 0x1027e612c in engineCore_startGameEngine engineCore.c:72
+    #4 0x10277ec28 in main main.c:30 #5 0x18576c270 (<unknown module>)
+    */
+    for (size_t i = 0; i < getLevel()->allUICanvases.size; i++) {
+        for (size_t j = 0; j < getLevel()->allUICanvases.items[i]->uiComponents.size; j++) {
+            void* comp = getLevel()->allUICanvases.items[i]->uiComponents.items[j];
+            if (comp == NULL) {
+                LOG_E("Engine core: Clean UI canvases: Component is NULL at index %d", j);
+                continue;
+            }
+
+            void (*event_destroyed)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 3);
+            if (event_destroyed != NULL)
+                event_destroyed(comp, getLevel()->allUICanvases.items[i]);
+
+            // get visibility from comp
+            Visibility* visibility = (Visibility*)((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 9 + sizeof(size_t) + sizeof(char) * 64 + sizeof(Vector2) * 2 + sizeof(Thickness));
+            (*visibility) = VISIBILITY_HIDDEN;
+        }
+    }
+
     return;
-    // TODO: Vyřešit memory leak - UI canvas se stále používá i po free
-    // Kdysi to vyřešilo přejmenování stejného jména proměnné v jiném souboru
 
     // Clean allUICanvases list
     for (size_t i = 0; i < getLevel()->allUICanvases.size; i++) {
-        LIST_CLEAN(getLevel()->allUICanvases.items[i]->uiComponents);
+        UICanvas* canvas = getLevel()->allUICanvases.items[i];
+        if (canvas == NULL) {
+            LOG_E("Engine core: Clean UI canvases: Canvas is NULL at index %d", i);
+            continue;
+        }
 
-        free(getLevel()->allUICanvases.items[i]);
+        for (size_t j = 0; j < canvas->uiComponents.size; j++) {
+            void* comp = canvas->uiComponents.items[j];
+            if (comp == NULL) {
+                LOG_E("Engine core: Clean UI canvases: Component is NULL at index %d", j);
+                continue;
+            }
+
+            void (*event_destroyed)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 3);
+            if (event_destroyed != NULL)
+                event_destroyed(comp, canvas);
+
+            free(comp);
+            canvas->uiComponents.items[j] = NULL;
+        }
+        LIST_CLEAN(canvas->uiComponents);
+
+        if (canvas->event_destroyed)
+            canvas->event_destroyed(canvas);
+
+        free(canvas);
         getLevel()->allUICanvases.items[i] = NULL;
     }
 
@@ -175,6 +247,11 @@ void _engineCore_tickGameObjects() {
     for (size_t i = 0; i < getLevel()->allGameObjects.size; i++) {
         GameObject* go = getLevel()->allGameObjects.items[i];
 
+        if (go == NULL) {
+            LOG_W("Engine core: Tick game objects: Game object is NULL at index %d", i);
+            continue;
+        }
+
         // Handle parent's properties
         if (go->parentGameObject != NULL) {
             go->location = vector2_add(&go->parentGameObject->location, &go->relativeLocation);
@@ -192,6 +269,11 @@ void _engineCore_tickGameObjects() {
                 // relativeLocation (Vector2)
                 // worldLocation (Vector2)
                 // size (Vector2)
+
+                if (comp == NULL) {
+                    LOG_W("Engine core: Tick game objects: Component is NULL at index %d in game object with ID: ", i, go->id);
+                    continue;
+                }
 
                 Vector2* relativeLoc = (Vector2*)((char*)comp + (sizeof(void (*)(void*, GameObject*)) * GAMEOBJECTCOMP_EVENT_COUNT) + sizeof(size_t));
                 Vector2* worldLoc = (Vector2*)((char*)relativeLoc + sizeof(Vector2));
@@ -217,15 +299,16 @@ void _engineCore_tickUI() {
     SDL_RenderGetViewport(getRenderer()->gameRenderer, &viewport);
 
     // Call tick event on every UI canvas
-    for (int i = 0; i < getLevel()->allUICanvases.size; i++) {
+    for (size_t i = 0; i < getLevel()->allUICanvases.size; i++) {
         UICanvas* canvas = getLevel()->allUICanvases.items[i];
+
         if (canvas == NULL) {
             LOG_E("Engine core: Tick UI: Canvas is NULL at index %d", i);
             continue;
         }
 
         // Call tick event on components
-        for (int j = 0; j < canvas->uiComponents.size; j++) {
+        for (size_t j = 0; j < canvas->uiComponents.size; j++) {
             void* comp = canvas->uiComponents.items[j];
             if (comp == NULL) {
                 LOG_E("Engine core: Tick UI: Component is NULL at index %d", j);
@@ -383,37 +466,49 @@ GameObject* _engineCore_registerGameObject(GameObject* go) {
     return _go;
 }
 
-int _engineCore_unregisterGameObject(size_t id) {
+void _engineCore_unregisterGameObject(GameObject* go) {
     Level* l = getLevel();
 
+    // Remove 'go' from others' overlapped lists
     for (size_t i = 0; i < l->allGameObjects.size; i++) {
-        if (l->allGameObjects.items[i]->id == id) {
-            if (l->allGameObjects.items[i]->event_destroyed != NULL)
-                l->allGameObjects.items[i]->event_destroyed(l->allGameObjects.items[i]);
-
-            // Todo: Clean components
-            for (size_t j = 0; j < l->allGameObjects.items[i]->components.size; j++) {
-                void* comp = l->allGameObjects.items[i]->components.items[j];
-                if (comp == NULL) {
-                    LOG_E("Engine core: Unregister game object: Component is NULL at index %d", j);
-                    continue;
-                }
-
-                void (*event_destroyed)(void*, GameObject*) = *(void (**)(void*, GameObject*))((char*)comp + sizeof(void (*)(void*, GameObject*)) * 3);
-                if (event_destroyed != NULL)
-                    event_destroyed(comp, l->allGameObjects.items[i]);
-
-                free(comp);
-                l->allGameObjects.items[i]->components.items[j] = NULL;
+        GameObject* other = l->allGameObjects.items[i];
+        if (other && LIST_CONTAINS(other->overlappedGameObjects, GameObject*, ->id, go->id)) {
+            size_t index = LIST_FIND_INDEX(other->overlappedGameObjects, GameObject*, ->id, go->id);
+            if (index != -1) {
+                LIST_REMOVE(other->overlappedGameObjects, GameObject*, index);
             }
-            LIST_REMOVE_CLEAN(l->allGameObjects, GameObject*, i);
-            LOG("Engine core: Game object with ID %d unregistered.", id);
-
-            return 1;
         }
     }
 
-    return 0;
+    if (go->event_destroyed != NULL)
+        go->event_destroyed(go);
+
+    for (size_t j = 0; j < go->components.size; j++) {
+        LOG("Engine core: Unregister game object: Cleaning component at index %zu with pointer %p", j, go->components.items[j]);
+
+        void* comp = go->components.items[j];
+        if (comp == NULL) {
+            LOG_E("Engine core: Unregister game object: Component is NULL at index %zu", j);
+            continue;
+        }
+
+        void (*event_destroyed)(void*, GameObject*) = *(void (**)(void*, GameObject*))((char*)comp + sizeof(void (*)(void*, GameObject*)) * 3);
+        if (event_destroyed != NULL)
+            event_destroyed(comp, go);
+
+        free(comp);
+        go->components.items[j] = NULL;
+    }
+
+    LIST_CLEAN(go->components);
+
+    int indexToRemove = LIST_FIND_INDEX(l->allGameObjects, GameObject*, , go);
+    if (indexToRemove >= 0) {
+        LOG("Engine core: Game object with ID %d (P: %p) unregistered.", go->id, go);
+        LIST_REMOVE_CLEAN(l->allGameObjects, GameObject*, indexToRemove);
+    } else {
+        LOG_E("Engine core: Unregister game object: Game object not found in allGameObjects");
+    }
 }
 
 UICanvas* _engineCore_registerUICanvas() {
@@ -432,22 +527,36 @@ UICanvas* _engineCore_registerUICanvas() {
     return canvas;
 }
 
-int _engineCore_unregisterUICanvas(size_t id) {
-    Level* l = getLevel();
-
-    for (size_t i = 0; i < l->allUICanvases.size; i++) {
-        if (l->allUICanvases.items[i]->id == id) {
-            if (l->allUICanvases.items[i]->event_destroyed != NULL)
-                l->allUICanvases.items[i]->event_destroyed(l->allUICanvases.items[i]);
-
-            LIST_CLEAN(l->allUICanvases.items[i]->uiComponents);
-            LIST_REMOVE_CLEAN(l->allUICanvases, UICanvas*, i);
-
-            return 1;
-        }
+void _engineCore_unregisterUICanvas(UICanvas* canvas) {
+    if (canvas == NULL) {
+        LOG_E("Engine core: Unregister UI canvas: Canvas is NULL.");
+        return;
     }
 
-    return 0;
+    if (canvas->event_destroyed != NULL)
+        canvas->event_destroyed(canvas);
+
+    for (size_t i = 0; i < canvas->uiComponents.size; i++) {
+        void* comp = canvas->uiComponents.items[i];
+        if (comp == NULL) {
+            LOG_E("Engine core: Unregister UI canvas: Component is NULL at index %d", i);
+            continue;
+        }
+
+        void (*event_destroyed)(void*, UICanvas*) = *(void (**)(void*, UICanvas*))((char*)comp + sizeof(void (*)(void*, UICanvas*)) * 3);
+        if (event_destroyed != NULL)
+            event_destroyed(comp, canvas);
+
+        free(comp);
+        canvas->uiComponents.items[i] = NULL;
+    }
+
+    LOG("Engine core: UI Canvas with ID %d unregistered.", canvas->id);
+
+    LIST_CLEAN(canvas->uiComponents);
+
+    int indexToRemove = LIST_FIND_INDEX(getLevel()->allUICanvases, UICanvas*, , canvas);
+    LIST_REMOVE_CLEAN(getLevel()->allUICanvases, UICanvas*, indexToRemove);
 }
 
 int engineCore_loadLevel(Level* level) {
@@ -456,8 +565,7 @@ int engineCore_loadLevel(Level* level) {
 
     if (level->name == NULL) {
         LOG_E("Failed to load level! Level name is NULL.");
-        cleanupApp();
-        exit(1);
+        return 0;
     }
 
     // Check ID
@@ -483,6 +591,9 @@ int engineCore_loadLevel(Level* level) {
     LIST_INIT(getLevel()->allGameObjects);
     LIST_INIT(getLevel()->allUICanvases);
     LOG("Level initialized.");
+
+    // Canvas amount
+    LOG("UI canvases count: %d", getLevel()->allUICanvases.size);
 
     LOG("Level \"%s\" loaded successfully.", getLevel()->name);
     getCore()->_loadingLevel = 0;

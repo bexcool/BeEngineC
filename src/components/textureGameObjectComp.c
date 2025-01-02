@@ -8,7 +8,7 @@
 #include "renderer.h"
 
 void _TextureGameObjectComp_registered(TextureGameObjectComp *comp, GameObject *parent) {
-    comp->textureBrush.texture = IMG_LoadTexture(getRenderer()->gameRenderer, comp->imagePath);
+    comp->textureBrush._SDL_Texture = IMG_LoadTexture(getRenderer()->gameRenderer, comp->textureBrush.texturePath);
 }
 
 void _TextureGameObjectComp_draw(TextureGameObjectComp *comp, GameObject *parent) {
@@ -16,13 +16,22 @@ void _TextureGameObjectComp_draw(TextureGameObjectComp *comp, GameObject *parent
 
     renderer_rectAdjustByCamera(&drawRect);
 
-    if (color_equal(&COLOR(255, 255, 255), &comp->textureBrush.color)) {
-        SDL_SetTextureColorMod(comp->textureBrush.texture, comp->textureBrush.color.r, comp->textureBrush.color.g, comp->textureBrush.color.b);
+    if (!color_equal(&COLOR(255, 255, 255), &comp->textureBrush.color)) {
+        SDL_SetTextureColorMod(comp->textureBrush._SDL_Texture, comp->textureBrush.color.r, comp->textureBrush.color.g, comp->textureBrush.color.b);
     }
 
-    SDL_RenderCopy(getRenderer()->gameRenderer, comp->textureBrush.texture, NULL, &drawRect);
+    SDL_RenderCopy(getRenderer()->gameRenderer, comp->textureBrush._SDL_Texture, NULL, &drawRect);
 }
 
 void _TextureGameObjectComp_tick(TextureGameObjectComp *comp, GameObject *parent) {}
 
 void _TextureGameObjectComp_destroyed(TextureGameObjectComp *comp, GameObject *parent) {}
+
+void textureGameObjectComp_changeTexture(TextureGameObjectComp *comp, char *texturePath) {
+    if (comp->textureBrush._SDL_Texture) {
+        SDL_DestroyTexture(comp->textureBrush._SDL_Texture);
+    }
+
+    comp->textureBrush.texturePath = texturePath;
+    comp->textureBrush._SDL_Texture = IMG_LoadTexture(getRenderer()->gameRenderer, texturePath);
+}

@@ -10,7 +10,8 @@ typedef struct Thickness {
 
 typedef struct TextureBrush {
     Color color;
-    SDL_Texture *texture;
+    char *texturePath;
+    SDL_Texture *_SDL_Texture;
 } TextureBrush;
 
 typedef struct BorderBrush {
@@ -29,7 +30,7 @@ typedef struct BorderBrush {
     ((Thickness){left, top, right, bottom})
 
 // Functions
-TextureBrush newTextureBrush(const Color *color, SDL_Texture *texture);
+TextureBrush newTextureBrush(Color *color, char *texturePath);
 
 // Idk jestli jen nechat makra hmmm :thinking:
 Thickness newThickness1(const unsigned int amount);

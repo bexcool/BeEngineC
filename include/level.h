@@ -24,7 +24,7 @@ typedef struct Level {
 #define DECLARE_LEVEL
 
 GameObject* level_spawnGameObject(GameObjectConstructor* gameObjectToSpawn, Vector2* location);
+void level_destroyGameObject(GameObject* gameObject);
 UICanvas* level_createUICanvas();
-int level_destroyGameObject(GameObject* gameObject);
-int level_destroyGameObjectByID(size_t id);
+void level_destroyUICanvas(UICanvas* canvas);
 void level_focusCamera(CameraGameObjectComp* camera, Vector2* bounds);

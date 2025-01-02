@@ -42,11 +42,11 @@ void _TextBoxUIComponent_tick(TextBoxUIComponent *comp, UICanvas *canvas) {
 void _TextBoxUIComponent_draw(TextBoxUIComponent *comp, UICanvas *canvas) {
     if (comp->event_draw) comp->event_draw(comp, canvas);
 
-    if (comp->backgroundBrush.texture == NULL) {
+    if (comp->backgroundBrush._SDL_Texture == NULL) {
         renderer_UI_drawFillRectangle(&comp->backgroundBrush.color, &comp->_actualPosition, &comp->size);
     } else {
         SDL_Rect rect = vector2x2toSDL_Rect(&comp->_actualPosition, &comp->size);
-        SDL_RenderCopy(getRenderer()->gameRenderer, comp->backgroundBrush.texture, NULL, &rect);
+        SDL_RenderCopy(getRenderer()->gameRenderer, comp->backgroundBrush._SDL_Texture, NULL, &rect);
     }
 
     // Border

@@ -30,6 +30,7 @@ typedef struct EngineCore {
     EngineOptions options;
     EngineEvents events;
     SDL_Event* lastInputEvent;
+    char _executableFolderPath[256];
     Renderer _renderer;
     Level _currentLevel;
     int _loadingLevel;
@@ -63,6 +64,9 @@ typedef struct {
 
 #define NEW_ID rand() % (SIZE_T_MAX + 1)
 
+#define NEW(name) \
+    (name*)malloc(sizeof(name))
+
 // Public functions
 void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, int argc, const char* argv[]);
 int engineCore_loadLevel(Level* level);
@@ -77,6 +81,7 @@ EngineCore* getCore();
 Level* getLevel();
 Renderer* getRenderer();
 double getDeltaTime();
+char* getExecutableFolderPath();
 
 // Private functions
 void _engineCore_initialize(EngineOptions* _options, EngineEvents* _events);
@@ -90,6 +95,6 @@ void _engineCore_tickUI();
 void _engineCore_anyInput(SDL_Event* event);
 
 GameObject* _engineCore_registerGameObject(GameObject* go);
-int _engineCore_unregisterGameObject(size_t id);
+void _engineCore_unregisterGameObject(GameObject* go);
 UICanvas* _engineCore_registerUICanvas();
-int _engineCore_unregisterUICanvas(size_t id);
+void _engineCore_unregisterUICanvas(UICanvas* canvas);

@@ -86,6 +86,9 @@ void renderer_render() {
     for (size_t i = 0; i < l->allGameObjects.size; i++) {
         GameObject *go = l->allGameObjects.items[i];
 
+        if (go == NULL)
+            continue;
+
         if (go->event_draw != NULL)
             go->event_draw(l->allGameObjects.items[i]);
 
@@ -158,6 +161,18 @@ Vector2 renderer_getViewportSize() {
 void renderer_rectAdjustByCamera(SDL_Rect *rect) {
     rect->x -= renderer_getViewportLocation().x;
     rect->y -= renderer_getViewportLocation().y;
+}
+
+Vector2 renderer_getTextSize(TTF_Font *font, char *text) {
+    int w, h;
+    TTF_SizeText(font, text, &w, &h);
+    return VECTOR2(w, h);
+}
+
+SDL_Texture *renderer_loadTexture(const char *texturePath) {
+    // null if empty
+    if (texturePath == NULL) return NULL;
+    return IMG_LoadTexture(getRenderer()->gameRenderer, texturePath);
 }
 
 void renderer_UI_drawFillRectangle(Color *color, Vector2 *location, Vector2 *size) {

@@ -6,6 +6,11 @@
 #include "logger.h"
 
 void _PhysicsGameObjectComp_tick(PhysicsGameObjectComp *comp, GameObject *parent) {
+    if (parent == NULL) {
+        LOG_E("Physics component: Parent is NULL.");
+        return;
+    }
+
     Level *l = getLevel();
     GameObject *checkGo;
 
@@ -37,6 +42,14 @@ void _PhysicsGameObjectComp_tick(PhysicsGameObjectComp *comp, GameObject *parent
     for (size_t j = 0; j < l->allGameObjects.size; j++) {
         checkGo = l->allGameObjects.items[j];
 
+        if (!checkGo) continue;
+        // Skip if 'checkGo' was unregistered
+        if (!LIST_CONTAINS(l->allGameObjects, GameObject *, ->id, checkGo->id)) continue;
+
+        // Do not check collision on null object
+        if (checkGo == NULL)
+            continue;
+
         // Do not check collision on itself or on no-collision object
         if (checkGo->id == parent->id || checkGo->collisionType == COLLISION_NO_COLLISION)
             continue;
@@ -62,10 +75,19 @@ void _PhysicsGameObjectComp_tick(PhysicsGameObjectComp *comp, GameObject *parent
                 if (checkGo->collisionType == COLLISION_BLOCK) {
                     if (parent->velocity.x > 0) {
                         parent->location.x = checkGo->location.x - parent->size.x;
+
+                        // Bounciness
+                        if (comp->bounce && comp->bounciness >= 0 && parent->objectType == OBJECT_MOVABLE) parent->velocity.x *= -comp->bounciness;
+
+                        // Hit event
                         if (parent->event_hit) parent->event_hit(parent, checkGo, &VECTOR2(1, 0));
-                    }
-                    if (parent->velocity.x < 0) {
+                    } else if (parent->velocity.x < 0) {
                         parent->location.x = checkGo->location.x + checkGo->size.x;
+
+                        // Bounciness
+                        if (comp->bounce && comp->bounciness >= 0 && parent->objectType == OBJECT_MOVABLE) parent->velocity.x *= -comp->bounciness;
+
+                        // Hit event
                         if (parent->event_hit) parent->event_hit(parent, checkGo, &VECTOR2(-1, 0));
                     }
                 }
@@ -79,10 +101,19 @@ void _PhysicsGameObjectComp_tick(PhysicsGameObjectComp *comp, GameObject *parent
                 if (checkGo->collisionType == COLLISION_BLOCK) {
                     if (parent->velocity.y > 0) {
                         parent->location.y = checkGo->location.y + checkGo->size.y;
+
+                        // Bounciness
+                        if (comp->bounce && comp->bounciness >= 0 && parent->objectType == OBJECT_MOVABLE) parent->velocity.y *= -comp->bounciness;
+
+                        // Hit event
                         if (parent->event_hit) parent->event_hit(parent, checkGo, &VECTOR2(0, 1));
-                    }
-                    if (parent->velocity.y < 0) {
+                    } else if (parent->velocity.y < 0) {
                         parent->location.y = checkGo->location.y - parent->size.y;
+
+                        // Bounciness
+                        if (comp->bounce && comp->bounciness >= 0 && parent->objectType == OBJECT_MOVABLE) parent->velocity.y *= -comp->bounciness;
+
+                        // Hit event
                         if (parent->event_hit) parent->event_hit(parent, checkGo, &VECTOR2(0, -1));
                     }
                 }

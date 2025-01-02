@@ -4,7 +4,7 @@
 #include "list.h"
 #include "logger.h"
 
-void uiCanvas_attachUIComponent(UICanvas *canvas, void *uiComponent) {
+void _uiCanvas_attachUIComponent(UICanvas *canvas, void *uiComponent) {
     LIST_ADD(canvas->uiComponents, void *, uiComponent);
 
     void (*event_registered)(void *, UICanvas *) = *(void (**)(void *, UICanvas *))(uiComponent);

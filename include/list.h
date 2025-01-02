@@ -36,11 +36,11 @@
  * \param type list data type
  * \param size size of list
  */
-#define LIST_NEW(listStruct, itemType, _size)                              \
-    {                                                                      \
-        listStruct.items = (itemType*)malloc(sizeof(itemType) * size * 2); \
-        listStruct.size = _size;                                           \
-        listStruct._capacity = _size * 2;                                  \
+#define LIST_NEW(listStruct, itemType, _size)                               \
+    {                                                                       \
+        listStruct.items = (itemType*)malloc(sizeof(itemType) * _size * 2); \
+        listStruct.size = _size;                                            \
+        listStruct._capacity = _size * 2;                                   \
     }
 
 #define LIST_ADD(listStruct, itemType, itemToAdd)                                                             \

@@ -23,48 +23,48 @@ void _ButtonUIComponent_draw(ButtonUIComponent *comp, UICanvas *canvas) {
 
     // Disabled
     if (comp->disabled) {
-        if (comp->style.disabledBrush.texture == NULL) {
+        if (comp->style.disabledBrush._SDL_Texture == NULL) {
             renderer_UI_drawFillRectangle(&comp->style.disabledBrush.color, &comp->_actualPosition, &comp->size);
             return;
         }
 
         SDL_Rect rect = vector2x2toSDL_Rect(&comp->_actualPosition, &comp->size);
-        SDL_RenderCopy(r->gameRenderer, comp->style.disabledBrush.texture, NULL, &rect);
+        SDL_RenderCopy(r->gameRenderer, comp->style.disabledBrush._SDL_Texture, NULL, &rect);
         return;
     }
 
     // Pressed
     if (comp->isPressed) {
-        if (comp->style.presssedBrush.texture == NULL) {
+        if (comp->style.presssedBrush._SDL_Texture == NULL) {
             renderer_UI_drawFillRectangle(&comp->style.presssedBrush.color, &comp->_actualPosition, &comp->size);
             return;
         }
 
         SDL_Rect rect = vector2x2toSDL_Rect(&comp->_actualPosition, &comp->size);
-        SDL_RenderCopy(r->gameRenderer, comp->style.presssedBrush.texture, NULL, &rect);
+        SDL_RenderCopy(r->gameRenderer, comp->style.presssedBrush._SDL_Texture, NULL, &rect);
         return;
     }
 
     // Hovered
     if (comp->isHovered) {
-        if (comp->style.hoveredBrush.texture == NULL) {
+        if (comp->style.hoveredBrush._SDL_Texture == NULL) {
             renderer_UI_drawFillRectangle(&comp->style.hoveredBrush.color, &comp->_actualPosition, &comp->size);
             return;
         }
 
         SDL_Rect rect = vector2x2toSDL_Rect(&comp->_actualPosition, &comp->size);
-        SDL_RenderCopy(r->gameRenderer, comp->style.hoveredBrush.texture, NULL, &rect);
+        SDL_RenderCopy(r->gameRenderer, comp->style.hoveredBrush._SDL_Texture, NULL, &rect);
         return;
     }
 
     // Normal
-    if (comp->style.normalBrush.texture == NULL) {
+    if (comp->style.normalBrush._SDL_Texture == NULL) {
         renderer_UI_drawFillRectangle(&comp->style.normalBrush.color, &comp->_actualPosition, &comp->size);
         return;
     }
 
     SDL_Rect rect = vector2x2toSDL_Rect(&comp->_actualPosition, &comp->size);
-    SDL_RenderCopy(r->gameRenderer, comp->style.normalBrush.texture, NULL, &rect);
+    SDL_RenderCopy(r->gameRenderer, comp->style.normalBrush._SDL_Texture, NULL, &rect);
 }
 
 void _ButtonUIComponent_destroyed(ButtonUIComponent *comp, UICanvas *canvas) {

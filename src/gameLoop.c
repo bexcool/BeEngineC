@@ -34,7 +34,6 @@ int gameLoop_start() {
         }
 
         _engineCore_tick();
-        //_physicsEngine_tick();
         renderer_render();
     }
 

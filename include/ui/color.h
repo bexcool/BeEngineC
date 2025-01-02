@@ -17,6 +17,9 @@ typedef struct Color {
 #define COLOR_RGBA(red, green, blue, alpha) \
     ((Color){.r = red, .g = green, .b = blue, .a = alpha})
 
+#define COLOR_RANDOM \
+    ((Color){.r = rand() % 256, .g = rand() % 256, .b = rand() % 256, .a = 255})
+
 #define COLOR_RED COLOR(255, 0, 0)
 #define COLOR_GREEN COLOR(0, 255, 0)
 #define COLOR_BLUE COLOR(0, 0, 255)

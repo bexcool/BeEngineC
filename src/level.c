@@ -22,12 +22,8 @@ GameObject* level_spawnGameObject(GameObjectConstructor* gameObjectToSpawn, Vect
     return _engineCore_registerGameObject(&go);
 }
 
-int level_destroyGameObject(GameObject* gameObject) {
-    return _engineCore_unregisterGameObject(gameObject->id);
-}
-
-int level_destroyGameObjectByID(size_t id) {
-    return _engineCore_unregisterGameObject(id);
+void level_destroyGameObject(GameObject* gameObject) {
+    _engineCore_unregisterGameObject(gameObject);
 }
 
 // UI Canvas
@@ -35,12 +31,8 @@ UICanvas* level_createUICanvas() {
     return _engineCore_registerUICanvas();
 }
 
-int level_destroyUICanvas(UICanvas* canvas) {
-    return _engineCore_unregisterUICanvas(canvas->id);
-}
-
-int level_destroyUICanvasByID(size_t id) {
-    return _engineCore_unregisterUICanvas(id);
+void level_destroyUICanvas(UICanvas* canvas) {
+    _engineCore_unregisterUICanvas(canvas);
 }
 
 // Camera

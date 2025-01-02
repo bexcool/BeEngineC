@@ -29,6 +29,8 @@ void renderer_render();
 Vector2 renderer_getViewportLocation();
 Vector2 renderer_getViewportSize();
 void renderer_rectAdjustByCamera(SDL_Rect *rect);
+Vector2 renderer_getTextSize(TTF_Font *font, char *text);
+SDL_Texture *renderer_loadTexture(const char *texturePath);
 
 void renderer_UI_drawFillRectangle(Color *color, Vector2 *location, Vector2 *size);
 void renderer_UI_drawRectangle(Color *color, Vector2 *location, Vector2 *size);
