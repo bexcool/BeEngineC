@@ -10,7 +10,6 @@ SOURCE_FILE="${COMPONENT_NAME_NCAPITAL}.c"
 
 cat << EOT >> ../include/$HEADER_FILE
 #pragma once
-
 #include "gameObjectComponent.h"
 
 DEFINE_GAMEOBJECTCOMP_START(${COMPONENT_NAME});
@@ -21,21 +20,22 @@ EOT
 cat << EOT >> ../src/$SOURCE_FILE
 #include "${HEADER_FILE}"
 
+#include "engineApi.h"
 #include "engineCore.h"
 
-void _${COMPONENT_NAME}_registered(${COMPONENT_NAME} *comp, GameObject *parent) {
+BEENGINE_API void _${COMPONENT_NAME}_registered(${COMPONENT_NAME} *comp, GameObject *parent) {
 
 }
 
-void _${COMPONENT_NAME}_tick(${COMPONENT_NAME} *comp, GameObject *parent) {
+BEENGINE_API void _${COMPONENT_NAME}_tick(${COMPONENT_NAME} *comp, GameObject *parent) {
 
 }
 
-void _${COMPONENT_NAME}_draw(${COMPONENT_NAME} *comp, GameObject *parent) {
+BEENGINE_API void _${COMPONENT_NAME}_draw(${COMPONENT_NAME} *comp, GameObject *parent) {
 
 }
 
-void _${COMPONENT_NAME}_destroyed(${COMPONENT_NAME} *comp, GameObject *parent) {
+BEENGINE_API void _${COMPONENT_NAME}_destroyed(${COMPONENT_NAME} *comp, GameObject *parent) {
 
 }
 EOT

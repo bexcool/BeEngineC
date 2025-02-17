@@ -1,9 +1,14 @@
 #include "engineCore.h"
 
+#ifdef MACOSX
+#include <unistd.h>
+#endif
+
+#include <conio.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "SDL.h"
 #include "appManager.h"
@@ -30,6 +35,10 @@ void engineCore_startGameEngine(EngineOptions* options, EngineEvents* events, in
     getParentDirectoryPath(argv[0], ___engineCore._executableFolderPath);
     strcpy(loggerFilePath, ___engineCore._executableFolderPath);
     strcat(loggerFilePath, "/log.txt");
+
+    printf("%s", ___engineCore._executableFolderPath);
+
+    getch();
 
     logger_init(loggerFilePath);
 
@@ -514,7 +523,7 @@ void _engineCore_unregisterGameObject(GameObject* go) {
 UICanvas* _engineCore_registerUICanvas() {
     UICanvas* canvas = (UICanvas*)malloc(sizeof(UICanvas));
 
-    canvas->id = rand() % SIZE_T_MAX + 1;
+    canvas->id = rand() % SIZE_MAX + 1;
     canvas->visibility = VISIBILITY_VISIBLE;
     canvas->event_register = NULL;
     canvas->event_tick = NULL;

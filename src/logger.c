@@ -15,7 +15,11 @@ void logger_init(const char *filePath) {
 
     // freopen(logger_logPath, "w", stdout);
 
+#ifdef __APPLE__
     LOG("Logger initialized. Log path: \"%s\"", realpath(logger_logPath, NULL));
+#elif _WIN32
+    LOG("Logger initialized. Log path: \"%s\"", _fullpath(logger_logPath, NULL, 256));
+#endif
 }
 
 void logger_log(LogType type, const char *message, ...) {
@@ -26,7 +30,12 @@ void logger_log(LogType type, const char *message, ...) {
     va_list args;
     va_start(args, message);
 
+#ifdef __APPLE__
     localtime_r(&now, &tm_now);
+#elif _WIN32
+    localtime_s(&tm_now, &now);
+#endif
+
     strftime(timeBuffer, sizeof(timeBuffer), "%H:%M:%S", &tm_now);
 
     switch (type) {

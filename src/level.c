@@ -6,7 +6,7 @@
 // Game Object
 GameObject* level_spawnGameObject(GameObjectConstructor* gameObjectToSpawn, Vector2* location) {
     GameObject go = {
-        .id = rand() % SIZE_T_MAX + 1,
+        .id = rand() % SIZE_MAX + 1,
         .location = (*location),
         .size = gameObjectToSpawn->size,
         .collisionType = gameObjectToSpawn->collisionType,

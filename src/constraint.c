@@ -1,6 +1,5 @@
-#include "constraint.h"
-
 #include "brush.h"
+#include "constraint.h"
 #include "transform.h"
 #include "vector2.h"
 
